@@ -1,27 +1,39 @@
-const { Sequelize } = require("sequelize");
-require("dotenv").config();
-
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
+// Use RENDER_DATABASE_URL if available (Render's PostgreSQL service), otherwise use DATABASE_URL or individual env vars
+const databaseUrl = process.env.RENDER_DATABASE_URL || process.env.DATABASE_URL;
+
 const isProduction = process.env.NODE_ENV === 'production';
 
-const sequelize = new Sequelize(
-    isProduction ? process.env.DATABASE_URL : process.env.DB_NAME,
-    isProduction ? null : process.env.DB_USER,
-    isProduction ? null : process.env.DB_PASSWORD,
-    {
-        host: isProduction ? null : process.env.DB_HOST,
+let sequelize;
+
+if (isProduction && databaseUrl) {
+    // Render/Heroku style database URL
+    sequelize = new Sequelize(databaseUrl, {
         dialect: 'postgres',
         logging: false,
-        dialectOptions: isProduction ? {
+        dialectOptions: {
             ssl: {
                 require: true,
                 rejectUnauthorized: false
             }
-        } : {}
-    }
-);
+        }
+    });
+} else {
+    // Traditional individual environment variables for development
+    sequelize = new Sequelize(
+        process.env.DB_NAME,
+        process.env.DB_USER,
+        process.env.DB_PASSWORD,
+        {
+            host: process.env.DB_HOST,
+            port: process.env.DB_PORT,
+            dialect: 'postgres',
+            logging: false
+        }
+    );
+}
 
 const connectToDB = async () => {
     try {

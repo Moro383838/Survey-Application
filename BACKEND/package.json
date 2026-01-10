@@ -4,9 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "npm run build-frontend && node server.js",
+    "start": "node server.js",
     "dev": "nodemon server.js",
-    "build-frontend": "cd ../FRONTEND && npm install && npm run build"
+    "build-frontend": "cd ../FRONTEND && npm install && npm run build",
+    "heroku-postbuild": "npm run build-frontend"
   },
   "author": "mohammad",
   "license": "ISC",
