@@ -2,7 +2,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: process.env.VUE_APP_API_BASE_URL || (process.env.NODE_ENV === 'production' ? '/api/v1' : 'http://localhost:5000/api/v1'),
+  baseURL: 'https://considerate-miracle-production-42bb.up.railway.app/api/v1',
   timeout: 10000
 })
 
