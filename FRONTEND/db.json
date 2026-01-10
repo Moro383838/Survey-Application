@@ -1,0 +1,50 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "admin123",
+      "name": "مدير النظام",
+      "email": "admin@schoolsystem.edu",
+      "role": "admin",
+      "school": "وزارة التربية والتعليم",
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "username": "user1",
+      "password": "user123",
+      "name": "أحمد محمد",
+      "email": "ahmed@school.edu",
+      "role": "user",
+      "school": "مدرسة النور الثانوية",
+      "schoolId": 1,
+      "createdAt": "2024-01-02T00:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "username": "teacher1",
+      "password": "teacher123",
+      "name": "سارة علي",
+      "email": "sara@school.edu",
+      "role": "user",
+      "school": "مدرسة الأمل الثانوية",
+      "schoolId": 2,
+      "createdAt": "2024-01-03T00:00:00.000Z"
+    }
+  ],
+  "schools": [
+    {
+      "id": 1,
+      "name": "مدرسة النور الثانوية",
+      "location": "الرياض",
+      "type": "ثانوية"
+    },
+    {
+      "id": 2,
+      "name": "مدرسة الأمل الثانوية",
+      "location": "جدة",
+      "type": "ثانوية"
+    }
+  ]
+}

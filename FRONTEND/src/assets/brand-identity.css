@@ -1,0 +1,180 @@
+/* Global Brand Identity - Syrian Arab Republic Theme */
+:root {
+  /* Primary Colors */
+  --primary-dark: #002623;
+  --primary-gold: #b9a779;
+  --primary-white: #ffffff;
+
+  /* Shades */
+  --dark-bg: #001a18;
+  --dark-hover: #003d36;
+  --gold-light: #d4c4a0;
+  --gold-dark: #9a8660;
+
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #b9a779;
+  --text-muted: #8a9a97;
+
+  /* Background Colors */
+  --bg-primary: #002623;
+  --bg-secondary: #001a18;
+  --bg-page: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-hover: #f1f5f9;
+
+  /* Border Colors */
+  --border-primary: #b9a779;
+  --border-secondary: #e2e8f0;
+
+  /* Status Colors */
+  --status-success: #10b981;
+  --status-warning: #f59e0b;
+  --status-error: #ef4444;
+  --status-info: #3b82f6;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--primary-dark) 0%, var(--dark-bg) 100%);
+  --gradient-gold: linear-gradient(135deg, var(--primary-gold) 0%, var(--gold-dark) 100%);
+}
+
+/* Global Overrides */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  direction: rtl;
+}
+
+/* Buttons */
+.btn-primary,
+button.primary,
+.primary-btn {
+  background: var(--primary-dark) !important;
+  color: var(--primary-white) !important;
+  border: 1px solid var(--primary-gold);
+}
+
+.btn-primary:hover,
+button.primary:hover,
+.primary-btn:hover {
+  background: var(--primary-gold) !important;
+  color: var(--primary-dark) !important;
+}
+
+.btn-secondary {
+  background: var(--primary-gold) !important;
+  color: var(--primary-dark) !important;
+}
+
+.btn-secondary:hover {
+  background: var(--gold-dark) !important;
+}
+
+/* Cards */
+.card,
+.card-primary {
+  border: 1px solid var(--border-secondary);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 38, 35, 0.1);
+}
+
+.card-header-primary {
+  background: linear-gradient(135deg, var(--primary-dark), var(--dark-bg));
+  color: var(--primary-white);
+  border-bottom: 2px solid var(--primary-gold);
+}
+
+/* Headers */
+.page-header-primary {
+  background: linear-gradient(135deg, var(--primary-dark), var(--dark-bg));
+  color: var(--primary-white);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 38, 35, 0.2);
+}
+
+/* Links */
+a {
+  color: var(--primary-gold);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--gold-light);
+  text-decoration: underline;
+}
+
+/* Inputs */
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--primary-gold) !important;
+  box-shadow: 0 0 0 3px rgba(185, 167, 121, 0.1) !important;
+}
+
+/* Tables */
+.table-primary thead {
+  background: var(--primary-dark);
+  color: var(--primary-white);
+}
+
+.table-primary tbody tr:hover {
+  background: var(--bg-hover);
+}
+
+/* Badges */
+.badge-primary {
+  background: var(--primary-dark);
+  color: var(--primary-white);
+  border: 1px solid var(--primary-gold);
+}
+
+.badge-gold {
+  background: var(--primary-gold);
+  color: var(--primary-dark);
+}
+
+/* Spinners/Loaders */
+.spinner-primary {
+  border-color: var(--border-secondary);
+  border-top-color: var(--primary-gold);
+}
+
+/* Utility Classes */
+.bg-brand-primary {
+  background: var(--gradient-primary) !important;
+}
+
+.bg-brand-gold {
+  background: var(--gradient-gold) !important;
+}
+
+.text-brand-primary {
+  color: var(--primary-dark) !important;
+}
+
+.text-brand-gold {
+  color: var(--primary-gold) !important;
+}
+
+.border-brand-gold {
+  border-color: var(--primary-gold) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-hover);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-gold);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-dark);
+}
