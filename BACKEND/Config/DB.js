@@ -1,15 +1,15 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-// Use RENDER_DATABASE_URL if available (Render's PostgreSQL service), otherwise use DATABASE_URL or individual env vars
-const databaseUrl = process.env.RENDER_DATABASE_URL || process.env.DATABASE_URL;
+// Use RAILWAY_DATABASE_URL if available (Railway's PostgreSQL service), otherwise use DATABASE_URL or individual env vars
+const databaseUrl = process.env.RAILWAY_DATABASE_URL || process.env.DATABASE_URL;
 
 const isProduction = process.env.NODE_ENV === 'production';
 
 let sequelize;
 
 if (isProduction && databaseUrl) {
-    // Render/Heroku style database URL
+    // Railway style database URL
     sequelize = new Sequelize(databaseUrl, {
         dialect: 'postgres',
         logging: false,
