@@ -2,8 +2,8 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'https://considerate-miracle-production-42bb.up.railway.app/api/v1',
-  timeout: 10000
+baseURL: 'https://considerate-miracle-production-42bb.up.railway.app/api/v1'
+,  timeout: 10000
 })
 
 api.interceptors.request.use(
