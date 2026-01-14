@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { analyticsService } from '@/api/index.js'
+import { analyticsService, schoolService, userService } from '@/api/index.js'
 
 export const useAnalyticsStore = defineStore('analytics', () => {
   // ==========================
@@ -26,17 +26,15 @@ export const useAnalyticsStore = defineStore('analytics', () => {
   const fetchGlobalAnalytics = async () => {
     loading.value = true
     error.value = null
-    
+
     try {
       console.log('🔄 جاري جلب الإحصائيات العامة...')
-      
-      // Use the dedicated global analytics endpoint
+
       const response = await analyticsService.getGlobalAnalytics()
-      
+
       if (response.data) {
-        // The API returns the exact structure we need
         const apiData = response.data;
-        
+
         const globalData = {
           total_surveys: apiData.cards?.total_surveys || 0,
           total_responses: apiData.cards?.total_responses || 0,
@@ -46,65 +44,19 @@ export const useAnalyticsStore = defineStore('analytics', () => {
           recent_activity: apiData.recent_activity || [],
           surveys_by_type: apiData.charts?.surveys_by_type || {}
         }
-        
+
         globalStats.value = globalData
         console.log('✅ تم جلب الإحصائيات العامة بنجاح', globalData)
-      } else {
-        throw new Error('No data received from global analytics endpoint')
       }
     } catch (err) {
-      console.warn('⚠️ فشل في استخدام نقطة النهاية العامة، العودة إلى الطريقة القديمة...', err)
-      
-      // Fallback to old method
-      try {
-        // Fetch data from existing services
-        const [userStats, schoolStats, surveysData] = await Promise.allSettled([
-          import('@/api/index.js').then(module => module.userService.getStats()),
-          import('@/api/index.js').then(module => module.schoolService.getStats()),
-          import('@/api/index.js').then(module => module.surveyService.getAll())
-        ])
-        
-        const globalData = {
-          total_surveys: surveysData.status === 'fulfilled' ? surveysData.value.data.length : 0,
-          total_responses: 0, // We don't have a direct endpoint for total responses
-          total_schools: schoolStats.status === 'fulfilled' ? (schoolStats.value.data.total_schools || schoolStats.value.data.length || 0) : 0,
-          total_users: userStats.status === 'fulfilled' ? (userStats.value.data.total_users || userStats.value.data.length || 0) : 0,
-          // Add top surveys if available
-          top_surveys: surveysData.status === 'fulfilled' ? surveysData.value.data.slice(0, 5) : []
-        }
-        
-        // Calculate total responses from surveys if possible
-        if (surveysData.status === 'fulfilled') {
-          const surveyIds = surveysData.value.data.map(s => s.id)
-          let totalResponses = 0
-          
-          // Try to get responses for each survey
-          for (const surveyId of surveyIds) {
-            try {
-              const response = await import('@/api/index.js').then(module => 
-                module.surveyService.getSurveyStats(surveyId)
-              )
-              totalResponses += response.data.total_responses || 0
-            } catch (e) {
-              // Continue if we can't get specific survey stats
-            }
-          }
-          globalData.total_responses = totalResponses
-        }
-        
-        globalStats.value = globalData
-        console.log('✅ تم جلب الإحصائيات العامة بالطريقة الاحتياطية', globalData)
-      } catch (fallbackErr) {
-        error.value = 'فشل في تحميل الإحصائيات: ' + (fallbackErr.response?.data?.message || fallbackErr.message)
-        console.error('❌ خطأ في الطريقة الاحتياطية:', fallbackErr)
-        // Set default values if there's an error
-        globalStats.value = {
-          total_surveys: 0,
-          total_responses: 0,
-          total_schools: 0,
-          total_users: 0,
-          top_surveys: []
-        }
+      error.value = 'فشل في تحميل الإحصائيات: ' + (err.response?.data?.message || err.message)
+      console.error('❌ خطأ في جلب الإحصائيات العامة:', err)
+      globalStats.value = {
+        total_surveys: 0,
+        total_responses: 0,
+        total_schools: 0,
+        total_users: 0,
+        top_surveys: []
       }
     } finally {
       loading.value = false
@@ -115,7 +67,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
   const fetchSurveySummary = async (surveyId) => {
     loading.value = true
     error.value = null
-    
+
     try {
       const response = await analyticsService.getSurveySummary(surveyId)
       if (response.data) {
@@ -134,7 +86,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
   const fetchSurveyTracking = async (surveyId) => {
     loading.value = true
     error.value = null
-    
+
     try {
       const response = await analyticsService.getSurveyTracking(surveyId)
       if (response.data) {
@@ -153,11 +105,11 @@ export const useAnalyticsStore = defineStore('analytics', () => {
   const fetchSurveyAnalysis = async (surveyId) => {
     loading.value = true
     error.value = null
-    
+
     try {
       console.log(`🔄 جاري جلب تحليل الاستبيان ${surveyId}...`)
       const response = await analyticsService.getSurveyAnalysis(surveyId)
-      
+
       if (response.data) {
         surveyAnalysis.value[surveyId] = response.data
         console.log('✅ تم جلب التحليل بنجاح')
@@ -190,43 +142,53 @@ export const useAnalyticsStore = defineStore('analytics', () => {
   const fetchSchoolAnalytics = async () => {
     loading.value = true
     error.value = null
-    
+
     try {
-      const response = await import('@/api/index.js').then(module => module.schoolService.getStats())
-      
+      const response = await schoolService.getStats()
+
       if (response.data) {
-        // Transform school statistics for analytics - NEW API STRUCTURE
-        const apiData = response.data;
-        
+        // Handle both flat and nested structures
+        const apiData = response.data.data || response.data;
+
+        // Extract cards and charts data (handle both formats)
+        const cards = apiData.cards || apiData;
+        const charts = apiData.charts || apiData;
+
+        // Distribution data
+        const dirDist = charts.directorates_distribution || apiData.directorates_distribution || {};
+        const compDist = charts.complexes_distribution || apiData.complexes_distribution || [];
+
+        // Derived counts if missing
+        const totalDir = cards.total_directorates ?? Object.keys(dirDist).length;
+        const totalComp = cards.total_complexes ?? (Array.isArray(compDist) ? compDist.length : (apiData.clusters_count || 0));
+        const totalSchools = cards.total_schools ?? (apiData.active_schools || 0);
+
         const schoolAnalytics = {
           // Cards data mapping
-          total_schools: apiData.cards?.total_schools || 0,
-          total_directorates: apiData.cards?.total_directorates || 0,
-          total_complexes: apiData.cards?.total_complexes || 0,
-          empty_schools_count: apiData.cards?.empty_schools_count || 0,
-          avg_schools_per_complex: apiData.cards?.avg_schools_per_complex || 0,
-          
+          total_schools: totalSchools,
+          total_directorates: totalDir,
+          total_complexes: totalComp,
+          empty_schools_count: cards.empty_schools_count ?? apiData.schools_by_status?.inactive ?? 0,
+          avg_schools_per_complex: cards.avg_schools_per_complex ?? (totalComp > 0 ? (totalSchools / totalComp) : 0),
+
           // Charts data mapping
-          directorates_distribution: apiData.charts?.directorates_distribution || {},
-          complexes_distribution: apiData.charts?.complexes_distribution || [],
-          
+          directorates_distribution: dirDist,
+          complexes_distribution: compDist,
+
           // Metadata
           generated_at: apiData.generated_at || new Date().toISOString(),
-          
-          // Legacy mappings for backward compatibility
-          active_schools: apiData.cards?.total_schools || 0,
-          clusters_count: apiData.cards?.total_complexes || 0,
-          directorates_count: apiData.cards?.total_directorates || 0,
-          schools_by_status: {
-            active: apiData.cards?.total_schools || 0,
-            inactive: apiData.cards?.empty_schools_count || 0
-          }
+
+          // Legacy mappings
+          active_schools: totalSchools,
+          clusters_count: totalComp,
+          directorates_count: totalDir
         }
-        
+
         return schoolAnalytics
       }
     } catch (err) {
       error.value = 'فشل في تحميل تحليلات المدارس: ' + (err.response?.data?.message || err.message)
+      console.error('❌ خطأ في جلب تحليلات المدارس:', err)
       throw err
     } finally {
       loading.value = false
@@ -237,17 +199,17 @@ export const useAnalyticsStore = defineStore('analytics', () => {
   const fetchUserAnalytics = async () => {
     loading.value = true
     error.value = null
-    
+
     try {
-      const response = await import('@/api/index.js').then(module => module.userService.getStats())
-      
+      const response = await userService.getStats()
+
       if (response.data) {
         // Extract data - backend returns data directly, not nested
         const userData = response.data.fn_users_stats || response.data;
-        
+
         // Handle roles_distribution - normalize role names
         const rolesDist = userData.roles_distribution || {};
-        
+
         // Transform user statistics for analytics
         const userAnalytics = {
           total_users: userData.total_users || 0,
@@ -261,7 +223,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
           users_by_role: rolesDist,
           schools_count: userData.schools_count || 0
         }
-        
+
         console.log('✅ تم جلب تحليلات المستخدمين:', userAnalytics)
         return userAnalytics
       }
@@ -307,7 +269,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
     loading,
     error,
     hasGlobalStats,
-    
+
     fetchGlobalAnalytics,
     fetchSurveySummary,
     fetchSurveyTracking,

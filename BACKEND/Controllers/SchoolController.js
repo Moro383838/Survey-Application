@@ -99,18 +99,97 @@ module.exports.deleteSchool = asyncHandler(async (req, res) => {
   }
 });
 
-// stats
+// get school stats
 module.exports.getSchoolStats = asyncHandler(async (req, res) => {
   try {
-    const result = await sequelize.query(
-      `SELECT  * From fn_get_school_statistics() as stats`,
+    // 1. Get base stats from the existing function
+    const statsResult = await sequelize.query(
+      `SELECT * From fn_get_school_statistics() as stats`,
       { type: QueryTypes.SELECT }
     );
 
-    console.log(result[0].stats);
-    res.status(200).json(result[0].stats);
+    let baseStats = statsResult[0]?.stats || {};
+    if (typeof baseStats === 'string') {
+      try {
+        baseStats = JSON.parse(baseStats);
+      } catch (e) {
+        baseStats = {};
+      }
+    }
+
+    // 2. Fetch schools, directorates and complexes for more accurate and structured data
+    const [schools, directorates] = await Promise.all([
+      sequelize.query('SELECT * FROM fn_get_all_schools()', { type: QueryTypes.SELECT }),
+      sequelize.query('SELECT * FROM fn_get_directorates()', { type: QueryTypes.SELECT })
+    ]);
+
+    // 3. Fetch all complexes by iterating through directorates
+    let allComplexes = [];
+    for (const dir of directorates) {
+      try {
+        const complexes = await sequelize.query('SELECT * FROM fn_get_complexes($1)', {
+          bind: [dir.id], type: QueryTypes.SELECT
+        });
+        allComplexes = allComplexes.concat(complexes);
+      } catch (e) {
+        console.error(`Error fetching complexes for directorate ${dir.id}:`, e);
+      }
+    }
+
+    const total_schools = schools.length || baseStats.total_schools || 0;
+    const total_directorates = directorates.length || 0;
+    const total_complexes = allComplexes.length || 0;
+    const empty_schools_count = baseStats.empty_schools_count || 0;
+
+    // 4. Calculate distributions
+    // Directorates distribution
+    const directorates_distribution = {};
+    directorates.forEach(dir => {
+      const count = schools.filter(s => s.directorate_id === dir.id || s.directorateId === dir.id).length;
+      if (count > 0) {
+        directorates_distribution[dir.name] = count;
+      }
+    });
+
+    // Complexes distribution
+    const complexes_distribution = allComplexes.map(comp => {
+      const count = schools.filter(s => s.complex_id === comp.id || s.complexId === comp.id).length;
+      return {
+        name: comp.name,
+        count: count
+      };
+    });
+
+    // Add schools without a complex if any
+    const schoolsWithoutComplex = schools.filter(s => !s.complex_id && !s.complexId).length;
+    if (schoolsWithoutComplex > 0) {
+      complexes_distribution.push({
+        name: 'غير محدد',
+        count: schoolsWithoutComplex
+      });
+    }
+
+    // 5. Build final response structure as requested by the user
+    const responseData = {
+      cards: {
+        total_schools: total_schools,
+        total_directorates: total_directorates,
+        total_complexes: total_complexes,
+        empty_schools_count: empty_schools_count,
+        avg_schools_per_complex: total_complexes > 0 ? parseFloat((total_schools / total_complexes).toFixed(1)) : 0
+      },
+      charts: {
+        directorates_distribution: Object.keys(directorates_distribution).length > 0
+          ? directorates_distribution
+          : (baseStats.directorates_distribution || {}),
+        complexes_distribution: complexes_distribution
+      },
+      generated_at: new Date().toISOString()
+    };
+
+    res.status(200).json(responseData);
   } catch (err) {
-    console.log(err);
+    console.error('❌ Error in getSchoolStats:', err);
     res.status(500).json({ error: err.message });
   }
 });

@@ -131,7 +131,7 @@
             <div class="metric-icon" :class="metric.color">
               <component :is="metric.icon" />
             </div>
-            <div class="trend-indicator" :class="{ up: metric.trend > 0, down: metric.trend < 0 }">
+            <div class="trend-indicator" v-if="metric.trend !== 0" :class="{ up: metric.trend > 0, down: metric.trend < 0 }">
               <svg v-if="metric.trend > 0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
                 <polyline points="16 7 22 7 22 13"></polyline>
@@ -147,7 +147,7 @@
             <h3 class="metric-value">{{ formatNumber(metric.value) }}</h3>
             <p class="metric-label">{{ metric.label }}</p>
           </div>
-          <div class="progress-bar">
+          <div class="progress-bar" v-if="metric.target > 0">
             <div 
               class="progress-fill" 
               :style="{ width: `${Math.min(100, (metric.value / metric.target) * 100)}%` }"
@@ -351,12 +351,8 @@
             <div class="card-content enhanced-content">
               <div class="card-value">{{ formatNumber(schoolAnalyticsData.total_schools) }}</div>
               <div class="card-label">إجمالي المدارس</div>
-              <div class="card-trend positive">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
-                  <polyline points="16 7 22 7 22 13"></polyline>
-                </svg>
-                <span>+{{ calculateGrowthRate(schoolAnalyticsData.total_schools, 120) }}%</span>
+              <div class="card-trend neutral">
+                <span>إجمالي المسجل في النظام</span>
               </div>
             </div>
           </div>
@@ -369,9 +365,9 @@
               </svg>
             </div>
             <div class="card-content enhanced-content">
-              <div class="card-value">{{ schoolAnalyticsData.total_directorates || Object.keys(schoolAnalyticsData.directorates_distribution || {}).length }}</div>
+              <div class="card-value">{{ schoolAnalyticsData.total_directorates }}</div>
               <div class="card-label">المديريات</div>
-              <div class="card-trend positive">
+              <div class="card-trend neutral">
                 <span>{{ calculateAveragePerDirectorate(schoolAnalyticsData.total_schools, schoolAnalyticsData.directorates_distribution) }} مدرسة/مديرية</span>
               </div>
             </div>
@@ -386,10 +382,27 @@
               </svg>
             </div>
             <div class="card-content enhanced-content">
-              <div class="card-value">{{ schoolAnalyticsData.total_complexes || 0 }}</div>
+              <div class="card-value">{{ schoolAnalyticsData.total_complexes }}</div>
               <div class="card-label">المجمعات</div>
               <div class="card-trend neutral">
                 <span>{{ calculateClustersPerDirectorate(schoolAnalyticsData.total_complexes, schoolAnalyticsData.total_directorates) }} مجمع/مديرية</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="overview-card enhanced-card danger" v-if="schoolAnalyticsData.empty_schools_count !== undefined">
+            <div class="card-icon enhanced-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <div class="card-content enhanced-content">
+              <div class="card-value">{{ schoolAnalyticsData.empty_schools_count }}</div>
+              <div class="card-label">مدارس شاغرة</div>
+              <div class="card-trend negative">
+                <span>بحاجة لتحديث البيانات</span>
               </div>
             </div>
           </div>
@@ -404,10 +417,16 @@
               </svg>
             </div>
             <div class="card-content enhanced-content">
-              <div class="card-value">{{ Math.round(schoolAnalyticsData.avg_schools_per_complex) || calculateAverageSchoolsPerCluster(schoolAnalyticsData.total_schools, schoolAnalyticsData.total_complexes) }}</div>
+              <div class="card-value">
+                {{ 
+                  schoolAnalyticsData.avg_schools_per_complex !== undefined && schoolAnalyticsData.avg_schools_per_complex !== null 
+                  ? schoolAnalyticsData.avg_schools_per_complex.toFixed(1) 
+                  : calculateAverageSchoolsPerCluster(schoolAnalyticsData.total_schools, schoolAnalyticsData.total_complexes) 
+                }}
+              </div>
               <div class="card-label">مدرسة/مجمع</div>
               <div class="card-trend neutral">
-                <span>متوسط المدارس في كل مجمع</span>
+                <span>متوسط المدارس في المجمعات</span>
               </div>
             </div>
           </div>
@@ -1282,48 +1301,49 @@ const error = computed(() => {
          usersStore.error
 })
 
-// Enhanced data structures
+// Enhanced data structures - Use only API data, no static values
 const keyMetrics = computed(() => {
   if (!globalStats.value) return [];
   
+  // Only use real data from API, no fallback values
   return [
     {
       key: 'surveys',
       label: 'إجمالي الاستبيانات',
-      value: globalStats.value.total_surveys || 0,
-      target: 100,
-      trend: 12.5,
+      value: globalStats.value.total_surveys,
+      target: 0, // Will be calculated dynamically
+      trend: 0, // Will be calculated dynamically
       color: 'primary',
       icon: SurveyIcon
     },
     {
       key: 'responses',
       label: 'إجمالي الإجابات',
-      value: globalStats.value.total_responses || 0,
-      target: 1000,
-      trend: 8.3,
+      value: globalStats.value.total_responses,
+      target: 0,
+      trend: 0,
       color: 'success',
       icon: ResponseIcon
     },
     {
       key: 'schools',
       label: 'إجمالي المدارس',
-      value: globalStats.value.total_schools || 0,
-      target: 50,
-      trend: -2.1,
+      value: globalStats.value.total_schools,
+      target: 0,
+      trend: 0,
       color: 'warning',
       icon: SchoolIcon
     },
     {
       key: 'users',
       label: 'إجمالي المستخدمين',
-      value: globalStats.value.total_users || 0,
-      target: 25,
-      trend: 15.7,
+      value: globalStats.value.total_users,
+      target: 0,
+      trend: 0,
       color: 'info',
       icon: UserIcon
     }
-  ];
+  ].filter(metric => metric.value !== undefined && metric.value !== null);
 });
 
 const monthlyActivity = computed(() => {
@@ -1336,31 +1356,15 @@ const monthlyActivity = computed(() => {
     }));
   }
   
-  // Fallback to placeholder data
-  if (surveys.value && surveys.value.length > 0) {
-    // Create monthly activity based on surveys
-    const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
-    return months.slice(0, 6).map((month, index) => ({
-      month,
-      count: Math.floor(Math.random() * 30) + 10, // Placeholder - should be real data
-      type: index % 3 === 0 ? 'completed' : index % 3 === 1 ? 'active' : 'pending'
-    }));
-  }
-  return [
-    { month: 'يناير', count: 24, type: 'completed' },
-    { month: 'فبراير', count: 18, type: 'active' },
-    { month: 'مارس', count: 32, type: 'completed' },
-    { month: 'أبريل', count: 15, type: 'pending' },
-    { month: 'مايو', count: 28, type: 'completed' },
-    { month: 'يونيو', count: 22, type: 'active' }
-  ];
+  return [];
 });
 
 const maxMonthlyCount = computed(() => {
+  // Only use real data from API, no fallback values
   if (monthlyActivity.value && monthlyActivity.value.length > 0) {
     return Math.max(...monthlyActivity.value.map(item => item.count));
   }
-  return 32; // default fallback
+  return 0; // No data available
 });
 
 // Enhanced chart computed properties
@@ -1392,23 +1396,21 @@ const totalResponses = computed(() => {
 });
 
 const surveysByType = computed(() => {
-  // Use real data from global analytics if available
+  // Only use real data from API, no static fallback data
   if (globalStats.value?.surveys_by_type) {
     const typeData = globalStats.value.surveys_by_type;
     return [
       { name: 'دوري', value: typeData.periodic || 0, color: '#4CAF50' },
       { name: 'عادي', value: typeData.regular || 0, color: '#2196F3' }
-    ].filter(item => item.value > 0); // Only show types that have data
+    ].filter(item => item.value > 0); // Only show types that have actual data
   }
   
-  // Fallback to placeholder data
-  return [
-    { name: 'دوري', value: 1, color: '#4CAF50' },
-    { name: 'عادي', value: 1, color: '#2196F3' }
-  ];
+  // Return empty array when no API data is available
+  return [];
 });
 
 const recentActivities = computed(() => {
+  // Only use real data from API
   const activities = [];
   
   // Use real data from global analytics if available
@@ -1428,47 +1430,7 @@ const recentActivities = computed(() => {
     return activities.slice(0, 4);
   }
   
-  // Fallback to old method
-  // Add real data based on surveys if available
-  if (surveys.value && surveys.value.length > 0) {
-    surveys.value.slice(0, 2).forEach((survey, index) => {
-      activities.push({
-        text: `تم نشر استبيان جديد: ${survey.title}`,
-        time: `قبل ${index + 1} ساعات`,
-        type: 'survey',
-        icon: SurveyIcon
-      });
-    });
-  }
-  
-  // Add placeholder activities to fill out the list
-  if (activities.length < 4) {
-    const placeholders = [
-      {
-        text: 'مدرسة الهدى قدمت إجاباتها لاستبيان التعليم',
-        time: 'قبل ساعة',
-        type: 'school',
-        icon: SchoolIcon
-      },
-      {
-        text: 'تم إنشاء مستخدم جديد: محمد أحمد',
-        time: 'قبل 3 ساعات',
-        type: 'user',
-        icon: UserIcon
-      },
-      {
-        text: 'استبيان تقييم المعلمين تم إغلاقه',
-        time: 'قبل يوم',
-        type: 'completed',
-        icon: CompletedIcon
-      }
-    ];
-    
-    const remaining = 4 - activities.length;
-    activities.push(...placeholders.slice(0, remaining));
-  }
-  
-  return activities;
+  return [];
 });
 
 // Icon components
@@ -1985,12 +1947,15 @@ const formatStructuredAnswer = (answerObj, questionType) => {
 }
 
 const maxDirectorateCount = computed(() => {
-  if (!schoolAnalyticsData.value?.directorates_distribution) return 1;
-  return Math.max(...Object.values(schoolAnalyticsData.value.directorates_distribution), 1);
+  // Use only API data, no fallback values
+  if (!schoolAnalyticsData.value?.directorates_distribution) return 0;
+  const values = Object.values(schoolAnalyticsData.value.directorates_distribution);
+  return values.length > 0 ? Math.max(...values) : 0;
 });
 
-// Enhanced schools analytics computed properties
+// Enhanced schools analytics computed properties - Use only API data
 const sortedDirectorates = computed(() => {
+  // Only use real data from API, no static/fallback data
   if (!schoolAnalyticsData.value?.directorates_distribution) return {};
   
   const entries = Object.entries(schoolAnalyticsData.value.directorates_distribution);
@@ -2001,26 +1966,21 @@ const radialCircumference = computed(() => {
   return 2 * Math.PI * 50; // 2πr where r = 50
 });
 
-// Dynamic clusters data from API
+// Dynamic clusters data from API - No static fallback data
 const clustersData = computed(() => {
-  // Use actual API data when available, fallback to sample data
+  // Only use real API data, no static fallback
   if (schoolAnalyticsData.value?.complexes_distribution && schoolAnalyticsData.value.complexes_distribution.length > 0) {
     // Transform API data format {name: "cluster name", count: number} to {name: string, schools: number}
-    return schoolAnalyticsData.value.complexes_distribution.map(item => ({
-      name: item.name || 'غير محدد',
-      schools: Math.round(item.count || 0) // Round fractional values to whole numbers
-    }));
+    return schoolAnalyticsData.value.complexes_distribution
+      .map(item => ({
+        name: item.name || 'غير محدد',
+        schools: Math.round(item.count || 0)
+      }))
+      .filter(item => item.schools > 0); // Only show items with actual data
   }
   
-  // Fallback sample data
-  return [
-    { name: 'مجمع دمشق الغربي', schools: 15 },
-    { name: 'مجمع دمشق الشرقي', schools: 12 },
-    { name: 'مجمع ريف دمشق', schools: 18 },
-    { name: 'مجمع حلب', schools: 22 },
-    { name: 'مجمع درعا', schools: 8 },
-    { name: 'مجمع ادلب', schools: 14 }
-  ];
+  // Return empty array when no API data is available
+  return [];
 });
 
 const formatNumber = (num) => {
@@ -4078,6 +4038,7 @@ onMounted(async () => {
 .overview-card.success { --card-accent: #10b981; --card-accent-light: #34d399; }
 .overview-card.warning { --card-accent: #f59e0b; --card-accent-light: #fbbf24; }
 .overview-card.info { --card-accent: #3b82f6; --card-accent-light: #60a5fa; }
+.overview-card.danger { --card-accent: #ef4444; --card-accent-light: #f87171; }
 
 /* Enhanced Card Styles */
 .overview-card.enhanced-card {
@@ -4115,6 +4076,12 @@ onMounted(async () => {
   --icon-bg: rgba(59, 130, 246, 0.1);
   --icon-bg-light: rgba(59, 130, 246, 0.05);
   --icon-color: #3b82f6;
+}
+
+.overview-card.danger .card-icon.enhanced-icon {
+  --icon-bg: rgba(239, 68, 68, 0.1);
+  --icon-bg-light: rgba(239, 68, 68, 0.05);
+  --icon-color: #ef4444;
 }
 
 .card-content.enhanced-content {
