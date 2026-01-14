@@ -5,7 +5,7 @@ const { QueryTypes } = require("sequelize");
  * @desc    Get Detailed Analysis (Supports JSONB & New Types)
  * @route   GET /api/analytics/survey/:id/analysis
 */
-exports.getSurveyAnalysis = asyncHandler(async (req, res) => {
+module.exports.getSurveyAnalysis = asyncHandler(async (req, res) => {
   const surveyId = req.params.id;
   try {
     const result = await sequelize.query(
@@ -27,7 +27,7 @@ exports.getSurveyAnalysis = asyncHandler(async (req, res) => {
  * @route   GET /api/analytics/global
  * @access  Private (Admin)
  */
-exports.getGlobalAnalytics = asyncHandler(async (req, res) => {
+module.exports.getGlobalAnalytics = asyncHandler(async (req, res) => {
   try {
     const result = await sequelize.query(
       `SELECT fn_get_global_system_stats() as stats`,
@@ -44,7 +44,7 @@ exports.getGlobalAnalytics = asyncHandler(async (req, res) => {
  * @route /analytics/getSurveySummary/{id}
  * @access private (admin and analayzer)
  */
-exports.getSurveySummary = asyncHandler(async (req, res) => {
+module.exports.getSurveySummary = asyncHandler(async (req, res) => {
   const surveyId = req.params.id;
   try {
     const result = await sequelize.query(
@@ -62,7 +62,7 @@ exports.getSurveySummary = asyncHandler(async (req, res) => {
  * @route survey/:id/tracking
  * @access private  (admin and analayzer)
  */
-exports.getSurveyTracking = asyncHandler(async (req, res) => {
+module.exports.getSurveyTracking = asyncHandler(async (req, res) => {
   const surveyId = req.params.id;
   try {
     const result = await sequelize.query(

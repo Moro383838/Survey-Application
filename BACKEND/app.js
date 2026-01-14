@@ -8,7 +8,6 @@ const compression = require("compression");
 const { notFound, errorHandler } = require("./middleware/ErrorHandler");
 
 const app = express();
-
 // CORS
 app.use(cors());
 
