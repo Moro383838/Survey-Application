@@ -1,6 +1,6 @@
 <template>
   <div class="users-page">
-    <div class="page-header">
+    <div class="page-header fixed-header">
       <div class="header-left">
         <h1>👥 إدارة المستخدمين</h1>
         <p>قم بإدارة حسابات المستخدمين في النظام</p>
@@ -12,37 +12,6 @@
       </div>
     </div>
 
-    <div class="stats">
-      <div class="stat-card">
-        <div class="stat-icon">🗂️</div>
-        <div class="stat-info">
-          <h3>{{ stats.admins }}</h3>
-          <p>مديرين</p>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">👥</div>
-        <div class="stat-info">
-          <h3>{{ stats.schoolUsers }}</h3>
-          <p>مستخدمين مدرسة</p>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">📊</div>
-        <div class="stat-info">
-          <h3>{{ stats.analayzerUsers }}</h3>
-          <p>محللين بيانات</p>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">📈</div>
-        <div class="stat-info">
-          <h3>{{ stats.total }}</h3>
-          <p>إجمالي المستخدمين</p>
-        </div>
-      </div>
-    </div>
-    
     
     <div class="search-section">
       <div class="search-box">
@@ -102,34 +71,35 @@
         </button>
       </div>
     </div>
+
+    <AddUserModal 
+      v-if="showAddModal"
+      @close="showAddModal = false"
+      @user-added="handleUserAdded"
+    />
+
+    <EditUserModal 
+      v-if="showEditModal && selectedUser"
+      :user="selectedUser"
+      @close="showEditModal = false"
+      @user-updated="handleUserUpdated"
+    />
+
+    <DeleteUserModal 
+      v-if="showDeleteModal && selectedUser"
+      :user="selectedUser"
+      @close="showDeleteModal = false"
+      @user-deleted="handleUserDeleted"
+    />
+
+    <UsersDetails 
+      v-if="showDeleteModal && selectedUser"
+      :user="selectedUser"
+      @close="showDeleteModal = false"
+      @user-deleted="viewUserDetails"
+    />
+
   </div>
-
-  <AddUserModal 
-    v-if="showAddModal"
-    @close="showAddModal = false"
-    @user-added="handleUserAdded"
-  />
-
-  <EditUserModal 
-    v-if="showEditModal && selectedUser"
-    :user="selectedUser"
-    @close="showEditModal = false"
-    @user-updated="handleUserUpdated"
-  />
-
-  <DeleteUserModal 
-    v-if="showDeleteModal && selectedUser"
-    :user="selectedUser"
-    @close="showDeleteModal = false"
-    @user-deleted="handleUserDeleted"
-  />
-  <UsersDetails 
-    v-if="showDeleteModal && selectedUser"
-    :user="selectedUser"
-    @close="showDeleteModal = false"
-    @user-deleted="viewUserDetails"
-  />
-  
 </template>
 
 <script setup>
@@ -215,55 +185,70 @@ onMounted(() => {
 
 <style scoped>
 .users-page {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 24px;
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
   position: relative;
-  min-height: calc(100vh - 120px);
+  min-height: calc(100vh - 128px);
+  background-color: #ffff;
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  background: var(--gradient-primary);
-  padding: 24px 32px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 38, 35, 0.2);
-  border: 2px solid var(--primary-gold);
-  color: white;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #002623, #001a18);
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 38, 35, 0.12);
+  color: #ffffff;
+}
+
+.fixed-header {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 20px;
 }
 
 .header-left h1 {
-  color: white;
-  margin-bottom: 8px;
-  font-size: 24px;
+  color: #b9a779;
+  margin-bottom: 4px;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .header-left p {
-  color: var(--gold-light);
+  color: #b9a779;
   margin: 0;
+  font-size: 13px;
+  opacity: 0.9;
 }
 
 .add-btn {
-  background: linear-gradient(135deg, #52B5AB, #126E70);
-  color: white;
-  border: none;
-  padding: 12px 24px;
+  background: linear-gradient(135deg, #002623, #001a18);
+  color: #b9a779;
+  border: 1px solid #b9a779;
+  padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 14px;
   display: flex;
   align-items: center;
   gap: 8px;
   transition: all 0.3s;
+  white-space: nowrap;
 }
 
 .add-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(185, 167, 121, 0.4);
-  background: var(--primary-white);
+  box-shadow: 0 4px 12px rgba(185, 167, 121, 0.3);
+  background: linear-gradient(135deg, #b9a779, #d4c4a0);
+  color: #002623;
 }
 
 .stats {
@@ -274,13 +259,13 @@ onMounted(() => {
 }
 
 .stat-card {
-  background: white;
+  background: #ffffff;
   border-radius: 12px;
   padding: 20px;
   display: flex;
   align-items: center;
   gap: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(5,66,57,0.06);
 }
 
 .stat-icon {
@@ -291,20 +276,21 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-hover);
-  color: var(--primary-dark);
-  border: 1px solid var(--primary-gold);
+  background: #ffff;
+  color: #054239;
+  border: 1px solid #edebe0;
 }
 
 .stat-info h3 {
   font-size: 28px;
-  color: #1e293b;
+  color: #054239;
   margin: 0 0 4px 0;
 }
 
 .stat-info p {
-  color: #64748b;
+  color: #054239;
   margin: 0;
+  opacity: 0.8;
 }
 
 
@@ -320,7 +306,7 @@ onMounted(() => {
 .search-input {
   width: 100%;
   padding: 12px 40px 12px 16px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #edebe0;
   border-radius: 8px;
   font-size: 16px;
   transition: all 0.3s;
@@ -328,8 +314,8 @@ onMounted(() => {
 
 .search-input:focus {
   outline: none;
-  border-color: var(--primary-gold);
-  box-shadow: 0 0 0 3px rgba(185, 167, 121, 0.1);
+  border-color: #edebe0;
+  box-shadow: 0 0 0 3px rgba(237,235,224,0.35);
 }
 
 .search-icon {
@@ -337,7 +323,7 @@ onMounted(() => {
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: #94a3b8;
+  color: #054239;
 }
 
 
@@ -361,8 +347,8 @@ onMounted(() => {
 .loading-spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid var(--border-secondary);
-  border-top: 4px solid var(--primary-gold);
+  border: 4px solid #edebe0;
+  border-top: 4px solid #054239;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 20px;
@@ -377,9 +363,9 @@ onMounted(() => {
 .error-state {
   text-align: center;
   padding: 40px;
-  background: #fef2f2;
+  background: #edebe0;
   border-radius: 12px;
-  border: 1px solid #fecaca;
+  border: 1px solid #edebe0;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -390,21 +376,22 @@ onMounted(() => {
 .error-icon {
   font-size: 48px;
   margin-bottom: 16px;
+  color: #054239;
 }
 
 .error-state h3 {
-  color: #dc2626;
+  color: #054239;
   margin-bottom: 8px;
 }
 
 .error-state p {
-  color: #991b1b;
+  color: #054239;
   margin-bottom: 20px;
 }
 
 .retry-btn {
-  background: #dc2626;
-  color: white;
+  background: #054239;
+  color: #ffffff;
   border: none;
   padding: 10px 20px;
   border-radius: 8px;
@@ -423,43 +410,54 @@ onMounted(() => {
   gap: 20px;
   margin-top: 20px;
   padding: 20px;
-  background: white;
+  background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(5,66,57,0.06);
 }
 
 .pagination-btn {
   padding: 8px 16px;
-  border: 1px solid #e2e8f0;
-  background: white;
+  border: 1px solid #edebe0;
+  background: #ffffff;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s;
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background: #f1f5f9;
+  background: #edebe0;
+  color: #054239;
 }
 
 .pagination-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
 .pagination-info {
-  color: #64748b;
+  color: #054239;
   font-weight: 500;
 }
 
 @media (max-width: 768px) {
+  .users-page {
+    padding: 140px 16px 16px 16px;
+  }
+  
   .page-header {
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
     align-items: stretch;
+    padding: 16px;
+  }
+  
+  .header-left h1 {
+    font-size: 18px;
   }
   
   .add-btn {
     justify-content: center;
+    width: 100%;
   }
   
   .stats {

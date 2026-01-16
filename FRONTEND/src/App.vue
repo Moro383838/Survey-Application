@@ -29,6 +29,7 @@ body {
   background-color: var(--bg-page, #f8fafc);
   color: #1e293b;
   line-height: 1.6;
+  background-color: #edebe0;
 }
 
 #app {

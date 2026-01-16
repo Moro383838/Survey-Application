@@ -107,7 +107,7 @@
               <div v-else-if="question.type_id === 3" class="clean-answer-area">
                 <div v-for="(option, idx) in question.options" :key="idx" class="clean-option">
                   <input type="radio" :name="'q_' + question.id" disabled />
-                  <span>{{ option.text }}</span>
+                  <span>{{ typeof option === 'object' ? (option.text || option.label || option.value) : option }}</span>
                 </div>
               </div>
 
@@ -115,7 +115,7 @@
               <div v-else-if="question.type_id === 4" class="clean-answer-area">
                 <div v-for="(option, idx) in question.options" :key="idx" class="clean-option">
                   <input type="checkbox" disabled />
-                  <span>{{ option.text }}</span>
+                  <span>{{ typeof option === 'object' ? (option.text || option.label || option.value) : option }}</span>
                 </div>
               </div>
 
@@ -258,28 +258,36 @@ onMounted(loadSurveyDetails)
 .survey-details-page {
   padding: 24px;
   direction: rtl;
-  min-height: 100vh;
-  background: var(--bg-page);
-  color: var(--primary-dark);
+  min-height: calc(100vh - 128px);
+  background: #f8fafc;
+  color: #002623;
+  max-width: 100%;
+  font-family: 'Inter', 'Outfit', sans-serif;
 }
 
 /* Back Button */
 .back-btn {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   cursor: pointer;
-  background: var(--primary-gold);
-  color: var(--primary-dark);
-  border: 1px solid var(--border-primary);
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  background: white;
+  color: #002623;
+  border: 1px solid #e2e8f0;
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .back-btn:hover {
-  background: var(--gold-dark);
-  color: var(--primary-dark);
-  transform: translateY(-2px);
+  background: #002623;
+  color: #b9a779;
+  border-color: #002623;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 38, 35, 0.15);
 }
 
 /* Loading State */
@@ -289,11 +297,11 @@ onMounted(loadSurveyDetails)
   align-items: center;
   justify-content: center;
   padding: 60px 20px;
-  background: var(--bg-card);
+  background: white;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 38, 35, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   margin: 40px 0;
-  color: var(--primary-dark);
+  color: #002623;
 }
 
 .loading-spinner {
@@ -317,12 +325,13 @@ onMounted(loadSurveyDetails)
   align-items: center;
   gap: 20px;
   padding: 24px;
-  background: var(--gradient-primary);
-  border: 2px solid var(--primary-gold);
-  border-radius: 16px;
+  background: linear-gradient(135deg, #002623, #001a18);
+  border: 1px solid #b9a779;
+  border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 38, 35, 0.2);
   margin-bottom: 24px;
   color: white;
+  flex-wrap: wrap;
 }
 
 .survey-icon {
@@ -331,8 +340,8 @@ onMounted(loadSurveyDetails)
 
 .survey-info h1 {
   margin: 0 0 12px 0;
-  color: white;
-  font-size: 28px;
+  color: #b9a779;
+  font-size: 24px;
   font-weight: 700;
 }
 
@@ -348,9 +357,9 @@ onMounted(loadSurveyDetails)
   border-radius: 20px;
   font-size: 14px;
   font-weight: 600;
-  color: var(--primary-white);
-  border: 1px solid var(--primary-gold);
-  background: var(--dark-bg);
+  color: #ffffff;
+  border: 1px solid #b9a779;
+  background: rgba(0, 38, 35, 0.8);
 }
 
 .status-draft { background: var(--dark-bg); }
@@ -359,12 +368,13 @@ onMounted(loadSurveyDetails)
 .status-default { background: var(--text-muted); }
 
 .survey-type {
-  background: var(--primary-gold);
-  color: var(--primary-dark);
+  background: rgba(185, 167, 121, 0.2);
+  color: #b9a779;
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 14px;
   font-weight: 600;
+  border: 1px solid rgba(185, 167, 121, 0.4);
 }
 
 .created-date {
@@ -389,14 +399,14 @@ onMounted(loadSurveyDetails)
 
 .card-header {
   padding: 20px 24px;
-  background: var(--gradient-primary);
-  border-bottom: 2px solid var(--primary-gold);
+  background: linear-gradient(135deg, #002623, #001a18);
+  border-bottom: 2px solid #b9a779;
   color: white;
 }
 
 .card-header h3 {
   margin: 0;
-  color: white;
+  color: #b9a779;
   font-size: 18px;
   font-weight: 600;
 }
@@ -747,25 +757,35 @@ onMounted(loadSurveyDetails)
 .details-card {
   background: white;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e2e8f0;
+}
+
+.details-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .card-header {
-  padding: 20px 24px;
-  background: #f8fafc;
-  border-bottom: 1px solid #e2e8f0;
+  padding: 24px;
+  background: white;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .card-header h3 {
   margin: 0;
-  color: #1e293b;
-  font-size: 18px;
-  font-weight: 600;
+  color: #002623;
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .card-content {
-  padding: 24px;
+  padding: 32px;
 }
 
 .detail-row {
@@ -794,14 +814,19 @@ onMounted(loadSurveyDetails)
 .questions-clean-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
 }
 
 .clean-question-item {
-  padding: 20px;
+  padding: 24px;
   background: #f8fafc;
-  border-radius: 12px;
+  border-radius: 16px;
   border: 1px solid #e2e8f0;
+  transition: border-color 0.2s ease;
+}
+
+.clean-question-item:hover {
+  border-color: #b9a779;
 }
 
 .clean-q-header {

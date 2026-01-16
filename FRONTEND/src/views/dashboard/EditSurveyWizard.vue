@@ -859,29 +859,39 @@ const formatDate = (dateStr) => {
 
 <style scoped>
 .wizard-page {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 24px;
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
   direction: rtl;
   font-family: 'Inter', 'Outfit', sans-serif;
+  min-height: calc(100vh - 128px);
 }
 
 .wizard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 24px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #002623 0%, #001a18 100%);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 38, 35, 0.2);
+  border: 1px solid #b9a779;
 }
 
 .header-content h1 {
-  font-size: 2rem;
-  color: #054239;
+  font-size: 24px;
+  color: #b9a779;
+  font-weight: 700;
   margin: 0;
 }
 
 .header-content p {
-  color: #64748b;
+  color: #b9a779;
   margin: 0.5rem 0 0;
+  opacity: 0.9;
+  font-size: 14px;
 }
 
 /* Stepper */
@@ -1021,9 +1031,9 @@ const formatDate = (dateStr) => {
 }
 
 .form-input:focus, .form-textarea:focus {
-  border-color: #054239;
+  border-color: #b9a779;
   outline: none;
-  box-shadow: 0 0 0 4px rgba(5, 66, 57, 0.05);
+  box-shadow: 0 0 0 4px rgba(185, 167, 121, 0.2);
 }
 
 .checkbox-container {
@@ -1150,14 +1160,16 @@ const formatDate = (dateStr) => {
 }
 
 .btn-primary {
-  background: #054239;
-  color: white;
+  background: linear-gradient(135deg, #002623, #001a18);
+  color: #b9a779;
+  border: 1px solid #b9a779;
 }
 
 .btn-primary:hover {
-  background: #04332c;
+  background: linear-gradient(135deg, #b9a779, #d4c4a0);
+  color: #002623;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(5, 66, 57, 0.2);
+  box-shadow: 0 4px 12px rgba(185, 167, 121, 0.3);
 }
 
 .btn-outline {

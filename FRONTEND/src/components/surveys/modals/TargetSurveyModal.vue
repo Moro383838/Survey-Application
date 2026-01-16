@@ -158,11 +158,30 @@ const handleSave = async () => {
   overflow: hidden;
 }
 .modal-header {
-  padding: 15px 20px;
-  background: #f8fafc;
-  border-bottom: 1px solid #ddd;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #002623, #001a18);
+  border-bottom: 2px solid #b9a779;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #b9a779;
+  font-size: 20px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #b9a779;
+}
+
+.close-btn:hover {
+  color: white;
 }
 .modal-body {
   padding: 20px;
@@ -180,11 +199,16 @@ const handleSave = async () => {
 .btn-add-item {
   width: 28%;
   padding: 8px;
-  background: #3b82f6;
+  background: #002623;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-add-item:hover {
+  background: #04332c;
 }
 .selected-list {
   margin-top: 20px;
@@ -223,12 +247,17 @@ const handleSave = async () => {
   gap: 10px;
 }
 .btn-primary {
-  background: #10b981;
-  color: white;
+  background: linear-gradient(135deg, #002623, #001a18);
+  color: #b9a779;
   padding: 8px 20px;
-  border: none;
+  border: 1px solid #b9a779;
   border-radius: 6px;
   cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #b9a779, #d4c4a0);
+  color: #002623;
 }
 .btn-secondary {
   background: #fff;

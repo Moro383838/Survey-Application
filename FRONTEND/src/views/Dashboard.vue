@@ -1,29 +1,26 @@
 <template>
-  <div class="dashboard-container">
-    <!-- الهيدر -->
+  <div class="dashboard-container" dir="rtl">
     <header class="dashboard-header">
-      <div class="header-main">
-        <UserProfile 
-            variant="compact" 
-            :showActions="false"
-          />
-        <div class="header-logo">
-          <img src="/logo.png" alt="شعار النظام" class="logo-img" />
-          <div class="logo-text">
-            <h1>لوحة التحكم</h1>
-            <p>نظام الاستبيانات الإلكتروني</p>
-          </div>
+      <!-- Header Top Section -->
+      <div class="dashboard-header__top">
+        <div class="dashboard-header__emblem">
+          <img src="/Syrian Arab Republic.svg" alt="شعار النظام" class="emblem-svg" />
         </div>
 
-        <div class="header-user">
-          <div class="user-info">
+        <div class="dashboard-header__center">
+          <h1 class="dashboard-header__title">لوحة التحكم</h1>
+          <p class="dashboard-header__subtitle">نظام الاستبيانات الإلكتروني</p>
+        </div>
+
+        <div class="dashboard-header__user">
+          <div class="user-section">
             <div class="user-avatar">
-              <span class="avatar-text">{{ userInitials }}</span>
+              <span class="user-avatar__text">{{ userInitials }}</span>
             </div>
-            <div class="user-details">
-              <h3>{{ username }}</h3>
-              <p class="user-role">
-                <span class="role-badge" :class="user.role">
+            <div class="user-info">
+              <h3 class="user-info__name">{{ username }}</h3>
+              <p class="user-info__role">
+                <span class="role-badge" :class="{ 'role-badge--admin': user.role === 'ADMIN', 'role-badge--user': user.role !== 'ADMIN' }">
                   {{ user.role === 'ADMIN' ? 'مدير النظام' : 'مستخدم' }}
                 </span>
               </p>
@@ -32,48 +29,29 @@
           <LogOut />
         </div>
       </div>
-
-      <nav class="dashboard-nav">
-        <div class="nav-container">
-          <router-link to="/dashboard" class="nav-item active">
-            <span class="nav-icon">📊</span>
-            <span>لوحة التحكم</span>
-          </router-link>
-          <router-link to="/surveys/create-wizard" class="nav-item">
-            <span class="nav-icon">➕</span>
-            <span>إضافة استبيان</span>
-          </router-link>
-          <router-link to="/surveys" class="nav-item">
-            <span class="nav-icon">📋</span>
-            <span>الاستبيانات</span>
-          </router-link>
-          <router-link to="/dashboard/users" class="nav-item">
-            <span class="nav-icon">👥</span>
-            <span>ادارة المستخدمين</span>
-          </router-link>
-          <router-link to="/dashboard/schools" class="nav-item">
-            <span class="nav-icon">🏫</span>
-            <span>المدارس</span>
-          </router-link>
-          <router-link to="/dashboard/analytics" class="nav-item active">
-            <span class="nav-icon">📊</span>
-            <span> التحليلات</span>
-          </router-link>
-        </div>
-      </nav>
     </header>
+    
+    <!-- Fixed Navigation Bar -->
+    <NavBar @tab-change="handleTabChange" ref="navBarRef" />
+
     <main class="dashboard-content">
-      <router-view />
+      <component :is="currentComponent" />
     </main>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, shallowRef } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import LogOut from '@/components/global/LogOut.vue'
-import UserProfile from '@/components/global/UserProfile.vue'
+import NavBar from '@/components/global/NavBar.vue'
+
+// Import tab components
+import Surveys from '@/views/dashboard/Surveys.vue'
+import Users from '@/views/dashboard/Users.vue'
+import Schools from '@/views/dashboard/Schools.vue'
+import Analytics from '@/views/dashboard/Analytics.vue'
 
 const username = JSON.parse(localStorage.getItem('user')).username
 const role = JSON.parse(localStorage.getItem('user')).role
@@ -88,7 +66,23 @@ const userInitials = computed(() => {
   return names.length > 1 ? names[0][0] + names[1][0] : names[0][0]
 })
 
-// Allow both ADMIN and ANALAYZER_USER to access dashboard
+// Tab management
+const navBarRef = ref(null)
+const currentComponent = shallowRef(Surveys)
+
+const tabComponents = {
+  surveys: Surveys,
+  users: Users,
+  schools: Schools,
+  analytics: Analytics
+}
+
+const handleTabChange = (tabName) => {
+  if (tabComponents[tabName]) {
+    currentComponent.value = tabComponents[tabName]
+  }
+}
+
 if (!authStore.isAdmin && !authStore.hasAnalyticsAccess) {
   router.push('/home')
 }
@@ -97,153 +91,259 @@ if (!authStore.isAdmin && !authStore.hasAnalyticsAccess) {
 <style scoped>
 .dashboard-container {
   min-height: 100vh;
-  background: #f8fafc;
+  background: #ffffff;
+  direction: rtl;
+  text-align: right;
 }
 
 .dashboard-header {
   background: linear-gradient(135deg, #002623, #001a18);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-bottom: 2px solid #b9a779;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1100; /* Above navbar */
 }
 
-.header-main {
+.dashboard-header__top {
+  position: relative;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
+  padding: 12px 32px;
+  min-height: 80px;
 }
 
-.header-logo {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+.dashboard-header__emblem {
+  position: absolute;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 280px;
+  height: 280px;
+  max-width: 400px;
+  z-index: 10;
+  pointer-events: none;
 }
 
-.logo-img {
-  width: 50px;
-  height: 50px;
+.emblem-svg {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 
-.logo-text h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0;
-  line-height: 1.2;
+.dashboard-header__center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 10;
 }
 
-.logo-text p {
-  font-size: 0.875rem;
+.dashboard-header__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #b9a779;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 20px rgba(185, 167, 121, 0.3);
+  letter-spacing: 1px;
+}
+
+.dashboard-header__subtitle {
+  font-size: 12px;
   color: #b9a779;
   margin: 0;
   font-weight: 500;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 15px rgba(185, 167, 121, 0.2);
 }
 
-.header-user {
+.dashboard-header__user {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 16px;
+  margin-right: auto;
+  z-index: 10;
+  position: relative;
 }
 
-.user-info {
+.user-section {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 12px;
 }
 
 .user-avatar {
-  width: 45px;
-  height: 45px;
-  background: linear-gradient(135deg, #b9a779, #d4af37);
-  border: 2px solid #ffffff;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  background: #b9a779;
+  border: 2px solid #002623;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #002623;
   font-weight: 700;
-  font-size: 1.125rem;
+  font-size: 14px;
+  text-align: center;
 }
 
-.user-details h3 {
-  font-size: 1rem;
+.user-avatar__text {
+  display: block;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.user-info__name {
+  font-size: 13px;
   font-weight: 600;
-  color: #ffffff;
-  margin: 0 0 0.25rem 0;
+  color: white;
+  margin: 0 0 4px 0;
 }
 
-.user-role {
+.user-info__role {
   margin: 0;
 }
 
 .role-badge {
   display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
-  font-size: 0.75rem;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 11px;
   font-weight: 600;
-}
-
-.role-badge.admin {
-  background: linear-gradient(135deg, #b9a779, #d4af37);
-  color: #002623;
-}
-
-.role-badge.user {
-  background: linear-gradient(135deg, #e8dfc8, #b9a779);
-  color: #002623;
-}
-
-.dashboard-nav {
-  background: linear-gradient(135deg, #001a18, #002623);
-  border-bottom: 2px solid #b9a779;
-  box-shadow: inset 0 -1px 0 rgba(185, 167, 121, 0.2);
-}
-
-.nav-container {
-  display: flex;
-  gap: 0.5rem;
-  padding: 0 2rem;
-  overflow-x: auto;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.875rem 1.25rem;
-  color: rgba(255, 255, 255, 0.7);
-  text-decoration: none;
-  background: none;
-  border: none;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  cursor: pointer;
   white-space: nowrap;
-  border-radius: 0.75rem;
-  transition: all 0.3s ease;
-  border: 1px solid transparent;
 }
 
-.nav-item:hover {
-  background: rgba(185, 167, 121, 0.1);
-  color: #ffffff;
-  border-color: rgba(185, 167, 121, 0.3);
-}
-
-.nav-item.active {
-  background: linear-gradient(135deg, #b9a779, #d4af37);
+.role-badge--admin {
+  background: #b9a779;
   color: #002623;
-  font-weight: 600;
-  border-color: #b9a779;
 }
 
-.nav-icon {
-  font-size: 1.125rem;
+.role-badge--user {
+  background: rgba(185, 167, 121, 0.8);
+  color: #002623;
 }
 
 .dashboard-content {
   padding: 0;
+  margin-top: 128px; /* Space for header (80px) + navbar (48px) */
+}
+
+@media (max-width: 768px) {
+  .dashboard-header__top {
+    padding: 12px 20px;
+    min-height: 100px;
+  }
+
+  .dashboard-header__emblem {
+    width: 180px;
+    height: 180px;
+  }
+
+  .dashboard-header__title {
+    font-size: 22px;
+  }
+
+  .dashboard-header__subtitle {
+    font-size: 12px;
+  }
+
+  .dashboard-header__user {
+    gap: 12px;
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    font-size: 14px;
+  }
+
+  .user-info__name {
+    font-size: 13px;
+  }
+
+  .nav-wrapper {
+    padding: 0 20px;
+    gap: 4px;
+  }
+
+  .nav-link {
+    padding: 12px 16px;
+    font-size: 14px;
+    gap: 6px;
+  }
+
+  .nav-link__icon {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header__emblem {
+    width: 120px;
+    height: 120px;
+  }
+
+  .dashboard-header__top {
+    min-height: 80px;
+  }
+
+  .dashboard-header__title {
+    font-size: 18px;
+  }
+
+  .dashboard-header__subtitle {
+    font-size: 11px;
+  }
+
+  .nav-link__text {
+    display: none;
+  }
+
+  .nav-link {
+    padding: 10px 12px;
+  }
+
+  .nav-link__icon {
+    font-size: 14px;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b9a779;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9a8660;
+}
+
+@keyframes emblem-entrance {
+  0% {
+    opacity: 0;
+    transform: translateY(-30%) scale(0.8);
+  }
+  100% {
+    opacity: 0.1;
+    transform: translateY(-50%) scale(1);
+  }
 }
 </style>

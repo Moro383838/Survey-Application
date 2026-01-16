@@ -1,9 +1,8 @@
 <template>
   <div class="surveys-page">
-    <!-- رأس الصفحة -->
-    <div class="page-header">
+    <!-- Fixed Page Header -->
+    <div class="page-header fixed-header">
       <div class="header-content">
-        <div class="header-icon">📊</div>
         <div>
           <h1>إدارة الاستبيانات</h1>
           <p class="header-subtitle">عرض وإدارة جميع الاستبيانات في النظام</p>
@@ -20,35 +19,30 @@
     <!-- بطاقات الإحصائيات -->
     <div class="stats-cards">
       <div class="stat-card" :style="statCardStyle(0)">
-        <div class="stat-icon">📋</div>
         <div class="stat-info">
           <h3>{{ stats.total_surveys || 0 }}</h3>
           <p>إجمالي الاستبيانات</p>
         </div>
       </div>
       <div class="stat-card" :style="statCardStyle(1)">
-        <div class="stat-icon">📈</div>
         <div class="stat-info">
           <h3>{{ stats.active_surveys || 0 }}</h3>
           <p>نشطة</p>
         </div>
       </div>
       <div class="stat-card" :style="statCardStyle(2)">
-        <div class="stat-icon">📝</div>
         <div class="stat-info">
           <h3>{{ stats.draft_surveys || 0 }}</h3>
           <p>مسودة</p>
         </div>
       </div>
       <div class="stat-card" :style="statCardStyle(3)">
-        <div class="stat-icon">✅</div>
         <div class="stat-info">
           <h3>{{ stats.completed_surveys || 0 }}</h3>
           <p>مكتملة</p>
         </div>
       </div>
       <div class="stat-card" :style="statCardStyle(4)">
-        <div class="stat-icon">🔄</div>
         <div class="stat-info">
           <h3>{{ stats.periodic_surveys || 0 }}</h3>
           <p>دورية</p>
@@ -524,80 +518,89 @@ watch([searchQuery, statusFilter, typeFilter], () => {
 <style scoped>
 .surveys-page {
   padding: 24px;
-  background: #f8f9fa;
-  min-height: 100vh;
-  direction: rtl;
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
+  position: relative;
+  min-height: calc(100vh - 128px);
+  background-color: #ffff;
 }
 
 /* رأس الصفحة */
 .page-header {
-  background: linear-gradient(135deg, #054239, #002623);
-  border-radius: 20px;
-  padding: 32px 40px;
-  margin-bottom: 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
-  box-shadow: 0 8px 30px rgba(0, 38, 35, 0.2);
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #002623, #001a18);
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 38, 35, 0.12);
+  color: #ffffff;
+}
+
+/* Fixed Header Styles - Removed sticky behavior */
+.fixed-header {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 20px;
 }
 
 .header-content {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 12px;
+  flex: 1;
 }
 
 .header-icon {
-  font-size: 56px;
+  font-size: 32px;
   opacity: 0.9;
 }
 
 .header-content h1 {
-  margin: 0 0 8px 0;
-  font-size: 32px;
-  font-weight: 800;
+  margin: 0 0 4px 0;
+  font-size: 24px;
+  font-weight: 700;
   line-height: 1.2;
 }
 
 .header-subtitle {
   margin: 0;
   opacity: 0.9;
-  font-size: 16px;
+  font-size: 14px;
 }
 
-.btn-add-survey {
-  background: linear-gradient(135deg, #428177, #054239);
-  color: white;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  padding: 16px 32px;
-  border-radius: 14px;
-  font-size: 16px;
-  font-weight: 700;
+.btn-add-survey{
+  background: linear-gradient(135deg, #002623, #001a18);
+  color: #b9a779;
+  border: 1px solid #b9a779;
+  padding: 10px 20px;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(66, 129, 119, 0.3);
+  gap: 8px;
+  transition: all 0.3s;
+  white-space: nowrap;
 }
 
 .btn-add-survey:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(66, 129, 119, 0.4);
-  background: linear-gradient(135deg, #054239, #002623);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(185, 167, 121, 0.3);
+  background: linear-gradient(135deg, #b9a779, #d4c4a0);
+  color: #002623;
 }
-
-.btn-icon {
-  font-size: 20px;
-}
-
 /* بطاقات الإحصائيات */
 .stats-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
 .stat-card {
@@ -1052,27 +1055,39 @@ watch([searchQuery, statusFilter, typeFilter], () => {
 
 @media (max-width: 768px) {
   .surveys-page {
-    padding: 16px;
+    padding: 140px 16px 16px 16px;
   }
   
   .page-header {
-    padding: 24px;
+    padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
   }
   
   .header-content h1 {
-    font-size: 24px;
+    font-size: 20px;
+  }
+  
+  .header-subtitle {
+    font-size: 12px;
+  }
+  
+  .btn-add-survey {
+    width: 100%;
+    justify-content: center;
   }
   
   .stats-cards {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
   
   .stat-card {
-    padding: 24px;
+    padding: 20px;
   }
   
   .table-section {
-    padding: 24px;
+    padding: 16px;
   }
   
   .pagination-section {

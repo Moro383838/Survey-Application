@@ -78,7 +78,10 @@
     <div v-if="selectedSurvey" class="modal-overlay" @click.self="closeModal">
       <div class="survey-fill-modal">
         <div class="modal-header">
-          <h2>{{ currentSurvey?.title }}</h2>
+          <div class="header-title-row">
+            <img src="/logo.png" alt="شعار الوزارة" class="ministry-logo" />
+            <h2>{{ currentSurvey?.title }}</h2>
+          </div>
           <button class="close-btn" @click="closeModal">&times;</button>
         </div>
         <div class="modal-body" v-if="currentSurvey">
@@ -577,21 +580,23 @@ onMounted(() => {
 <style scoped>
 .available-surveys-page {
   padding: 24px;
-  max-width: 1400px;
-  margin: 0 auto;
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
+  min-height: calc(100vh - 128px);
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 32px;
-  padding: 32px;
-  background: var(--gradient-primary);
-  border: 2px solid var(--primary-gold);
-  border-radius: 16px;
+  margin-bottom: 24px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #002623, #001a18);
+  border-radius: 12px;
   color: white;
   box-shadow: 0 4px 12px rgba(0, 38, 35, 0.2);
+  border: 1px solid #b9a779;
 }
 
 .header-content {
@@ -606,28 +611,30 @@ onMounted(() => {
 
 .header-content h1 {
   margin: 0;
-  color: white;
-  font-size: 28px;
+  color: #b9a779;
+  font-size: 24px;
+  font-weight: 700;
 }
 
 .header-subtitle {
   margin: 4px 0 0;
-  color: var(--gold-light);
+  color: #b9a779;
   font-size: 14px;
+  opacity: 0.9;
 }
 
 .school-context {
-  color: #b9a779;
+  color: #428177;
   font-weight: 700;
   margin-right: 4px;
 }
 
 .btn-refresh {
   padding: 12px 24px;
-  background: var(--gradient-gold);
-  color: var(--primary-dark);
+  background: #428177;
+  color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 700;
   display: flex;
@@ -637,7 +644,7 @@ onMounted(() => {
 }
 
 .btn-refresh:hover:not(:disabled) {
-  background: #b9a779;
+  background: #36635b;
 }
 
 .btn-refresh:disabled {
@@ -689,7 +696,7 @@ onMounted(() => {
 .survey-card {
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 20px;
   cursor: pointer;
   transition: all 0.3s;
@@ -698,8 +705,8 @@ onMounted(() => {
 
 .survey-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(185, 167, 121, 0.2);
-  border-color: var(--primary-gold);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  border-color: #428177;
 }
 
 .card-header {
@@ -765,9 +772,9 @@ onMounted(() => {
 .btn-fill {
   width: 100%;
   padding: 12px;
-  background: var(--gradient-primary);
+  background: #054239;
   color: white;
-  border: 1px solid var(--primary-gold);
+  border: none;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
@@ -779,16 +786,16 @@ onMounted(() => {
 }
 
 .btn-fill:hover {
-  background: var(--gradient-gold);
-  color: var(--primary-dark);
-  box-shadow: 0 4px 15px rgba(185, 167, 121, 0.3);
+  background: #04332c;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 /* Modal Styles */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.75);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -798,7 +805,7 @@ onMounted(() => {
 
 .survey-fill-modal {
   background: white;
-  border-radius: 12px;
+  border-radius: 8px;
   max-width: 800px;
   width: 100%;
   max-height: 90vh;
@@ -808,25 +815,39 @@ onMounted(() => {
 }
 
 .modal-header {
-  padding: 20px 24px;
-  background: var(--gradient-primary);
-  border-bottom: 2px solid var(--primary-gold);
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #002623, #001a18);
+  border-bottom: 2px solid #b9a779;
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: white;
 }
 
+.header-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ministry-logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
 .modal-header h2 {
   margin: 0;
-  color: white;
+  color: #b9a779;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .close-btn {
   background: none;
   border: none;
   font-size: 28px;
-  color: #94a3b8;
+  color: #b9a779;
   cursor: pointer;
   padding: 0;
   width: 32px;
@@ -837,7 +858,8 @@ onMounted(() => {
 }
 
 .close-btn:hover {
-  color: #1e293b;
+  color: white;
+  transform: scale(1.1);
 }
 
 .modal-body {
@@ -904,14 +926,14 @@ onMounted(() => {
 }
 
 .btn-submit {
-  background: var(--gradient-primary);
-  color: white;
-  border: 1px solid var(--primary-gold);
+  background: linear-gradient(135deg, #002623, #001a18);
+  color: #b9a779;
+  border: 1px solid #b9a779;
 }
 
 .btn-submit:hover:not(:disabled) {
-  background: var(--gradient-gold);
-  color: var(--primary-dark);
+  background: linear-gradient(135deg, #b9a779, #d4c4a0);
+  color: #002623;
 }
 
 .btn-submit:disabled {
@@ -935,8 +957,8 @@ onMounted(() => {
 
 .form-input:focus {
   outline: none;
-  border-color: #002623;
-  box-shadow: 0 0 0 3px rgba(0, 38, 35, 0.1);
+  border-color: #428177;
+  box-shadow: 0 0 0 3px rgba(66, 129, 119, 0.1);
 }
 
 .textarea {
@@ -975,7 +997,7 @@ onMounted(() => {
 .choice-label input[type="checkbox"] {
   width: 18px;
   height: 18px;
-  accent-color: #002623;
+  accent-color: #428177;
   cursor: pointer;
 }
 
@@ -1052,4 +1074,3 @@ onMounted(() => {
   }
 }
 </style>
-

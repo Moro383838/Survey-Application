@@ -397,21 +397,23 @@ onMounted(() => {
 }
 .modal-header {
   padding: 24px;
-  background: linear-gradient(90deg, #52b5ab, #52b5ab);
+  background: linear-gradient(135deg, #002623, #001a18);
   color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 2px solid #b9a779;
 }
 .modal-header h3 {
   font-size: 20px;
   font-weight: 600;
   margin: 0;
+  color: #b9a779;
 }
 .close-modal {
-  background: none;
+  background: rgba(185, 167, 121, 0.1);
   border: none;
-  color: white;
+  color: #b9a779;
   font-size: 24px;
   cursor: pointer;
   padding: 0;
@@ -421,9 +423,12 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   transition: transform 0.3s ease;
+  border-radius: 8px;
 }
 .close-modal:hover {
   transform: rotate(90deg);
+  background: rgba(185, 167, 121, 0.2);
+  color: white;
 }
 .modal-body {
   padding: 32px;
@@ -457,8 +462,8 @@ onMounted(() => {
 .form-input:focus,
 .form-select:focus {
   outline: none;
-  border-color: #52b5ab;
-  box-shadow: 0 0 0 3px rgba(82, 181, 171, 0.1);
+  border-color: #b9a779;
+  box-shadow: 0 0 0 3px rgba(185, 167, 121, 0.2);
 }
 .error-message {
   display: flex;
@@ -497,12 +502,15 @@ onMounted(() => {
   transition: all 0.3s ease;
 }
 .btn-primary {
-  background: linear-gradient(135deg, #52b5ab, #52b5ab);
-  color: white;
+  background: linear-gradient(135deg, #002623, #001a18);
+  color: #b9a779;
+  border: 1px solid #b9a779;
 }
 .btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #b9a779, #d4c4a0);
+  color: #002623;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 8px 20px rgba(185, 167, 121, 0.3);
 }
 .btn-primary:disabled {
   opacity: 0.6;

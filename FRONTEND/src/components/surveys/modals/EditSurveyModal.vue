@@ -3,7 +3,7 @@
     <div class="modal">
       <div class="modal-header">
         <div class="header-right">
-          <div class="logo-icon">✏️</div>
+          <img src="/logo.png" alt="شعار الوزارة" class="ministry-logo" />
           <div class="header-text">
             <h3>تعديل الاستبيان</h3>
             <p>تعديل بيانات وأسئلة الاستبيان الحالي</p>
@@ -290,7 +290,7 @@ const handleSubmit = async () => {
 <style scoped>
 /* نفس التنسيقات المستخدمة في AddSurveyModal تماماً لضمان التطابق */
 .modal-overlay {
-  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6);
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75);
   display: flex; justify-content: center; align-items: center; z-index: 1000;
   backdrop-filter: blur(4px); direction: rtl;
 }
@@ -304,18 +304,18 @@ const handleSubmit = async () => {
 
 /* Header */
 .modal-header {
-  background: white; padding: 16px 24px; border-bottom: 1px solid #e2e8f0;
+  background: #054239; padding: 16px 24px; border-bottom: 1px solid #36635b;
   display: flex; justify-content: space-between; align-items: center;
+  color: white;
 }
 .header-right { display: flex; gap: 16px; align-items: center; }
-.logo-icon { 
-  width: 40px; height: 40px; background: #fff7ed; color: #ea580c;
-  border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px;
+.ministry-logo { 
+  height: 50px; width: auto; object-fit: contain;
 }
-.header-text h3 { margin: 0; font-size: 18px; font-weight: 700; color: #0f172a; }
-.header-text p { margin: 0; font-size: 13px; color: #64748b; }
-.close-btn { background: none; border: none; font-size: 28px; color: #94a3b8; cursor: pointer; }
-.close-btn:hover { color: #ef4444; }
+.header-text h3 { margin: 0; font-size: 18px; font-weight: 700; color: white; }
+.header-text p { margin: 0; font-size: 13px; color: #d1e7dd; }
+.close-btn { background: none; border: none; font-size: 28px; color: #e2e8f0; cursor: pointer; }
+.close-btn:hover { color: white; }
 
 /* Body Layout */
 .modal-body { display: flex; flex: 1; overflow: hidden; }
@@ -337,7 +337,7 @@ const handleSubmit = async () => {
 .title-input::placeholder { color: #cbd5e1; }
 .input-focus-border {
   position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
-  background: #ea580c; transition: width 0.3s;
+  background: #428177; transition: width 0.3s;
 }
 .title-input:focus + .input-focus-border { width: 100%; }
 
@@ -357,16 +357,16 @@ const handleSubmit = async () => {
   width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px;
   font-size: 14px; transition: border-color 0.2s;
 }
-.form-group input:focus, .form-group textarea:focus { outline: none; border-color: #ea580c; }
+.form-group input:focus, .form-group textarea:focus { outline: none; border-color: #428177; }
 
 /* Sidebar (Left) */
 .question-sidebar {
   flex: 1; min-width: 300px; max-width: 350px;
   background: white; display: flex; flex-direction: column;
 }
-.sidebar-header { padding: 20px; background: #fff7ed; border-bottom: 1px solid #ffedd5; }
-.sidebar-header h4 { margin: 0; color: #9a3412; font-size: 16px; }
-.sidebar-header p { margin: 4px 0 0; color: #c2410c; font-size: 12px; opacity: 0.8; }
+.sidebar-header { padding: 20px; background: #054239; border-bottom: 1px solid #36635b; }
+.sidebar-header h4 { margin: 0; color: white; font-size: 16px; }
+.sidebar-header p { margin: 4px 0 0; color: #d1e7dd; font-size: 12px; opacity: 0.8; }
 .sidebar-content {
   flex: 1; overflow-y: auto; padding: 16px;
   display: flex; flex-direction: column; gap: 12px;
@@ -377,13 +377,13 @@ const handleSubmit = async () => {
   background: white; cursor: pointer; transition: all 0.2s;
 }
 .sidebar-item:hover {
-  border-color: #ea580c; transform: translateX(-4px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  border-color: #428177; transform: translateX(-4px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
 }
 .item-icon { font-size: 20px; }
 .item-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
 .item-title { font-weight: 700; color: #1e293b; font-size: 14px; }
 .item-desc { font-size: 11px; color: #64748b; line-height: 1.3; }
-.item-add { color: #ea580c; font-weight: bold; font-size: 18px; }
+.item-add { color: #428177; font-weight: bold; font-size: 18px; }
 
 /* Questions Cards */
 .question-card-item {
@@ -394,8 +394,8 @@ const handleSubmit = async () => {
   background: #f8fafc; padding: 8px 12px; border-bottom: 1px solid #e2e8f0;
   display: flex; justify-content: space-between; align-items: center;
 }
-.q-number { font-weight: bold; color: #ea580c; font-size: 13px; }
-.q-type { font-size: 12px; background: #ffedd5; color: #9a3412; padding: 2px 8px; border-radius: 4px; }
+.q-number { font-weight: bold; color: #428177; font-size: 13px; }
+.q-type { font-size: 12px; background: #e6f0ee; color: #054239; padding: 2px 8px; border-radius: 4px; }
 .q-body { padding: 12px; font-size: 14px; color: #334155; }
 .q-actions button { background: none; border: none; cursor: pointer; font-size: 14px; margin-left: 6px; }
 .q-actions button:hover { transform: scale(1.1); }
@@ -408,8 +408,8 @@ const handleSubmit = async () => {
 .footer-actions { display: flex; gap: 12px; }
 .btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; }
 .btn-secondary { background: #f1f5f9; color: #475569; }
-.btn-primary { background: #ea580c; color: white; }
-.btn-primary:hover { background: #c2410c; }
+.btn-primary { background: #054239; color: white; }
+.btn-primary:hover { background: #04332c; }
 
 /* Scrollbar */
 .custom-scrollbar::-webkit-scrollbar { width: 6px; }

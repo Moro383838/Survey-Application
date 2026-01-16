@@ -153,14 +153,14 @@ const formatDate = (dateString) => {
   }
   
   .users-table th {
-    background: var(--primary-dark);
-    padding: 16px 12px;
-    text-align: right;
-    font-weight: 600;
-    color: white;
-    border-bottom: 2px solid var(--primary-gold);
-    font-size: 14px;
-  }
+  background: linear-gradient(135deg, #002623, #001a18);
+  padding: 16px 12px;
+  text-align: right;
+  font-weight: 600;
+  color: #b9a779;
+  border-bottom: 2px solid #b9a779;
+  font-size: 14px;
+}
   
   .users-table td {
     padding: 16px 12px;
@@ -252,13 +252,16 @@ const formatDate = (dateString) => {
   }
   
   .edit-btn {
-    background: #f1f5f9;
-    color: #475569;
-  }
-  
-  .edit-btn:hover {
-    background: #e2e8f0;
-  }
+  background: white;
+  color: #002623;
+  border: 1px solid #e2e8f0;
+}
+
+.edit-btn:hover {
+  background: #b9a779;
+  color: white;
+  border-color: #b9a779;
+}
   
   .delete-btn {
     background: #fef2f2;

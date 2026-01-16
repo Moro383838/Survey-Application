@@ -136,10 +136,10 @@
   // تنسيق الاسم الأولي (اسم المستخدم)
   const avatarStyle = computed(() => {
     const colors = {
-      ADMIN: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
-      SCHOOL_USER: 'linear-gradient(135deg, #059669, #10b981)',
-      ANALAYZER_USER: 'linear-gradient(135deg, #d97706, #f59e0b)',
-      USER: 'linear-gradient(135deg, #6b7280, #9ca3af)'
+      ADMIN: '#054239',
+      SCHOOL_USER: '#428177',
+      ANALAYZER_USER: '#2c5e55',
+      USER: '#6b7280'
     }
     
     const color = colors[currentUser.value.role] || colors.USER
@@ -414,22 +414,22 @@
   }
   
   .role-tag.admin {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    background: #054239;
     color: white;
   }
   
   .role-tag.school_user {
-    background: linear-gradient(135deg, #059669, #10b981);
+    background: #428177;
     color: white;
   }
   
   .role-tag.analayzer_user {
-    background: linear-gradient(135deg, #d97706, #f59e0b);
+    background: #2c5e55;
     color: white;
   }
   
   .role-tag.user {
-    background: linear-gradient(135deg, #6b7280, #9ca3af);
+    background: #6b7280;
     color: white;
   }
   

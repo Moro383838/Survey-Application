@@ -2,7 +2,10 @@
   <div class="modal-overlay" @click.self="emit('close')">
     <div class="modal">
       <div class="modal-header">
-        <h3>تأكيد حذف المدرسة</h3>
+        <div class="header-content-wrapper">
+          <img src="/logo.png" alt="شعار الوزارة" class="ministry-logo" />
+          <h3>تأكيد حذف المدرسة</h3>
+        </div>
         <button class="close-modal" @click="emit('close')">&times;</button>
       </div>
       <div class="modal-body">
@@ -118,7 +121,7 @@ const formatDate = (dateString) => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.75);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -128,7 +131,7 @@ const formatDate = (dateString) => {
 
 .modal {
   background: white;
-  border-radius: 20px;
+  border-radius: 8px;
   width: 90%;
   max-width: 500px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -138,23 +141,36 @@ const formatDate = (dateString) => {
 
 .modal-header {
   padding: 24px;
-  background: linear-gradient(90deg, #ef4444, #dc2626);
+  background: linear-gradient(135deg, #002623, #001a18);
   color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 2px solid #b9a779;
+}
+
+.header-content-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ministry-logo {
+  height: 40px;
+  width: auto;
 }
 
 .modal-header h3 {
   font-size: 20px;
   font-weight: 600;
   margin: 0;
+  color: #b9a779;
 }
 
 .close-modal {
-  background: none;
+  background: rgba(185, 167, 121, 0.1);
   border: none;
-  color: white;
+  color: #b9a779;
   font-size: 24px;
   cursor: pointer;
   padding: 0;
@@ -164,10 +180,13 @@ const formatDate = (dateString) => {
   align-items: center;
   justify-content: center;
   transition: transform 0.3s ease;
+  border-radius: 8px;
 }
 
 .close-modal:hover {
   transform: rotate(90deg);
+  background: rgba(185, 167, 121, 0.2);
+  color: white;
 }
 
 .modal-body {
@@ -260,7 +279,7 @@ const formatDate = (dateString) => {
 
 .btn {
   padding: 10px 20px;
-  border-radius: 12px;
+  border-radius: 8px;
   font-weight: 600;
   font-size: 14px;
   border: none;
@@ -272,7 +291,7 @@ const formatDate = (dateString) => {
 }
 
 .btn-danger {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
+  background: #d32f2f;
   color: white;
 }
 

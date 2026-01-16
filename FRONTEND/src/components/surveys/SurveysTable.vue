@@ -2,7 +2,6 @@
   <table class="custom-table">
       <thead>
         <tr>
-          <th>#</th>
           <th style="width: 25%">الاستبيان</th>
           <th>النوع</th>
           <th>تاريخ الإنشاء</th>
@@ -13,10 +12,8 @@
       </thead>
       <tbody>
         <tr v-for="(survey, index) in surveys" :key="survey.id">
-          <td>{{ index + 1 }}</td>
           <td>
             <div class="survey-name-cell">
-              <span class="survey-icon-small">📊</span>
               <span class="survey-title">{{ survey.title }}</span>
             </div>
           </td>
@@ -40,8 +37,7 @@
                 class="action-btn btn-publish" 
                 @click="$emit('publish', survey)" 
                 v-if="survey.status_id == 1"
-              >
-                <span class="icon">🚀</span> نشر
+              >نشر
               </button>
 
               <button 
@@ -49,7 +45,7 @@
                 @click="$emit('edit', survey)" 
                 v-if="survey.status_id == 1 || survey.status_id == 2"
               >
-                <span class="icon">✏️</span> تعديل
+                تعديل
               </button>
 
               <button 
@@ -57,7 +53,7 @@
                 @click="$emit('unpublish', survey)" 
                 v-if="survey.status_id == 2"
               >
-                <span class="icon">📤</span> إلغاء النشر
+                إلغاء النشر
               </button>
               
               <button 
@@ -65,7 +61,7 @@
                 @click="$emit('close', survey)" 
                 v-if="survey.status_id != 3"
               >
-                <span class="icon">🔒</span> إغلاق
+                إغلاق
               </button>
             </div>
           </td>
@@ -125,8 +121,8 @@ const getStatusClass = (statusId) => {
 }
 
 .custom-table th {
-  background-color: var(--primary-dark);
-  color: white;
+  background: linear-gradient(135deg, #002623, #001a18);
+  color: #b9a779;
   font-weight: 600;
   padding: 16px;
   text-align: right;

@@ -1,116 +1,87 @@
 <template>
-  <div class="login-container">
+  <div class="login-page">
+    <!-- Header -->
     <header class="login-header">
       <div class="header-content">
         <div class="logo-section">
-          <div class="logo-container">
-            <img src="/logo.png" alt="شعار النظام" class="logo-img" />
-            <div class="logo-text">
-              <h1>نظام الاستبيانات</h1>
-              <p>الإلكتروني للمدارس</p>
-            </div>
+          <img src="/Syrian Arab Republic.svg" alt="شعار الجمهورية" class="header-logo" />
+          <div class="system-info">
+            <h1>نظام الاستبيانات</h1>
+            <p>الإلكتروني للمدارس</p>
           </div>
         </div>
       </div>
     </header>
-
+    <!-- Main Content -->
     <main class="login-main">
-      <div class="login-background">
-        <div class="bg-shape shape-1"></div>
-        <div class="bg-shape shape-2"></div>
-        <div class="bg-shape shape-3"></div>
-      </div>
+      <div class="login-card">
+        <div class="card-header">
+          <div class="seal-container">
+            <img src="../../public/logo.png" alt="شعار النظام" class="card-seal" />
+          </div>
+          <h2 class="card-title">تسجيل الدخول</h2>
+          <p class="card-subtitle">أدخل بياناتك للوصول إلى النظام</p>
+        </div>
 
-      <div class="login-card-container">
-        <div class="login-card">
-          <div class="card-logo">
-            <div class="card-logo-icon">
-              <img src="/logo.png" alt="شعار النظام" class="logo-imgg" />
+        <form @submit.prevent="handleSubmit" class="login-form">
+          <div class="form-group">
+            <label for="username" class="form-label">اسم المستخدم</label>
+            <div class="input-container">
+              <input
+                id="username"
+                v-model="form.username"
+                type="text"
+                class="form-input"
+                required
+                placeholder="أدخل اسم المستخدم"
+                :disabled="isLoading"
+              />
+              <span class="input-icon">👤</span>
             </div>
-            <h2 class="card-title">تسجيل الدخول</h2>
-            <p class="card-subtitle">أدخل بياناتك للوصول إلى النظام</p>
           </div>
 
-          <form @submit.prevent="handleSubmit" class="login-form">
-            <div class="form-group">
-              <label for="username" class="form-label">
-                <span class="label-icon">👤</span>
-                اسم المستخدم
-              </label>
-              <div class="input-container">
-                <input
-                  id="username"
-                  v-model="form.username"
-                  type="text"
-                  class="form-input"
-                  required
-                  placeholder="أدخل اسم المستخدم"
-                  :disabled="isLoading"
-                />
-                <div class="input-border"></div>
-              </div>
+          <div class="form-group">
+            <label for="password" class="form-label">كلمة المرور</label>
+            <div class="input-container">
+              <input
+                id="password"
+                v-model="form.password"
+                :type="showPassword ? 'text' : 'password'"
+                class="form-input"
+                required
+                placeholder="أدخل كلمة المرور"
+                :disabled="isLoading"
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                @click="showPassword = !showPassword"
+                :disabled="isLoading"
+              >
+                {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+              </button>
             </div>
+          </div>
 
-            <div class="form-group">
-              <label for="password" class="form-label">
-                <span class="label-icon">🔒</span>
-                كلمة المرور
-              </label>
-              <div class="input-container">
-                <input
-                  id="password"
-                  v-model="form.password"
-                  :type="showPassword ? 'text' : 'password'"
-                  class="form-input"
-                  required
-                  placeholder="أدخل كلمة المرور"
-                  :disabled="isLoading"
-                />
-                <button
-                  type="button"
-                  class="password-toggle"
-                  @click="showPassword = !showPassword"
-                  :disabled="isLoading"
-                >
-                  <span class="toggle-icon">
-                    {{ showPassword ? '👁️' : '👁️‍🗨️' }}
-                  </span>
-                </button>
-                <div class="input-border"></div>
-              </div>
-            </div>
+          <div v-if="error" class="error-message">
+            <span>⚠️ {{ error }}</span>
+          </div>
 
-            <div v-if="error" class="error-message">
-              <span class="error-icon">⚠️</span>
-              <span>{{ error }}</span>
-            </div>
-
-            <button
-              type="submit"
-              class="login-button"
-              :disabled="isLoading"
-            >
-              <span v-if="isLoading" class="button-loading">
-                <span class="loading-spinner"></span>
-                <span>جاري التحقق...</span>
-              </span>
-              <span v-else class="button-content">
-                <span> تسجيل الدخول </span>
-                <span class="button-icon">→</span>
-              </span>
-            </button>
-          </form>
-        </div>
+          <button
+            type="submit"
+            class="login-button"
+            :disabled="isLoading"
+          >
+            <span v-if="isLoading" class="loading-spinner"></span>
+            <span>{{ isLoading ? 'جاري التحقق...' : 'تسجيل الدخول' }}</span>
+          </button>
+        </form>
       </div>
     </main>
+
+    <!-- Footer -->
     <footer class="login-footer">
-      <div class="footer-content">
-        <p>2025 نظام الاستبيانات الإلكتروني للمدارس. جميع الحقوق محفوظة.</p>
-        <div class="footer-links">
-          <span>الإصدار 1.0.0</span>
-          <span class="divider">•</span>
-        </div>
-      </div>
+      <p>2025 نظام الاستبيانات الإلكتروني للمدارس. جميع الحقوق محفوظة.</p>
     </footer>
   </div>
 </template>
@@ -168,112 +139,67 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-.login-container {
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+
+.login-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #002623 0%, #001a18 50%, #002623 100%);
   display: flex;
   flex-direction: column;
+  background-color: #f8fafc;
+  font-family: 'Cairo', sans-serif;
+  direction: rtl;
 }
 
+/* Header */
 .login-header {
-  padding: 1rem 2rem;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 2px solid #b9a779;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #002623, #001a18);
+  padding: 0.5rem 2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: relative;
+  z-index: 10;
+  overflow: visible;
 }
 
 .header-content {
   max-width: 1200px;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .logo-section {
   display: flex;
   align-items: center;
   gap: 1rem;
+  width: 100%;
+  max-width: 480px;
 }
 
-.logo-container {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.logo-img {
-  width: 50px;
-  height: 50px;
+.header-logo {
+  height: 100px;
+  width: auto;
+  max-height: 100px;
   object-fit: contain;
+  display: block;
 }
 
-.logo-imgg {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-}
-
-.logo-text h1 {
-  font-size: 1.5rem;
+.system-info h1 {
+  color: #ffff;
+  font-size: 1.25rem;
   font-weight: 700;
-  color: #002623;
   margin: 0;
   line-height: 1.2;
 }
 
-.logo-text p {
+.system-info p {
+  color: #ffff;
   font-size: 0.875rem;
-  color: #b9a779;
   margin: 0;
-  font-weight: 600;
+  opacity: 0.8;
 }
 
-.login-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 0;
-}
-
-.bg-shape {
-  position: absolute;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #b9a779, #d4af37);
-  opacity: 0.05;
-}
-
-.shape-1 {
-  width: 300px;
-  height: 300px;
-  top: -100px;
-  right: -100px;
-  animation: float 20s infinite ease-in-out;
-}
-
-.shape-2 {
-  width: 200px;
-  height: 200px;
-  bottom: -50px;
-  left: -50px;
-  animation: float 15s infinite ease-in-out reverse;
-}
-
-.shape-3 {
-  width: 150px;
-  height: 150px;
-  top: 50%;
-  left: 20%;
-  animation: float 25s infinite ease-in-out;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(180deg); }
-}
-
+/* Main */
 .login-main {
   flex: 1;
   display: flex;
@@ -281,73 +207,64 @@ const handleSubmit = async () => {
   justify-content: center;
   padding: 2rem;
   position: relative;
-  z-index: 1;
 }
 
-.login-card-container {
-  width: 100%;
-  max-width: 480px;
-}
-
+/* Card */
 .login-card {
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(20px);
-  border-radius: 24px;
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 450px;
+  border-radius: 16px;
   padding: 2.5rem;
-  box-shadow: 
-    0 10px 40px rgba(0, 38, 35, 0.15),
-    0 1px 3px rgba(0, 0, 0, 0.05);
-  border: 2px solid #b9a779;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   position: relative;
-  overflow: hidden;
+  border-top: 5px solid #b9a779;
 }
 
-.login-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #b9a779, #d4af37);
-  border-radius: 24px 24px 0 0;
-}
-
-.card-logo {
+.card-header {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
+  position: relative;
 }
 
-.card-logo-icon {
-  width: 100px;
-  height: 100px;
-  background: linear-gradient(135deg, #002623, #001a18);
-  border: 3px solid #b9a779;
+.seal-container {
+  width: 80px;
+  height: 80px;
+  margin: -60px auto 1rem; /* Pull up */
+  background: #ffffff;
   border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 38, 35, 0.2);
+  border: 2px solid #b9a779;
+}
+
+.card-seal {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .card-title {
-  font-size: 1.875rem;
-  font-weight: 700;
   color: #002623;
-  margin-bottom: 0.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
 }
 
 .card-subtitle {
-  font-size: 1rem;
-  color: #64748b;
+  color: #666;
+  font-size: 0.9rem;
   margin: 0;
 }
 
+/* Form */
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 1.5rem;
 }
 
 .form-group {
@@ -357,256 +274,140 @@ const handleSubmit = async () => {
 }
 
 .form-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9375rem;
-  font-weight: 600;
   color: #002623;
-}
-
-.label-icon {
-  font-size: 1.125rem;
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .input-container {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .form-input {
   width: 100%;
-  padding: 1rem 1.25rem;
+  padding: 0.875rem 1rem;
+  padding-left: 2.5rem; /* Space for icon/toggle */
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-family: inherit;
   font-size: 1rem;
-  background: #f8fafc;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  color: #1e293b;
+  color: #002623;
   transition: all 0.3s ease;
-  outline: none;
 }
 
 .form-input:focus {
-  background: white;
+  outline: none;
+  background-color: #ffffff;
   border-color: #b9a779;
   box-shadow: 0 0 0 3px rgba(185, 167, 121, 0.1);
 }
 
-.form-input::placeholder {
-  color: #94a3b8;
-}
-
-.form-input:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.input-border {
+.input-icon {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #b9a779, #d4af37);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-  border-radius: 0 0 12px 12px;
-}
-
-.form-input:focus + .input-border {
-  transform: scaleX(1);
+  left: 1rem;
+  color: #002623;
+  opacity: 0.5;
 }
 
 .password-toggle {
   position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
+  left: 0.5rem;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0.5rem;
-  color: #64748b;
-  transition: color 0.3s ease;
-}
-
-.password-toggle:hover:not(:disabled) {
-  color: #b9a779;
-}
-
-.password-toggle:disabled {
+  color: #002623;
   opacity: 0.6;
-  cursor: not-allowed;
+  transition: opacity 0.2s;
 }
 
-.toggle-icon {
-  font-size: 1.125rem;
+.password-toggle:hover {
+  opacity: 1;
 }
 
-.error-message {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  background: linear-gradient(135deg, #fee2e2, #fecaca);
-  border: 1px solid #fca5a5;
-  border-radius: 12px;
-  color: #dc2626;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.error-icon {
-  font-size: 1.125rem;
-}
-
+/* Button */
 .login-button {
-  width: 100%;
-  padding: 1rem;
   background: linear-gradient(135deg, #002623, #001a18);
-  border: 2px solid #b9a779;
-  color: white;
-  border-radius: 12px;
-  font-size: 1.125rem;
-  font-weight: 600;
+  color: #ffffff;
+  border: 1px solid #b9a779;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  overflow: hidden;
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: inherit;
 }
 
 .login-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  background: linear-gradient(135deg, #b9a779, #d4af37);
+  background: linear-gradient(135deg, #b9a779, #9a8660);
   color: #002623;
-  box-shadow: 
-   0 10px 25px rgba(185, 167, 121, 0.3),
-   0 5px 10px rgba(185, 167, 121, 0.2);
-}
-
-.login-button:active:not(:disabled) {
-  transform: translateY(0);
 }
 
 .login-button:disabled {
-  opacity: 0.6;
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
-.button-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-}
-
 .loading-spinner {
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #ffffff;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-}
-
-.button-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-}
-
-.button-icon {
-  font-size: 1.25rem;
-  transition: transform 0.3s ease;
-}
-
-.login-button:hover .button-icon {
-  transform: translateX(-4px);
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-.login-footer {
-  padding: 1.5rem 2rem;
-  background: rgba(255, 255, 255, 0.95);
-  border-top: 2px solid #b9a779;
-}
-
-.footer-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.footer-content p {
-  font-size: 0.875rem;
-  color: #64748b;
-  margin: 0;
+/* Error */
+.error-message {
+  background-color: #fee2e2;
+  color: #dc2626;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
   text-align: center;
+  border: 1px solid #fca5a5;
 }
 
-.footer-links {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.8125rem;
+/* Footer */
+.login-footer {
+  background: linear-gradient(135deg, #002623, #001a18);
+  padding: 1.5rem;
+  text-align: center;
   color: #b9a779;
+  font-size: 0.85rem;
   font-weight: 600;
 }
 
-.divider {
-  color: #cbd5e1;
-}
-
+/* Responsive */
 @media (max-width: 640px) {
   .login-header {
     padding: 1rem;
   }
   
-  .logo-text h1 {
-    font-size: 1.25rem;
-  }
-  
-  .login-main {
-    padding: 1rem;
-  }
-  
   .login-card {
-    padding: 2rem;
+    padding: 2rem 1.5rem;
   }
   
   .card-title {
     font-size: 1.5rem;
   }
-}
 
-@media (max-width: 480px) {
-  .login-card {
-    padding: 1.5rem;
-  }
-  
-  .card-logo-icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 1rem;
-  }
-  
-  .footer-content {
-    text-align: center;
-  }
-  
-  .footer-links {
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-  
-  .divider {
-    display: none;
+  /* Reduce logo height on small screens so it doesn't overwhelm layout */
+  .header-logo {
+    height: 100px;
+    max-height: 100px;
   }
 }
 </style>

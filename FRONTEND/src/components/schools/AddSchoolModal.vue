@@ -227,7 +227,7 @@ const handleSubmit = async () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 38, 35, 0.7); /* تعتيم الخلفية */
+  background: rgba(0, 38, 35, 0.85); /* تعتيم الخلفية */
   display: flex;
   justify-content: center;
   align-items: center; /* توسيط عمودي وأفقي */
@@ -256,11 +256,12 @@ const handleSubmit = async () => {
 /* --- الرأس --- */
 .modal-header {
   padding: 24px 30px;
-  background: linear-gradient(135deg, #054239, #002623);
+  background: linear-gradient(135deg, #002623, #001a18);
   color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 2px solid #b9a779;
 }
 
 .header-content {
@@ -272,12 +273,13 @@ const handleSubmit = async () => {
 .header-icon {
   width: 40px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(185, 167, 121, 0.1);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 22px;
+  border: 1px solid rgba(185, 167, 121, 0.2);
 }
 
 .modal-header h3 {
@@ -285,12 +287,13 @@ const handleSubmit = async () => {
   font-size: 20px;
   font-weight: 700;
   letter-spacing: 0.5px;
+  color: #b9a779;
 }
 
 .close-modal {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(185, 167, 121, 0.1);
   border: none;
-  color: white;
+  color: #b9a779;
   width: 36px;
   height: 36px;
   border-radius: 10px;
@@ -303,8 +306,9 @@ const handleSubmit = async () => {
 }
 
 .close-modal:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(185, 167, 121, 0.2);
   transform: rotate(90deg);
+  color: white;
 }
 
 /* --- الجسم --- */
@@ -350,8 +354,8 @@ const handleSubmit = async () => {
 
 .form-input:focus, .form-select:focus {
   outline: none;
-  border-color: #054239;
-  box-shadow: 0 0 0 4px rgba(5, 66, 57, 0.1);
+  border-color: #b9a779;
+  box-shadow: 0 0 0 4px rgba(185, 167, 121, 0.2);
 }
 
 .form-input:disabled, .form-select:disabled {
@@ -430,14 +434,16 @@ const handleSubmit = async () => {
 .btn-secondary:hover { background: #e2e8f0; color: #1e293b; }
 
 .btn-primary {
-  background: #054239;
-  color: white;
+  background: linear-gradient(135deg, #002623, #001a18);
+  color: #b9a779;
+  border: 1px solid #b9a779;
 }
 
 .btn-primary:hover {
-  background: #075e51;
+  background: linear-gradient(135deg, #b9a779, #d4c4a0);
+  color: #002623;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(5, 66, 57, 0.25);
+  box-shadow: 0 4px 12px rgba(185, 167, 121, 0.3);
 }
 
 .btn:disabled {

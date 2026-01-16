@@ -9,7 +9,7 @@ const { verifyTokenAndAdminOrAnalyzer } = require("../middleware/verifyToken");
 
 router.get("/global", verifyTokenAndAdminOrAnalyzer, getGlobalAnalytics
 );
-
+//ET http://localhost:5000/api/v1/analytics/survey/81/analysis
 //get summary of survey
 router.get(
     "/survey/:id/summary",

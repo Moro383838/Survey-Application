@@ -1,6 +1,6 @@
 <template>
     <div class="schools-page">
-      <div class="page-header">
+      <div class="page-header fixed-header">
         <div class="header-left">
           <h1>🏫 إدارة المدارس</h1>
           <p>قم بإدارة المدارس المسجلة في النظام</p>
@@ -9,43 +9,8 @@
           <button class="add-btn" @click="showAddModal = true">
             ➕ إضافة مدرسة جديدة
           </button>
-          <button class="refresh-btn" @click="fetchSchools">
-            🔄 تحديث القائمة
-          </button>
         </div>
       </div>
-
-      <div class="stats">
-        <div class="stat-card">
-          <div class="stat-icon">🏫</div>
-          <div class="stat-info">
-            <h3>{{ stats.total_schools || 0}}</h3>
-            <p>إجمالي المدارس</p>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">👥</div>
-          <div class="stat-info">
-            <h3>{{ stats.max_staff_count || 0 }}</h3>
-            <p>أكثر مدرسة موظفين</p>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">📊</div>
-          <div class="stat-info">
-            <h3>{{ stats.empty_schools_count || 0 }}</h3>
-            <p>مدارس بدون موظفين</p>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">🗺️</div>
-          <div class="stat-info">
-            <h3>{{ uniqueRegionsCount }}</h3>
-            <p>عدد المناطق</p>
-          </div>
-        </div>
-      </div>
-
       <div class="search-section">
         <div class="search-box">
           <input 
@@ -119,6 +84,12 @@
         @school-updated="handleSchoolUpdated"
       />
 
+      <ViewSchoolModal 
+        v-if="showViewModal && selectedSchool"
+        :school="selectedSchool"
+        @close="showViewModal = false"
+      />
+
       <DeleteSchoolModal 
         v-if="showDeleteModal && selectedSchool"
         :school="selectedSchool"
@@ -135,6 +106,7 @@
   import AddSchoolModal from '@/components/schools/AddSchoolModal.vue'
   import EditSchoolModal from '@/components/schools/EditSchoolModal.vue'
   import DeleteSchoolModal from '@/components/schools/DeleteSchoolModal.vue'
+  import ViewSchoolModal from '@/components/schools/ViewSchoolModal.vue'
   import { schoolService } from '@/api/index.js'
   
   const router = useRouter()
@@ -148,6 +120,7 @@
   const itemsPerPage = ref(10)
   const showAddModal = ref(false)
   const showEditModal = ref(false)
+  const showViewModal = ref(false)
   const showDeleteModal = ref(false)
   const selectedSchool = ref(null)
   
@@ -257,8 +230,8 @@
   }
   
   const viewDetails = (school) => {
-    console.log('عرض تفاصيل المدرسة:', school)
-    router.push(`/schools/${school.id}`)
+    selectedSchool.value = school
+    showViewModal.value = true
   }
 
   const handleSchoolAdded = () => {
@@ -283,33 +256,44 @@
   
   <style scoped>
   .schools-page {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 24px;
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
   }
   
   .page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
-    background: var(--gradient-primary);
-    padding: 24px 32px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 38, 35, 0.2);
-    border: 2px solid var(--primary-gold);
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, #002623, #001a18);
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 38, 35, 0.12);  
     color: white;
+  }
+  
+  .fixed-header {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 20px;
   }
   
   .header-left h1 {
-    color: white;
-    margin-bottom: 8px;
-    font-size: 24px;
+    color: #b9a779;
+    margin-bottom: 4px;
+    font-size: 20px;
+    font-weight: 700;
   }
   
   .header-left p {
-    color: var(--gold-light);
+    color: #b9a779;
     margin: 0;
+    font-size: 13px;
+    opacity: 0.9;
   }
   
   .header-right {
@@ -317,41 +301,28 @@
     gap: 12px;
   }
   
-  .add-btn, .refresh-btn {
-    padding: 12px 20px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s;
-  }
-  
-  .add-btn {
-    background: var(--gradient-gold);
-    color: var(--primary-dark);
-    border: none;
-    cursor: pointer;
-    font-weight: 700;
-  }
-  
-  .add-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(185, 167, 121, 0.4);
-    background: var(--primary-white);
-  }
-  
-  .refresh-btn {
-    background: #f1f5f9;
-    color: #475569;
-    border: 1px solid #e2e8f0;
-  }
-  
-  .refresh-btn:hover {
-    background: #e2e8f0;
-  }
+.add-btn {
+  background: linear-gradient(135deg, #002623, #001a18);
+  color: #b9a779;
+  border: 1px solid #b9a779;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(185, 167, 121, 0.3);
+  background: linear-gradient(135deg, #b9a779, #d4c4a0);
+  color: #002623;
+}
 
   .stats {
     display: grid;
@@ -368,6 +339,12 @@
     align-items: center;
     gap: 16px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0, 38, 35, 0.15);
   }
   
   .stat-icon {
@@ -412,10 +389,18 @@
     transition: all 0.3s;
   }
   
-  .search-input:focus {
+  .search-input:focus-visible {
     outline: none;
     border-color: var(--primary-gold);
-    box-shadow: 0 0 0 3px rgba(185, 167, 121, 0.1);
+    box-shadow: 0 0 0 4px rgba(0, 38, 35, 0.12);
+  }
+
+  .add-btn:focus-visible,
+  .refresh-btn:focus-visible,
+  .pagination-btn:focus-visible,
+  .retry-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 38, 35, 0.12);
   }
   
   .search-icon {
@@ -522,10 +507,19 @@
   }
   
   @media (max-width: 768px) {
+    .schools-page {
+      padding: 140px 16px 16px 16px;
+    }
+    
     .page-header {
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
       align-items: stretch;
+      padding: 16px;
+    }
+    
+    .header-left h1 {
+      font-size: 18px;
     }
     
     .header-right {
@@ -535,6 +529,7 @@
     .add-btn, .refresh-btn {
       flex: 1;
       justify-content: center;
+      width: 100%;
     }
     
     .stats {

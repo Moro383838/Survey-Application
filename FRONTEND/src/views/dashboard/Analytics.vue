@@ -2214,10 +2214,12 @@ onMounted(async () => {
 /* Root Variables */
 .analytics-dashboard {
   padding: 24px;
-  max-width: 1600px;
-  margin: 0 auto;
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
   direction: rtl;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: calc(100vh - 128px);
 }
 
 /* Animations */
@@ -2292,13 +2294,15 @@ onMounted(async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 32px;
-  padding: 24px;
+  margin-bottom: 24px;
+  padding: 16px 24px;
   background: linear-gradient(135deg, #002623 0%, #001a18 100%);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 38, 35, 0.3);
-  border: 2px solid #b9a779;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 38, 35, 0.2);
+  border: 1px solid #b9a779;
   color: white;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .header-content {
@@ -2319,17 +2323,19 @@ onMounted(async () => {
 }
 
 .header-text h1 {
-  margin: 0 0 8px 0;
-  font-size: 28px;
+  margin: 0 0 4px 0;
+  font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.5px;
+  color: #b9a779;
 }
 
 .header-subtitle {
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   opacity: 0.9;
   font-weight: 400;
+  color: #b9a779;
 }
 
 .header-actions .btn-refresh {

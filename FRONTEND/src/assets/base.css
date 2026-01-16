@@ -9,11 +9,11 @@
 }
 
 :root {
-  /* Primary Colors */
-  --primary-dark: #126E70;
-  --primary: #52B5AB;
-  --primary-light: #9EE5DC;
-  --primary-very-light: #D9FFFA;
+  /* Primary Colors - Aligned with Brand Identity */
+  --primary-dark: #002623;
+  --primary: #002623;
+  --primary-light: #b9a779;
+  --primary-very-light: #f8fafc;
 
   /* Font Family */
   --font-primary: 'ITF Qomra Arabic Light', 'Segoe UI', 'Tajawal', sans-serif;
@@ -29,10 +29,10 @@
 
   --vt-c-indigo: #2c3e50;
 
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
+  --vt-c-divider-light-1: rgba(0, 38, 35, 0.29);
+  --vt-c-divider-light-2: rgba(0, 38, 35, 0.12);
+  --vt-c-divider-dark-1: rgba(185, 167, 121, 0.65);
+  --vt-c-divider-dark-2: rgba(185, 167, 121, 0.48);
 
   --vt-c-text-light-1: var(--vt-c-indigo);
   --vt-c-text-light-2: rgba(60, 60, 60, 0.66);

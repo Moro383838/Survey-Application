@@ -309,7 +309,7 @@ const getQuestionIcon = (typeId) => {
       }
   .question-types-container {
     background: white;
-    border-radius: 20px;
+    border-radius: 8px;
     padding: 24px;
     box-shadow: 0 4px 20px rgba(0, 38, 35, 0.08);
     height: 100%;
@@ -330,8 +330,8 @@ const getQuestionIcon = (typeId) => {
   .header-icon {
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, #52B5AB, #126E70);
-    border-radius: 14px;
+    background: #054239;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -358,7 +358,7 @@ const getQuestionIcon = (typeId) => {
     gap: 20px;
     padding: 16px;
     background: #f8f9fa;
-    border-radius: 12px;
+    border-radius: 8px;
   }
   
   .stat-item {
@@ -389,7 +389,7 @@ const getQuestionIcon = (typeId) => {
   
   .type-card {
     border: 2px solid;
-    border-radius: 16px;
+    border-radius: 8px;
     padding: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -434,7 +434,7 @@ const getQuestionIcon = (typeId) => {
     background: rgba(66, 129, 119, 0.1);
     color: #428177;
     border: 1px solid rgba(66, 129, 119, 0.3);
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 8px 16px;
     font-size: 13px;
     font-weight: 600;
@@ -453,7 +453,7 @@ const getQuestionIcon = (typeId) => {
   /* Saved Questions */
   .saved-questions {
     background: #f8f9fa;
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 20px;
   }
   
@@ -472,9 +472,9 @@ const getQuestionIcon = (typeId) => {
   }
   
   .manage-btn {
-    background: rgba(185, 167, 121, 0.1);
-    color: #b9a779;
-    border: 1px solid rgba(185, 167, 121, 0.3);
+    background: rgba(66, 129, 119, 0.1);
+    color: #428177;
+    border: 1px solid rgba(66, 129, 119, 0.3);
     border-radius: 6px;
     padding: 6px 12px;
     font-size: 12px;
@@ -493,7 +493,7 @@ const getQuestionIcon = (typeId) => {
   .saved-item {
     background: white;
     border: 1px solid #edebe0;
-    border-radius: 10px;
+    border-radius: 8px;
     padding: 16px;
     display: flex;
     align-items: center;
@@ -503,7 +503,7 @@ const getQuestionIcon = (typeId) => {
   }
   
   .saved-item:hover {
-    border-color: #b9a779;
+    border-color: #428177;
     transform: translateX(5px);
   }
   
@@ -512,7 +512,7 @@ const getQuestionIcon = (typeId) => {
     width: 40px;
     height: 40px;
     background: rgba(66, 129, 119, 0.1);
-    border-radius: 8px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -551,7 +551,7 @@ const getQuestionIcon = (typeId) => {
   /* Recent Templates */
   .recent-templates {
     background: #f8f9fa;
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 20px;
   }
   
@@ -564,7 +564,7 @@ const getQuestionIcon = (typeId) => {
   .template-item {
     background: white;
     border: 1px solid #edebe0;
-    border-radius: 10px;
+    border-radius: 8px;
     padding: 16px;
     display: flex;
     align-items: center;
@@ -606,7 +606,7 @@ const getQuestionIcon = (typeId) => {
   .action-btn {
     flex: 1;
     padding: 12px;
-    border-radius: 10px;
+    border-radius: 8px;
     border: 1px solid;
     font-weight: 600;
     cursor: pointer;
@@ -629,13 +629,13 @@ const getQuestionIcon = (typeId) => {
   }
   
   .template-btn {
-    background: rgba(185, 167, 121, 0.1);
-    color: #b9a779;
-    border-color: rgba(185, 167, 121, 0.3);
+    background: rgba(66, 129, 119, 0.1);
+    color: #428177;
+    border-color: rgba(66, 129, 119, 0.3);
   }
   
   .template-btn:hover {
-    background: #b9a779;
+    background: #428177;
     color: white;
   }
   

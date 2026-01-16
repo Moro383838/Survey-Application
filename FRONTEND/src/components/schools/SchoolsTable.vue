@@ -29,7 +29,6 @@
         <tr v-for="school in schools" :key="school.id">
           <td>
             <div class="school-cell">
-              <div class="school-avatar">🏫</div>
               <div class="school-info">
                 <strong>{{ school.name }}</strong>
               </div>
@@ -47,13 +46,13 @@
           <td>
             <div class="actions">
               <button class="edit-btn" @click="handleEdit(school)">
-                ✏️ تعديل
+                 تعديل
               </button>
               <button class="delete-btn" @click="handleDelete(school)">
-                🗑️ حذف
+                 حذف
               </button>
               <button class="view-btn" @click="handleView(school)">
-                👁️ تفاصيل
+                 تفاصيل
               </button>
             </div>
           </td>
@@ -61,7 +60,6 @@
       </tbody>
     </table>
     <div v-if="schools.length === 0 && !loading" class="empty-state">
-      <div class="empty-icon">🏫</div>
       <h3>لا توجد مدارس</h3>
       <p>لم يتم إضافة أي مدارس بعد</p>
     </div>
@@ -110,7 +108,7 @@ const formatDate = (dateString) => {
 <style scoped>
 .table-container {
   background: white;
-  border-radius: 12px;
+  border-radius: 3px;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -145,12 +143,12 @@ const formatDate = (dateString) => {
 }
 
 .schools-table th {
-  background: var(--primary-dark);
+  background: linear-gradient(135deg, #002623, #001a18);
   padding: 16px 12px;
   text-align: right;
   font-weight: 600;
-  color: white;
-  border-bottom: 2px solid var(--primary-gold);
+  color: #b9a779;
+  border-bottom: 2px solid #b9a779;
   font-size: 14px;
 }
 
@@ -225,12 +223,15 @@ const formatDate = (dateString) => {
 }
 
 .edit-btn {
-  background: #f1f5f9;
-  color: #475569;
+  background: white;
+  color: #002623;
+  border: 1px solid #e2e8f0;
 }
 
 .edit-btn:hover {
-  background: #e2e8f0;
+  background: #b9a779;
+  color: white;
+  border-color: #b9a779;
 }
 
 .delete-btn {
