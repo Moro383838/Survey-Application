@@ -10,7 +10,7 @@ const verifyToken = (req, res, next) => {
         const token = authHeader.split(" ")[1];
 
         jwt.verify(token, process.env.JWT_SECRET, (err, decodedUser) => {
-            if (err) return res.status(403).json({ error: "التوكن غير صالح أو منتهي الصلاحية" });
+            if (err) return res.status(401).json({ error: "التوكن غير صالح أو منتهي الصلاحية" });
 
             req.user = decodedUser;
             next();
