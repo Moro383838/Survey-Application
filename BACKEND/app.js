@@ -11,7 +11,8 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:5173',
-
+  'https://survey-frontend-ashen.vercel.app',
+  'https://survey-frontend-onvidmt91-moro383838s-projects.vercel.app'
 ];
 
 app.use(cors({
