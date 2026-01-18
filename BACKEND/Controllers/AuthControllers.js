@@ -38,7 +38,7 @@ exports.loginCtrl = asyncHandler(async (req, res) => {
     schools: user.schools
   };
 
-  const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '1m' });
+  const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '1w' });
   res.json({
     message: "تم تسجيل الدخول بنجاح",
     token,
