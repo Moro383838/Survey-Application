@@ -38,7 +38,7 @@ const verifyTokenAndSchoolUser = (req, res, next) => {
 };
 const verifyTokenAndAdminOrAnalyzer = (req, res, next) => {
     verifyToken(req, res, () => {
-        if (req.user.role === 'ADMIN' || req.user.roleId == '3') {
+        if (req.user.role === 'ADMIN' || req.user.roleId == '3' || req.user.role == 'ANALAYZER_USER') {
             next();
         } else {
             return res.status(403).json({ error: "غير مصرح لك (تحتاج صلاحيات مدير أو تحليل )" });
