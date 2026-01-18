@@ -120,37 +120,36 @@ const openModal = async () => {
 
 const closeModal = () => {
   showModal.value = false
+  questions.value = [] // Reset on close
 }
 
 const loadAnalysis = async () => {
   if (!props.surveyId) return
   loading.value = true
   try {
-    // استدعاء الدالة التي أضفناها للستور
     const resp = await analyticsStore.fetchSurveyQuestionsAnalysis(props.surveyId)
 
-    // Normalize different API shapes:
-    // - Array of questions
-    // - { questions: [...] }
-    // - { data: { questions: [...] } }
-    // - { data: [...] }
+    // Normalize Data Structure
     let normalized = []
-
-    if (!resp) normalized = []
-    else if (Array.isArray(resp)) normalized = resp
-    else if (Array.isArray(resp.data)) normalized = resp.data
-    else if (Array.isArray(resp.questions)) normalized = resp.questions
-    else if (Array.isArray(resp.data?.questions)) normalized = resp.data.questions
-    else if (typeof resp === 'object') {
-      // If object with keys as question ids map to stats, convert to array
-      const possibleArray = Object.values(resp)
-      if (possibleArray.length > 0 && Array.isArray(possibleArray[0])) {
-        // e.g., { q1: [...], q2: [...] } -> flatten to objects
-        normalized = possibleArray.flat()
-      } else {
-        // Fallback: try to extract questions-like objects
-        normalized = []
-      }
+    
+    // Handle different possible API responses
+    if (Array.isArray(resp)) {
+      normalized = resp
+    } else if (resp && Array.isArray(resp.data)) {
+      normalized = resp.data
+    } else if (resp && typeof resp === 'object') {
+       // Check for 'questions' key
+       if (Array.isArray(resp.questions)) {
+          normalized = resp.questions
+       } else if (resp.data && Array.isArray(resp.data.questions)) {
+          normalized = resp.data.questions
+       } else {
+         // Fallback: If it's an object of questions { q1: {}, q2: {} }
+         const values = Object.values(resp)
+         if (values.length > 0 && values[0]?.question_id) {
+           normalized = values
+         }
+       }
     }
 
     questions.value = normalized || []
@@ -162,7 +161,7 @@ const loadAnalysis = async () => {
   }
 }
 
-// دوال مساعدة
+// Helpers
 const getQuestionTypeLabel = (type) => {
   const types = {
     'LONG_TEXT': 'نص طويل',
@@ -170,7 +169,10 @@ const getQuestionTypeLabel = (type) => {
     'SINGLE_CHOICE': 'خيار واحد',
     'MULTIPLE_CHOICE': 'خيار متعدد',
     'NUMBER': 'رقمي',
-    'DATE': 'تاريخ'
+    'DATE': 'تاريخ',
+    'TIME': 'وقت',
+    'DATE_RANGE': 'نطاق تاريخ',
+    'DATETIME_RANGE': 'نطاق تاريخ ووقت'
   }
   return types[type] || type
 }
@@ -180,16 +182,18 @@ const isChoiceType = (type) => {
 }
 
 const formatNumber = (val) => {
-  return val !== null && val !== undefined ? val : '-'
+  return val !== null && val !== undefined && !isNaN(val) ? Number(val).toFixed(2).replace(/\.00$/, '') : '-'
 }
 
 const cleanText = (text) => {
   if (typeof text !== 'string') return text
-  return text.replace(/^"|"$/g, '') // إزالة علامات التنصيص إذا وجدت
+  // Remove surrounding quotes if they exist (e.g. "\"value\"")
+  return text.replace(/^"|"$/g, '').replace(/\\"/g, '"')
 }
 
 const calculatePercentage = (count, allStats) => {
-  const total = Object.values(allStats).reduce((a, b) => a + b, 0)
+  if (!allStats) return 0
+  const total = Object.values(allStats).reduce((a, b) => a + (Number(b) || 0), 0)
   if (total === 0) return 0
   return Math.round((count / total) * 100)
 }
