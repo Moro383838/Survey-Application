@@ -183,12 +183,13 @@ const formatDate = (dateString) => {
   }
   
   .users-table th {
-  background: linear-gradient(135deg, #002623, #001a18);
+  background:#054239;
   padding: 16px 12px;
   text-align: right;
   font-weight: 600;
-  color: #b9a779;
-  border-bottom: 2px solid #b9a779;
+  color: var(--primary-gold);
+  border: none !important;
+  border-bottom: 2px solid var(--primary-gold) !important;
   font-size: 14px;
 }
   
@@ -268,8 +269,8 @@ const formatDate = (dateString) => {
   
   .edit-btn {
   background: white;
-  color: #002623;
-  border: 1px solid #e2e8f0;
+  color: var(--primary-dark);
+  border: 1px solid var(--primary-teal);
 }
 
 .edit-btn:hover {
@@ -324,7 +325,7 @@ const formatDate = (dateString) => {
     width: 40px;
     height: 40px;
     border: 3px solid #f3f3f3;
-    border-top: 3px solid #52B5AB;
+    border-top: 3px solid var(--primary-teal);
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin: 0 auto 16px;

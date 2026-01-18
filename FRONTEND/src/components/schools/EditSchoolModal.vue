@@ -245,7 +245,7 @@
   
   .modal-header {
   padding: 24px;
-  background: linear-gradient(135deg, #002623, #001a18);
+  background: linear-gradient(135deg, #054239, #005f57);
   color: white;
   display: flex;
   justify-content: space-between;
@@ -410,14 +410,14 @@
   }
   
   .btn-primary {
-  background: linear-gradient(135deg, #002623, #001a18);
+  background: linear-gradient(135deg, #054239, #001a18);
   color: #b9a779;
   border: 1px solid #b9a779;
 }
 
 .btn-primary:hover:not(:disabled) {
   background: linear-gradient(135deg, #b9a779, #d4c4a0);
-  color: #002623;
+  color: #054239;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(185, 167, 121, 0.3);
 }

@@ -53,14 +53,27 @@ defineExpose({
 
 <style scoped>
 .navbar {
-  background: linear-gradient(135deg, #002623, #001a18);
-  border-top: 1px solid rgba(185, 167, 121, 0.2);
+  background: var(--gradient-primary);
+  border-top: 1px solid var(--primary-teal);
   position: fixed;
-  top: 80px; /* Position below header */
+  top: 80px; /* Default position below header */
   left: 0;
   right: 0;
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive positioning to match header height changes */
+@media (max-width: 768px) {
+  .navbar {
+    top: 100px; /* Match tablet header height */
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    top: 80px; /* Match small phone header height */
+  }
 }
 
 .nav-wrapper {
@@ -78,7 +91,7 @@ defineExpose({
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
-  color: #b9a779;
+  color: var(--primary-gold);
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
@@ -118,10 +131,10 @@ defineExpose({
 /* Removed hover effect - buttons maintain original appearance */
 
 .nav-link--active {
-  color: #002623;
+  color: var(--primary-dark);
   font-weight: 600;
-  background: linear-gradient(135deg, #b9a779, #d4c4a0) !important;
-  box-shadow: 0 2px 8px rgba(185, 167, 121, 0.3);
+  background: var(--gradient-gold) !important;
+  box-shadow: 0 2px 8px rgba(var(--primary-gold-rgb), 0.3);
 }
 
 .nav-link__icon {

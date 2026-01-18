@@ -6,7 +6,6 @@
         <div class="dashboard-header__emblem">
           <img src="/Syrian Arab Republic.svg" alt="شعار النظام" class="emblem-svg" />
         </div>
-
         <div class="dashboard-header__center">
           <h1 class="dashboard-header__title">لوحة التحكم</h1>
           <p class="dashboard-header__subtitle">نظام الاستبيانات الإلكتروني</p>
@@ -97,7 +96,7 @@ if (!authStore.isAdmin && !authStore.hasAnalyticsAccess) {
 }
 
 .dashboard-header {
-  background: linear-gradient(135deg, #002623, #001a18);
+  background: var(--gradient-primary);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
@@ -145,7 +144,7 @@ if (!authStore.isAdmin && !authStore.hasAnalyticsAccess) {
 .dashboard-header__title {
   font-size: 24px;
   font-weight: 700;
-  color: #b9a779;
+  color: var(--primary-gold);
   margin: 0 0 4px 0;
   line-height: 1.2;
   text-align: center;
@@ -155,7 +154,7 @@ if (!authStore.isAdmin && !authStore.hasAnalyticsAccess) {
 
 .dashboard-header__subtitle {
   font-size: 12px;
-  color: #b9a779;
+  color: var(--primary-gold);
   margin: 0;
   font-weight: 500;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 15px rgba(185, 167, 121, 0.2);
@@ -180,13 +179,13 @@ if (!authStore.isAdmin && !authStore.hasAnalyticsAccess) {
   width: 40px;
   height: 40px;
   min-width: 40px;
-  background: #b9a779;
-  border: 2px solid #002623;
+  background: var(--primary-gold);
+  border: 2px solid var(--primary-dark);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #002623;
+  color: var(--primary-dark);
   font-weight: 700;
   font-size: 14px;
   text-align: center;
@@ -223,18 +222,31 @@ if (!authStore.isAdmin && !authStore.hasAnalyticsAccess) {
 }
 
 .role-badge--admin {
-  background: #b9a779;
-  color: #002623;
+  background: var(--primary-gold);
+  color: var(--primary-dark);
 }
 
 .role-badge--user {
-  background: rgba(185, 167, 121, 0.8);
-  color: #002623;
+  background: var(--gold-light);
+  color: var(--primary-dark);
 }
 
 .dashboard-content {
   padding: 0;
-  margin-top: 128px; /* Space for header (80px) + navbar (48px) */
+  margin-top: 128px; /* Default space for header (80px) + navbar (48px) */
+}
+
+/* Responsive margin to match changing header/navbar heights */
+@media (max-width: 768px) {
+  .dashboard-content {
+    margin-top: 148px; /* Space for header (100px) + navbar (48px) */
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-content {
+    margin-top: 128px; /* Space for header (80px) + navbar (48px) */
+  }
 }
 
 @media (max-width: 768px) {
@@ -328,7 +340,7 @@ if (!authStore.isAdmin && !authStore.hasAnalyticsAccess) {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #b9a779;
+  background: var(--primary-gold);
   border-radius: 4px;
 }
 

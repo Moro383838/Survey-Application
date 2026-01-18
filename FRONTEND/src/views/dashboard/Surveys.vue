@@ -15,41 +15,6 @@
         </button>
       </div>
     </div>
-
-    <!-- بطاقات الإحصائيات -->
-    <div class="stats-cards">
-      <div class="stat-card" :style="statCardStyle(0)">
-        <div class="stat-info">
-          <h3>{{ stats.total_surveys || 0 }}</h3>
-          <p>إجمالي الاستبيانات</p>
-        </div>
-      </div>
-      <div class="stat-card" :style="statCardStyle(1)">
-        <div class="stat-info">
-          <h3>{{ stats.active_surveys || 0 }}</h3>
-          <p>نشطة</p>
-        </div>
-      </div>
-      <div class="stat-card" :style="statCardStyle(2)">
-        <div class="stat-info">
-          <h3>{{ stats.draft_surveys || 0 }}</h3>
-          <p>مسودة</p>
-        </div>
-      </div>
-      <div class="stat-card" :style="statCardStyle(3)">
-        <div class="stat-info">
-          <h3>{{ stats.completed_surveys || 0 }}</h3>
-          <p>مكتملة</p>
-        </div>
-      </div>
-      <div class="stat-card" :style="statCardStyle(4)">
-        <div class="stat-info">
-          <h3>{{ stats.periodic_surveys || 0 }}</h3>
-          <p>دورية</p>
-        </div>
-      </div>
-    </div>
-
     <!-- البحث والتصفية -->
     <div class="controls-section">
       <div class="search-container">
@@ -491,7 +456,7 @@ const handlePageSizeChange = () => {
 
 const statCardStyle = (index) => {
   const colors = [
-    { bg: '#e6f4f1', border: '#428177', text: '#054239' },
+    { bg: '#e6f4f1', border: 'var(--primary-teal)', text: 'var(--primary-dark)' },
     { bg: '#f0f7f6', border: '#10b981', text: '#065f46' },
     { bg: '#fef3c7', border: '#f59e0b', text: '#92400e' },
     { bg: '#dbeafe', border: '#3b82f6', text: '#1e40af' },
@@ -534,11 +499,11 @@ watch([searchQuery, statusFilter, typeFilter], () => {
   flex-wrap: wrap;
   gap: 16px;
   margin-bottom: 24px;
-  background: linear-gradient(135deg, #002623, #001a18);
+  background: var(--gradient-primary);
   padding: 16px 24px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 38, 35, 0.12);
-  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(var(--primary-dark-rgb), 0.12);
+  color: var(--primary-gold);
 }
 
 /* Fixed Header Styles - Removed sticky behavior */
@@ -574,9 +539,9 @@ watch([searchQuery, statusFilter, typeFilter], () => {
 }
 
 .btn-add-survey{
-  background: linear-gradient(135deg, #002623, #001a18);
-  color: #b9a779;
-  border: 1px solid #b9a779;
+  background: var(--gradient-primary);
+  color: var(--primary-gold);
+  border: 1px solid var(--primary-gold);
   padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
@@ -592,8 +557,8 @@ watch([searchQuery, statusFilter, typeFilter], () => {
 .btn-add-survey:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(185, 167, 121, 0.3);
-  background: linear-gradient(135deg, #b9a779, #d4c4a0);
-  color: #002623;
+  background: var(--gradient-gold);
+  color: var(--primary-dark);
 }
 /* بطاقات الإحصائيات */
 .stats-cards {
@@ -610,14 +575,14 @@ watch([searchQuery, statusFilter, typeFilter], () => {
   display: flex;
   align-items: center;
   gap: 24px;
-  box-shadow: 0 6px 20px rgba(0, 38, 35, 0.08);
+  box-shadow: 0 6px 20px rgba(var(--primary-dark-rgb), 0.08);
   transition: all 0.3s ease;
   border: 3px solid;
 }
 
 .stat-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 30px rgba(0, 38, 35, 0.15);
+  box-shadow: 0 12px 30px rgba(var(--primary-dark-rgb), 0.15);
 }
 
 .stat-icon {
@@ -685,7 +650,7 @@ watch([searchQuery, statusFilter, typeFilter], () => {
   border: 3px solid #edebe0;
   border-radius: 14px;
   font-size: 16px;
-  color: #002623;
+  color: var(--primary-dark);
   background: #f8f9fa;
   transition: all 0.3s ease;
   font-weight: 500;
@@ -693,9 +658,9 @@ watch([searchQuery, statusFilter, typeFilter], () => {
 
 .search-input:focus {
   outline: none;
-  border-color: #428177;
+  border-color: var(--primary-teal);
   background: white;
-  box-shadow: 0 0 0 4px rgba(66, 129, 119, 0.15);
+  box-shadow: 0 0 0 4px rgba(0, 95, 87, 0.15);
 }
 
 .search-input::placeholder {
@@ -733,7 +698,7 @@ watch([searchQuery, statusFilter, typeFilter], () => {
   border: 3px solid #edebe0;
   border-radius: 12px;
   font-size: 15px;
-  color: #002623;
+  color: var(--primary-dark);
   background: white;
   cursor: pointer;
   min-width: 160px;
@@ -743,8 +708,8 @@ watch([searchQuery, statusFilter, typeFilter], () => {
 
 .filter-select:focus {
   outline: none;
-  border-color: #428177;
-  box-shadow: 0 0 0 3px rgba(66, 129, 119, 0.15);
+  border-color: var(--primary-teal);
+  box-shadow: 0 0 0 3px rgba(0, 95, 87, 0.15);
 }
 
 .date-filter {
@@ -763,8 +728,8 @@ watch([searchQuery, statusFilter, typeFilter], () => {
 
 .btn-refresh {
   background: #edebe0;
-  color: #054239;
-  border: 3px solid #b9a779;
+  color: var(--primary-dark);
+  border: 3px solid var(--primary-gold);
   padding: 14px 24px;
   border-radius: 12px;
   font-size: 15px;
@@ -791,7 +756,7 @@ watch([searchQuery, statusFilter, typeFilter], () => {
   width: 18px;
   height: 18px;
   border: 3px solid rgba(5, 66, 57, 0.3);
-  border-top-color: #054239;
+  border-top-color: var(--primary-dark);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -821,7 +786,7 @@ watch([searchQuery, statusFilter, typeFilter], () => {
   width: 60px;
   height: 60px;
   border: 5px solid #edebe0;
-  border-top-color: #428177;
+  border-top-color: var(--primary-teal);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 20px;

@@ -764,9 +764,12 @@ const handlePublish = async () => {
       })
     }
     await surveyStore.publishSurvey(surveyId.value)
+    // Show success message and navigate to surveys dashboard
+    alert('تم نشر الاستبيان بنجاح!')
     router.push('/surveys')
   } catch (err) {
     console.error('Publish failed', err)
+    alert('حدث خطأ أثناء نشر الاستبيان. يرجى المحاولة مرة أخرى.')
   } finally {
     loading.value = false
   }
@@ -806,7 +809,9 @@ const handleSave = async () => {
         questions: questions.value,
         targets: targets
       })
-      router.push('/surveys')
+      // Show success message and navigate to surveys dashboard
+      alert('تم حفظ المسودة بنجاح!')
+      router.push('/dashboard')
     }
   } catch (err) {
     console.error('Save failed', err)

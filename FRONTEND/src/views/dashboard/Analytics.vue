@@ -117,210 +117,170 @@
       <p>لا توجد بيانات تحليلية متاحة حالياً. يرجى التحقق من الاتصال أو المحاولة لاحقاً.</p>
     </div>
 
-    <!-- Overview Dashboard -->
-    <div v-else-if="activeTab === 'overview'" class="overview-dashboard animate-fade-in">
-      <!-- Key Metrics Cards -->
-      <div class="metrics-grid">
-        <div 
-          v-for="(metric, index) in keyMetrics" 
-          :key="metric.key"
-          class="metric-card animate-slide-up"
-          :class="[`delay-${index}`, metric.trend > 0 ? 'positive' : 'negative']"
-        >
-          <div class="card-header">
-            <div class="metric-icon" :class="metric.color">
-              <component :is="metric.icon" />
-            </div>
-            <div class="trend-indicator" v-if="metric.trend !== 0" :class="{ up: metric.trend > 0, down: metric.trend < 0 }">
-              <svg v-if="metric.trend > 0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
-                <polyline points="16 7 22 7 22 13"></polyline>
-              </svg>
-              <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline>
-                <polyline points="16 17 22 17 22 11"></polyline>
-              </svg>
-              <span>{{ Math.abs(metric.trend) }}%</span>
-            </div>
+    <!-- Overview Dashboard (Redesigned) -->
+    <div v-else-if="activeTab === 'overview'" class="overview-dashboard fade-in">
+      
+      <!-- Key Metrics Cards (PRO DESIGN) - Reduced Size -->
+      <div class="metrics-grid small">
+        <!-- Surveys Card -->
+        <div class="metric-card card-blue small">
+          <div class="metric-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
           </div>
-          <div class="card-body">
-            <h3 class="metric-value">{{ formatNumber(metric.value) }}</h3>
-            <p class="metric-label">{{ metric.label }}</p>
+          <div class="metric-content">
+            <p class="metric-label">إجمالي الاستبيانات</p>
+            <h3 class="metric-value">{{ formatNumber(globalStats?.total_surveys || 0) }}</h3>
           </div>
-          <div class="progress-bar" v-if="metric.target > 0">
-            <div 
-              class="progress-fill" 
-              :style="{ width: `${Math.min(100, (metric.value / metric.target) * 100)}%` }"
-              :class="metric.color"
-            ></div>
+          <div class="metric-bg-shape"></div>
+        </div>
+
+        <!-- Responses Card -->
+        <div class="metric-card card-green small">
+          <div class="metric-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
+          <div class="metric-content">
+            <p class="metric-label">إجمالي الإجابات</p>
+            <h3 class="metric-value">{{ formatNumber(globalStats?.total_responses || 0) }}</h3>
+          </div>
+          <div class="metric-bg-shape"></div>
+        </div>
+
+        <!-- Schools Card -->
+        <div class="metric-card card-orange small">
+          <div class="metric-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4 8 4v14M8 21v-4h8v4"></path></svg>
+          </div>
+          <div class="metric-content">
+            <p class="metric-label">المدارس المسجلة</p>
+            <h3 class="metric-value">{{ formatNumber(globalStats?.total_schools || 0) }}</h3>
+          </div>
+          <div class="metric-bg-shape"></div>
+        </div>
+
+        <!-- Users Card -->
+        <div class="metric-card card-purple small">
+          <div class="metric-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          </div>
+          <div class="metric-content">
+            <p class="metric-label">المستخدمين</p>
+            <h3 class="metric-value">{{ formatNumber(globalStats?.total_users || 0) }}</h3>
+          </div>
+          <div class="metric-bg-shape"></div>
         </div>
       </div>
 
-      <!-- Charts Section - Redesigned with Modern Professional Charts -->
-      <div class="charts-section">
-        <!-- Monthly Activity Chart - Enhanced Bar Chart -->
-        <div class="chart-container animate-slide-up delay-3">
+      <!-- Charts Section -->
+      <div class="charts-row">
+        
+        <!-- Monthly Activity Chart -->
+        <div class="chart-card large">
           <div class="chart-header">
-            <h3 class="chart-title">نشاط الاستبيانات الشهرية</h3>
-            <div class="chart-actions">
-              <button class="chart-action-btn" @click="toggleChartView('monthly')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M3 3v18h18"></path>
-                  <path d="m19 9-5 5-4-4-3 3"></path>
-                </svg>
-              </button>
-            </div>
+            <h3>📊 النشاط الشهري</h3>
+            <span class="chart-subtitle">عدد الاستبيانات المنشورة خلال الأشهر الماضية</span>
           </div>
-          <div class="enhanced-bar-chart">
-            <div class="chart-y-axis">
-              <div 
-                v-for="tick in yAxisTicks" 
-                :key="tick" 
-                class="y-axis-tick"
-              >
-                <span class="tick-label">{{ tick }}</span>
-                <div class="tick-line"></div>
-              </div>
+          <div class="chart-body bar-chart-container">
+            <div class="y-axis">
+              <span>{{ maxMonthlyCount }}</span>
+              <span>{{ Math.round(maxMonthlyCount / 2) }}</span>
+              <span>0</span>
             </div>
-            <div class="bars-container">
+            <div class="bars-wrapper">
               <div 
                 v-for="(item, index) in monthlyActivity" 
-                :key="index"
-                class="enhanced-bar-item"
-                @mouseenter="highlightBar(index)"
-                @mouseleave="unhighlightBar()"
+                :key="index" 
+                class="bar-group"
               >
-                <div class="bar-tooltip" v-if="hoveredBar === index">
-                  <div class="tooltip-content">
-                    <strong>{{ item.month }}</strong>
-                    <div class="tooltip-value">{{ item.count }} استبيان</div>
-                    <div class="tooltip-type" :class="item.type">
-                      {{ getSurveyStatusText(item.type) }}
-                    </div>
-                  </div>
-                </div>
                 <div 
-                  class="enhanced-bar" 
-                  :style="{ 
-                    height: `${(item.count / maxYAxisValue) * 100}%`,
-                    '--bar-color': getBarColor(item.type)
-                  }"
-                  :class="[
-                    item.type === 'completed' ? 'completed' : 
-                    item.type === 'active' ? 'active' : 'pending',
-                    { 'highlighted': hoveredBar === index }
-                  ]"
+                  class="bar" 
+                  :style="{ height: `${(item.count / (maxMonthlyCount || 1)) * 100}%` }"
+                  :title="`${item.count} استبيان`"
                 >
-                  <div class="bar-value-label">{{ item.count }}</div>
+                  <span class="bar-value">{{ item.count }}</span>
                 </div>
-                <span class="enhanced-bar-label">{{ item.month }}</span>
+                <span class="bar-label">{{ item.month }}</span>
               </div>
-            </div>
-          </div>
-          <div class="chart-legend">
-            <div class="legend-item">
-              <div class="legend-color completed"></div>
-              <span>مكتمل</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-color active"></div>
-              <span>نشط</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-color pending"></div>
-              <span>معلق</span>
             </div>
           </div>
         </div>
-        
-        <!-- Surveys Distribution Chart - Enhanced Donut Chart -->
-        <div class="chart-container animate-slide-up delay-4">
+
+        <!-- Survey Type Distribution Chart -->
+        <div class="chart-card small">
           <div class="chart-header">
-            <h3 class="chart-title">توزيع الاستبيانات حسب النوع</h3>
-            <div class="chart-actions">
-              <button class="chart-action-btn" @click="exportChart('distribution')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-              </button>
-            </div>
+            <h3>📋 توزيع الاستبيانات حسب النوع</h3>
+            <span class="chart-subtitle">نسبة الاستبيانات الدورية مقابل العادية</span>
           </div>
-          <div class="enhanced-donut-chart" v-if="surveysByType.length > 0">
-            <div class="donut-container">
-              <svg class="donut-svg" viewBox="0 0 100 100">
-                <!-- Background circle -->
-                <circle cx="50" cy="50" r="40" fill="none" stroke="#f1f5f9" stroke-width="16" />
-                <!-- Data segments -->
+          <div class="chart-body donut-chart-container">
+            <div class="donut-chart">
+              <svg viewBox="0 0 100 100" class="donut-svg">
+                <!-- Background -->
+                <circle cx="50" cy="50" r="40" fill="transparent" stroke="#f1f5f9" stroke-width="15" />
+                <!-- Segments -->
                 <circle 
-                  v-for="(item, index) in surveysByType" 
+                  v-for="(item, index) in surveysByType"
                   :key="index"
-                  cx="50" 
-                  cy="50" 
-                  r="40"
-                  fill="none"
+                  cx="50" cy="50" r="40"
+                  fill="transparent"
                   :stroke="item.color"
-                  stroke-width="16"
+                  stroke-width="15"
                   :stroke-dasharray="calculateStrokeDashArray(index)"
                   :stroke-dashoffset="calculateStrokeDashOffset(index)"
                   class="donut-segment"
-                  @mouseenter="highlightSegment(index)"
-                  @mouseleave="unhighlightSegment()"
                 />
               </svg>
               <div class="donut-center">
-                <div class="center-value">{{ totalSurveys }}</div>
-                <div class="center-label">إجمالي</div>
+                <span class="center-number">{{ totalSurveys }}</span>
+                <span class="center-text">إجمالي</span>
               </div>
             </div>
-            <div class="donut-data">
-              <div 
-                v-for="(item, index) in surveysByType" 
-                :key="index"
-                class="data-item"
-                :class="{ 'highlighted': highlightedSegment === index }"
-                @mouseenter="highlightSegment(index)"
-                @mouseleave="unhighlightSegment()"
-              >
-                <div class="data-color" :style="{ backgroundColor: item.color }"></div>
-                <div class="data-content">
-                  <div class="data-label">{{ item.name }}</div>
-                  <div class="data-value">{{ item.value }}</div>
-                  <div class="data-percentage">{{ calculatePercentage(item.value, totalSurveys) }}%</div>
-                </div>
+            <div class="donut-legend">
+              <div class="legend-item" v-for="item in surveysByType" :key="item.name">
+                <span class="legend-dot" :style="{background: item.color}"></span>
+                <span class="legend-name">{{ item.name }}</span>
+                <span class="legend-val">{{ item.value }}</span>
               </div>
             </div>
-          </div>
-          <div v-else class="chart-empty-state">
-            <div class="empty-icon">📊</div>
-            <h4>لا توجد بيانات متاحة</h4>
-            <p>لم يتم العثور على استبيانات لعرض التوزيع</p>
           </div>
         </div>
       </div>
 
-      <!-- Recent Activity -->
-      <div class="recent-activity animate-slide-up delay-5">
-        <h3 class="section-title">النشاط الأخير</h3>
-        <div class="activity-list">
+      <!-- Recent Activity (Timeline) -->
+      <div class="chart-card full-width">
+        <div class="chart-header">
+          <h3>⚡ النشاط الأخير</h3>
+          <span class="chart-subtitle">آخر العمليات التي تمت على النظام</span>
+        </div>
+        <div class="activity-timeline">
           <div 
             v-for="(activity, index) in recentActivities" 
-            :key="index"
-            class="activity-item animate-fade-in"
-            :class="`delay-${index % 3}`"
+            :key="index" 
+            class="timeline-item"
           >
-            <div class="activity-icon" :class="activity.type">
-              <component :is="activity.icon" />
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <span class="activity-title">{{ activity.text }}</span>
+                <span class="activity-time">{{ activity.time }}</span>
+              </div>
+              <div class="timeline-meta">
+                <span class="user-badge">👤 {{ activity.created_by }}</span>
+                <span 
+                  class="status-badge-mini" 
+                  :class="getActivityStatusClass(activity.status)"
+                >
+                  {{ activity.status }}
+                </span>
+              </div>
             </div>
-            <div class="activity-content">
-              <p class="activity-text">{{ activity.text }}</p>
-              <span class="activity-time">{{ activity.time }}</span>
-            </div>
+          </div>
+          
+          <div v-if="recentActivities.length === 0" class="empty-timeline">
+            لا يوجد نشاط حديث لعرضه
           </div>
         </div>
       </div>
+
     </div>
 
     <!-- Schools Analytics - Enhanced Professional Design -->
@@ -365,7 +325,7 @@
               </svg>
             </div>
             <div class="card-content enhanced-content">
-              <div class="card-value">{{ schoolAnalyticsData.total_directorates }}</div>
+              <div class="card-value">{{ schoolAnalyticsData.total_directorates || 0 }}</div>
               <div class="card-label">المديريات</div>
               <div class="card-trend neutral">
                 <span>{{ calculateAveragePerDirectorate(schoolAnalyticsData.total_schools, schoolAnalyticsData.directorates_distribution) }} مدرسة/مديرية</span>
@@ -382,7 +342,7 @@
               </svg>
             </div>
             <div class="card-content enhanced-content">
-              <div class="card-value">{{ schoolAnalyticsData.total_complexes }}</div>
+              <div class="card-value">{{ schoolAnalyticsData.total_complexes || 0 }}</div>
               <div class="card-label">المجمعات</div>
               <div class="card-trend neutral">
                 <span>{{ calculateClustersPerDirectorate(schoolAnalyticsData.total_complexes, schoolAnalyticsData.total_directorates) }} مجمع/مديرية</span>
@@ -399,7 +359,7 @@
               </svg>
             </div>
             <div class="card-content enhanced-content">
-              <div class="card-value">{{ schoolAnalyticsData.empty_schools_count }}</div>
+              <div class="card-value">{{ schoolAnalyticsData.empty_schools_count || 0 }}</div>
               <div class="card-label">مدارس شاغرة</div>
               <div class="card-trend negative">
                 <span>بحاجة لتحديث البيانات</span>
@@ -486,7 +446,7 @@
                     <span class="stat-label">مديرية</span>
                   </div>
                   <div class="stat-item">
-                    <span class="stat-number">{{ schoolAnalyticsData.total_schools }}</span>
+                    <span class="stat-number">{{ schoolAnalyticsData.total_schools || 0 }}</span>
                     <span class="stat-label">مدرسة</span>
                   </div>
                 </div>
@@ -1254,23 +1214,24 @@ const error = computed(() => {
 
 // Enhanced data structures - Use only API data, no static values
 const keyMetrics = computed(() => {
-  if (!globalStats.value) return [];
+  if (!globalStats.value?.cards) return [];
   
   // Only use real data from API, no fallback values
+  // Map fields from 'cards' object in the API response
   return [
     {
       key: 'surveys',
       label: 'إجمالي الاستبيانات',
-      value: globalStats.value.total_surveys,
-      target: 0, // Will be calculated dynamically
-      trend: 0, // Will be calculated dynamically
+      value: globalStats.value.cards.total_surveys,
+      target: 0,
+      trend: 0,
       color: 'primary',
       icon: SurveyIcon
     },
     {
       key: 'responses',
       label: 'إجمالي الإجابات',
-      value: globalStats.value.total_responses,
+      value: globalStats.value.cards.total_responses,
       target: 0,
       trend: 0,
       color: 'success',
@@ -1279,7 +1240,7 @@ const keyMetrics = computed(() => {
     {
       key: 'schools',
       label: 'إجمالي المدارس',
-      value: globalStats.value.total_schools,
+      value: globalStats.value.cards.total_schools,
       target: 0,
       trend: 0,
       color: 'warning',
@@ -1288,7 +1249,7 @@ const keyMetrics = computed(() => {
     {
       key: 'users',
       label: 'إجمالي المستخدمين',
-      value: globalStats.value.total_users,
+      value: globalStats.value.cards.total_users,
       target: 0,
       trend: 0,
       color: 'info',
@@ -1299,11 +1260,12 @@ const keyMetrics = computed(() => {
 
 const monthlyActivity = computed(() => {
   // Use real data from global analytics if available
+  // Map from 'charts.monthly_activity'
   if (globalStats.value?.charts?.monthly_activity) {
     return globalStats.value.charts.monthly_activity.map(item => ({
       month: item.month?.trim() || '',
       count: item.count || 0,
-      type: 'completed' // Default type since API doesn't specify
+      type: 'completed'
     }));
   }
   
@@ -1311,28 +1273,14 @@ const monthlyActivity = computed(() => {
 });
 
 const maxMonthlyCount = computed(() => {
-  // Only use real data from API, no fallback values
   if (monthlyActivity.value && monthlyActivity.value.length > 0) {
-    return Math.max(...monthlyActivity.value.map(item => item.count));
+    const max = Math.max(...monthlyActivity.value.map(item => item.count));
+    return Math.max(max * 1.2, 10);
   }
-  return 0; // No data available
+  return 10;
 });
 
 // Enhanced chart computed properties
-const maxYAxisValue = computed(() => {
-  const maxValue = maxMonthlyCount.value;
-  // Round up to nearest 10 for better scaling
-  return Math.ceil(maxValue / 10) * 10;
-});
-
-const yAxisTicks = computed(() => {
-  const maxVal = maxYAxisValue.value;
-  const ticks = [];
-  for (let i = 0; i <= maxVal; i += Math.ceil(maxVal / 5)) {
-    ticks.push(i);
-  }
-  return ticks.reverse(); // Reverse for RTL layout
-});
 
 const totalSurveys = computed(() => {
   return surveysByType.value.reduce((sum, item) => sum + item.value, 0);
@@ -1343,20 +1291,20 @@ const donutCircumference = computed(() => {
 });
 
 const totalResponses = computed(() => {
-  return globalStats.value?.total_responses || 0;
+  return globalStats.value?.cards?.total_responses || 0;
 });
 
 const surveysByType = computed(() => {
   // Only use real data from API, no static fallback data
-  if (globalStats.value?.surveys_by_type) {
-    const typeData = globalStats.value.surveys_by_type;
+  // Map from 'charts.surveys_by_type'
+  if (globalStats.value?.charts?.surveys_by_type) {
+    const typeData = globalStats.value.charts.surveys_by_type;
     return [
       { name: 'دوري', value: typeData.periodic || 0, color: '#4CAF50' },
       { name: 'عادي', value: typeData.regular || 0, color: '#2196F3' }
-    ].filter(item => item.value > 0); // Only show types that have actual data
+    ].filter(item => item.value > 0);
   }
   
-  // Return empty array when no API data is available
   return [];
 });
 
@@ -1466,14 +1414,6 @@ const exportChart = (chartType) => {
   // TODO: Implement actual chart export functionality
 };
 
-const getBarColor = (type) => {
-  const colors = {
-    completed: '#10b981',
-    active: '#3b82f6',
-    pending: '#f59e0b'
-  };
-  return colors[type] || '#64748b';
-};
 
 const getSurveyStatusText = (type) => {
   const texts = {
@@ -1599,6 +1539,38 @@ const viewSchoolResponses = async (schoolId) => {
   }
 }
 
+// Enhanced schools analytics computed properties - Use only API data
+const maxDirectorateCount = computed(() => {
+  if (!schoolAnalyticsData.value?.directorates_distribution) return 0;
+  const values = Object.values(schoolAnalyticsData.value.directorates_distribution);
+  return values.length > 0 ? Math.max(...values) : 0;
+});
+
+// Fix for "Green Block" issue: Ensure Y-axis always has a reasonable minimum max value (e.g. 10)
+const maxYAxisValue = computed(() => {
+  if (!monthlyActivity.value || monthlyActivity.value.length === 0) return 10;
+  const max = Math.max(...monthlyActivity.value.map(item => item.count));
+  // If max is small (e.g. 3), use 10 as axis max so the bar is 30% height, not 100%
+  return Math.max(max * 1.2, 10); 
+});
+
+const yAxisTicks = computed(() => {
+  const max = maxYAxisValue.value;
+  // Create 5 ticks: 0, 20%, 40%, 60%, 80%, 100% of max
+  const ticks = [];
+  for (let i = 0; i <= 5; i++) {
+    ticks.push(Math.round((max / 5) * i));
+  }
+  return ticks.reverse(); // Standard Y-axis order (top to bottom)
+});
+
+const getBarColor = (type) => {
+  // Use brand gradients instead of solid colors
+  if (type === 'completed') return 'var(--primary-dark)'; // Dark Green
+  if (type === 'active') return 'var(--primary-teal)'; // Teal
+  return 'var(--primary-gold)'; // Gold for drafts/pending
+};
+
 const loadSchoolAnalytics = async () => {
   try {
     const data = await analyticsStore.fetchAllSchoolAnalytics();
@@ -1611,7 +1583,6 @@ const loadSchoolAnalytics = async () => {
 // Enhanced schools analytics methods
 const exportSchoolChart = (chartType) => {
   console.log(`Exporting school ${chartType} chart`);
-  // TODO: Implement actual export functionality
 };
 
 const sortDirectorates = () => {
@@ -1800,6 +1771,12 @@ const getTotalFromObject = (obj) => {
   return Object.values(obj).reduce((sum, val) => sum + (val || 0), 0)
 }
 
+const getActivityStatusClass = (status) => {
+  if (status === 'نشط') return 'badge-active';
+  if (status === 'مسودة') return 'badge-draft';
+  return 'badge-closed';
+}
+
 // Helper method to clean text samples (remove quotes)
 const cleanTextSample = (text) => {
   if (typeof text === 'string') {
@@ -1898,12 +1875,6 @@ const formatStructuredAnswer = (answerObj, questionType) => {
   }
 }
 
-const maxDirectorateCount = computed(() => {
-  // Use only API data, no fallback values
-  if (!schoolAnalyticsData.value?.directorates_distribution) return 0;
-  const values = Object.values(schoolAnalyticsData.value.directorates_distribution);
-  return values.length > 0 ? Math.max(...values) : 0;
-});
 
 // Enhanced schools analytics computed properties - Use only API data
 const sortedDirectorates = computed(() => {
@@ -1921,14 +1892,14 @@ const radialCircumference = computed(() => {
 // Dynamic clusters data from API - No static fallback data
 const clustersData = computed(() => {
   // Only use real API data, no static fallback
-  if (schoolAnalyticsData.value?.complexes_distribution && schoolAnalyticsData.value.complexes_distribution.length > 0) {
-    // Transform API data format {name: "cluster name", count: number} to {name: string, schools: number}
+  if (schoolAnalyticsData.value?.complexes_distribution && Array.isArray(schoolAnalyticsData.value.complexes_distribution)) {
+    // Transform API data format {name: string, count: number} to {name: string, schools: number}
     return schoolAnalyticsData.value.complexes_distribution
       .map(item => ({
         name: item.name || 'غير محدد',
         schools: Math.round(item.count || 0)
       }))
-      .filter(item => item.schools > 0); // Only show items with actual data
+      .filter(item => item.schools >= 0); // Include items even with 0 schools for completeness if needed, or > 0 to hide empty
   }
   
   // Return empty array when no API data is available

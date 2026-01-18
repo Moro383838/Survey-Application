@@ -439,7 +439,7 @@ const saveQuestion = () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 38, 35, 0.85);
+  background: rgba(5, 66, 57, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -459,17 +459,17 @@ const saveQuestion = () => {
   max-width: 900px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 25px 50px rgba(0, 38, 35, 0.3);
+  box-shadow: 0 25px 50px rgba(5, 66, 57, 0.3);
   animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .modal-header {
   padding: 24px 32px;
-  background: linear-gradient(135deg, #002623, #001a18);
+  background: var(--gradient-primary);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid #b9a779;
+  border-bottom: 2px solid var(--primary-gold);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -485,7 +485,7 @@ const saveQuestion = () => {
 .close-btn {
   background: rgba(185, 167, 121, 0.1);
   border: 1px solid rgba(185, 167, 121, 0.2);
-  color: #b9a779;
+  color: var(--primary-gold);
   font-size: 24px;
   width: 40px;
   height: 40px;
@@ -532,17 +532,17 @@ const saveQuestion = () => {
 }
 
 .preview-badge {
-  background: linear-gradient(135deg, #002623, #001a18);
-  color: #b9a779;
+  background: var(--gradient-primary);
+  color: var(--primary-gold);
   padding: 8px 16px;
   border-radius: 20px;
   font-size: 14px;
   font-weight: 700;
-  border: 1px solid #b9a779;
+  border: 1px solid var(--primary-gold);
 }
 
 .question-type-label {
-  color: #054239;
+  color: var(--primary-dark);
   font-weight: 700;
   font-size: 16px;
 }
@@ -713,8 +713,8 @@ const saveQuestion = () => {
 
 .large-textarea:focus {
   outline: none;
-  border-color: #428177;
-  box-shadow: 0 0 0 4px rgba(66, 129, 119, 0.15);
+  border-color: var(--primary-teal);
+  box-shadow: 0 0 0 4px rgba(0, 95, 87, 0.15);
 }
 
 .char-count {
@@ -767,7 +767,7 @@ const saveQuestion = () => {
 .option-number {
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, #428177, #054239);
+  background: var(--primary-teal);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -787,7 +787,7 @@ const saveQuestion = () => {
 
 .remove-option-btn {
   background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
+  color: var(--primary-dark);
   border: 2px solid rgba(239, 68, 68, 0.3);
   border-radius: 8px;
   width: 44px;

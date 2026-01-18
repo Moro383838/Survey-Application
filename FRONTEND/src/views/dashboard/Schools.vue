@@ -84,7 +84,7 @@
         @school-updated="handleSchoolUpdated"
       />
 
-      <ViewSchoolModal 
+      <ViewSchoolModal
         v-if="showViewModal && selectedSchool"
         :school="selectedSchool"
         @close="showViewModal = false"
@@ -226,10 +226,10 @@
     flex-wrap: wrap;
     gap: 16px;
     margin-bottom: 24px;
-    background: linear-gradient(135deg, #002623, #001a18);
+    background: var(--gradient-primary);
     padding: 16px 24px;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 38, 35, 0.12);  
+    box-shadow: 0 2px 8px rgba(var(--primary-dark-rgb), 0.12);  
     color: white;
   }
   
@@ -240,14 +240,14 @@
   }
   
   .header-left h1 {
-    color: #b9a779;
+    color: var(--primary-gold);
     margin-bottom: 4px;
     font-size: 20px;
     font-weight: 700;
   }
   
   .header-left p {
-    color: #b9a779;
+    color: var(--primary-gold);
     margin: 0;
     font-size: 13px;
     opacity: 0.9;
@@ -260,8 +260,8 @@
   
 .add-btn {
   background: linear-gradient(135deg, #002623, #001a18);
-  color: #b9a779;
-  border: 1px solid #b9a779;
+  color: var(--primary-gold);
+  border: 1px solid var(--primary-gold);
   padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
@@ -277,8 +277,8 @@
 .add-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(185, 167, 121, 0.3);
-  background: linear-gradient(135deg, #b9a779, #d4c4a0);
-  color: #002623;
+  background: var(--gradient-gold);
+  color: var(--primary-dark);
 }
 
   .stats {

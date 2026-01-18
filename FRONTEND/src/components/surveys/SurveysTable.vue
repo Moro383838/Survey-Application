@@ -117,18 +117,18 @@ const getStatusClass = (statusId) => {
 
 .custom-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+  border-collapse: collapse;
   min-width: 800px;
 }
 
 .custom-table th {
-  background: linear-gradient(135deg, #002623, #001a18);
-  color: #b9a779;
+  background: #054239;
+  color: var(--primary-gold);
   font-weight: 600;
   padding: 16px;
   text-align: right;
-  border-bottom: 2px solid var(--primary-gold);
+  border: none !important;
+  border-bottom: 2px solid var(--primary-gold) !important;
   font-size: 14px;
 }
 

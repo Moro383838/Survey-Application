@@ -152,7 +152,7 @@ const handleSubmit = async () => {
 
 /* Header */
 .login-header {
-  background: linear-gradient(135deg, #002623, #001a18);
+  background: var(--gradient-primary);
   padding: 0.5rem 2rem;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   position: relative;
@@ -221,7 +221,7 @@ const handleSubmit = async () => {
   padding: 2.5rem;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   position: relative;
-  border-top: 5px solid #b9a779;
+  border-top: 5px solid var(--primary-gold);
 }
 
 .card-header {
@@ -241,7 +241,7 @@ const handleSubmit = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #b9a779;
+  border: 2px solid var(--primary-gold);
 }
 
 .card-seal {
@@ -251,7 +251,7 @@ const handleSubmit = async () => {
 }
 
 .card-title {
-  color: #002623;
+  color: var(--primary-dark);
   font-size: 1.75rem;
   font-weight: 700;
   margin: 0 0 0.5rem;
@@ -277,7 +277,7 @@ const handleSubmit = async () => {
 }
 
 .form-label {
-  color: #002623;
+  color: var(--primary-dark);
   font-weight: 600;
   font-size: 0.95rem;
 }
@@ -304,7 +304,7 @@ const handleSubmit = async () => {
 .form-input:focus {
   outline: none;
   background-color: #ffffff;
-  border-color: #b9a779;
+  border-color: var(--primary-gold);
   box-shadow: 0 0 0 3px rgba(185, 167, 121, 0.1);
 }
 
@@ -333,9 +333,9 @@ const handleSubmit = async () => {
 
 /* Button */
 .login-button {
-  background: linear-gradient(135deg, #002623, #001a18);
+  background: var(--gradient-primary);
   color: #ffffff;
-  border: 1px solid #b9a779;
+  border: 1px solid var(--primary-gold);
   padding: 1rem;
   border-radius: 8px;
   font-size: 1.1rem;
@@ -350,8 +350,8 @@ const handleSubmit = async () => {
 }
 
 .login-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #b9a779, #9a8660);
-  color: #002623;
+  background: var(--gradient-gold);
+  color: var(--primary-dark);
 }
 
 .login-button:disabled {
@@ -385,10 +385,10 @@ const handleSubmit = async () => {
 
 /* Footer */
 .login-footer {
-  background: linear-gradient(135deg, #002623, #001a18);
+  background: var(--gradient-primary);
   padding: 1.5rem;
   text-align: center;
-  color: #b9a779;
+  color: var(--primary-gold);
   font-size: 0.85rem;
   font-weight: 600;
 }

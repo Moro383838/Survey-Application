@@ -9,8 +9,8 @@ export default {
       colors: {
         // تم استخراج هذه الألوان من ملف base.css
         primary: {
-          DEFAULT: '#002623', // --primary
-          dark: '#002623',    // --primary-dark
+          DEFAULT: '#054239', // --primary
+          dark: '#054239',    // --primary-dark
           light: '#b9a779',   // --primary-light (Gold)
           'very-light': '#f8fafc', // --primary-very-light
         },

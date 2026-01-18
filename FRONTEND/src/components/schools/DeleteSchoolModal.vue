@@ -141,7 +141,7 @@ const formatDate = (dateString) => {
 
 .modal-header {
   padding: 24px;
-  background: linear-gradient(135deg, #002623, #001a18);
+  background: linear-gradient(135deg, #054239, #001a18);
   color: white;
   display: flex;
   justify-content: space-between;

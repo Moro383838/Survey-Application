@@ -13,7 +13,6 @@
   
   <template>
     <button @click="handleLogout" class="logout-btn">
-      <span class="logout-icon">🚪</span>
       <span>تسجيل الخروج</span>
     </button>
   </template>

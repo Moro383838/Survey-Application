@@ -304,7 +304,7 @@ const handleSubmit = async () => {
 
 /* Header */
 .modal-header {
-  background: #054239; padding: 16px 24px; border-bottom: 1px solid #36635b;
+  background: var(--primary-dark); padding: 16px 24px; border-bottom: 1px solid var(--primary-teal);
   display: flex; justify-content: space-between; align-items: center;
   color: white;
 }
@@ -313,7 +313,7 @@ const handleSubmit = async () => {
   height: 50px; width: auto; object-fit: contain;
 }
 .header-text h3 { margin: 0; font-size: 18px; font-weight: 700; color: white; }
-.header-text p { margin: 0; font-size: 13px; color: #d1e7dd; }
+.header-text p { margin: 0; font-size: 13px; color: var(--gold-light); }
 .close-btn { background: none; border: none; font-size: 28px; color: #e2e8f0; cursor: pointer; }
 .close-btn:hover { color: white; }
 
@@ -337,7 +337,7 @@ const handleSubmit = async () => {
 .title-input::placeholder { color: #cbd5e1; }
 .input-focus-border {
   position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
-  background: #428177; transition: width 0.3s;
+  background: var(--primary-teal); transition: width 0.3s;
 }
 .title-input:focus + .input-focus-border { width: 100%; }
 
@@ -357,16 +357,16 @@ const handleSubmit = async () => {
   width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px;
   font-size: 14px; transition: border-color 0.2s;
 }
-.form-group input:focus, .form-group textarea:focus { outline: none; border-color: #428177; }
+.form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary-teal); }
 
 /* Sidebar (Left) */
 .question-sidebar {
   flex: 1; min-width: 300px; max-width: 350px;
   background: white; display: flex; flex-direction: column;
 }
-.sidebar-header { padding: 20px; background: #054239; border-bottom: 1px solid #36635b; }
+.sidebar-header { padding: 20px; background: var(--primary-dark); border-bottom: 1px solid var(--primary-teal); }
 .sidebar-header h4 { margin: 0; color: white; font-size: 16px; }
-.sidebar-header p { margin: 4px 0 0; color: #d1e7dd; font-size: 12px; opacity: 0.8; }
+.sidebar-header p { margin: 4px 0 0; color: var(--gold-light); font-size: 12px; opacity: 0.8; }
 .sidebar-content {
   flex: 1; overflow-y: auto; padding: 16px;
   display: flex; flex-direction: column; gap: 12px;
@@ -377,13 +377,13 @@ const handleSubmit = async () => {
   background: white; cursor: pointer; transition: all 0.2s;
 }
 .sidebar-item:hover {
-  border-color: #428177; transform: translateX(-4px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  border-color: var(--primary-teal); transform: translateX(-4px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
 }
 .item-icon { font-size: 20px; }
 .item-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
 .item-title { font-weight: 700; color: #1e293b; font-size: 14px; }
 .item-desc { font-size: 11px; color: #64748b; line-height: 1.3; }
-.item-add { color: #428177; font-weight: bold; font-size: 18px; }
+.item-add { color: var(--primary-teal); font-weight: bold; font-size: 18px; }
 
 /* Questions Cards */
 .question-card-item {
@@ -394,8 +394,8 @@ const handleSubmit = async () => {
   background: #f8fafc; padding: 8px 12px; border-bottom: 1px solid #e2e8f0;
   display: flex; justify-content: space-between; align-items: center;
 }
-.q-number { font-weight: bold; color: #428177; font-size: 13px; }
-.q-type { font-size: 12px; background: #e6f0ee; color: #054239; padding: 2px 8px; border-radius: 4px; }
+.q-number { font-weight: bold; color: var(--primary-teal); font-size: 13px; }
+.q-type { font-size: 12px; background: #e6f0ee; color: var(--primary-dark); padding: 2px 8px; border-radius: 4px; }
 .q-body { padding: 12px; font-size: 14px; color: #334155; }
 .q-actions button { background: none; border: none; cursor: pointer; font-size: 14px; margin-left: 6px; }
 .q-actions button:hover { transform: scale(1.1); }
@@ -408,7 +408,7 @@ const handleSubmit = async () => {
 .footer-actions { display: flex; gap: 12px; }
 .btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; }
 .btn-secondary { background: #f1f5f9; color: #475569; }
-.btn-primary { background: #054239; color: white; }
+.btn-primary { background: var(--primary-dark); color: white; }
 .btn-primary:hover { background: #04332c; }
 
 /* Scrollbar */

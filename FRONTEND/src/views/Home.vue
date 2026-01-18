@@ -24,7 +24,7 @@ const dashboardCards = [
     title: 'الاستبيانات المتاحة',
     description: 'عرض والإجابة على الاستبيانات المطلوبة',
     icon: '📝',
-    color: '#002623',
+    color: 'var(--primary-dark)',
     route: '/available-surveys'
   },
   {
@@ -40,7 +40,7 @@ const dashboardCards = [
     title: 'الإحصائيات',
     description: 'عرض إحصائيات المشاركة',
     icon: '📊',
-    color: '#002623',
+    color: 'var(--primary-dark)',
     route: '#'
   }
 ]
@@ -147,7 +147,7 @@ const navigateTo = (route) => {
 .home-header {
   background: white;
   padding: 1rem 2rem;
-  border-bottom: 2px solid #b9a779;
+  border-bottom: 2px solid var(--primary-gold);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
@@ -177,14 +177,14 @@ const navigateTo = (route) => {
 .logo-text h1 {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #002623;
+  color: var(--primary-dark);
   margin: 0;
   line-height: 1.2;
 }
 
 .logo-text p {
   font-size: 0.875rem;
-  color: #b9a779;
+  color: var(--primary-gold);
   margin: 0;
   font-weight: 600;
 }
@@ -201,9 +201,9 @@ const navigateTo = (route) => {
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   background: linear-gradient(135deg, #f5f1e8, #e8dfc8);
-  border: 1px solid #b9a779;
+  border: 1px solid var(--primary-gold);
   border-radius: 0.75rem;
-  color: #002623;
+  color: var(--primary-dark);
   font-weight: 500;
 }
 
@@ -233,14 +233,14 @@ const navigateTo = (route) => {
   background: none;
   font-size: 0.9375rem;
   font-weight: 700;
-  color: #002623;
+  color: var(--primary-dark);
   cursor: pointer;
   outline: none;
   padding: 0.25rem;
 }
 
 .school-select:focus {
-  color: #b9a779;
+  color: var(--primary-gold);
 }
 
 /* Main Content */
@@ -256,7 +256,7 @@ const navigateTo = (route) => {
 }
 
 .welcome-card {
-  background: linear-gradient(135deg, #002623, #001a18);
+  background: var(--gradient-primary);
   color: white;
   padding: 3rem;
   border-radius: 20px;
@@ -392,12 +392,12 @@ const navigateTo = (route) => {
 }
 
 .quick-action-btn.primary {
-  background: #002623;
+  background: var(--primary-dark);
   color: white;
 }
 
 .quick-action-btn.primary:hover {
-  background: #b9a779;
+  background: var(--primary-gold);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 38, 35, 0.3);
 }

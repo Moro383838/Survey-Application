@@ -202,7 +202,7 @@ onMounted(() => {
   flex-wrap: wrap;
   gap: 16px;
   margin-bottom: 24px;
-  background: linear-gradient(135deg, #002623, #001a18);
+  background: var(--gradient-primary);
   padding: 16px 24px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 38, 35, 0.12);
@@ -216,23 +216,23 @@ onMounted(() => {
 }
 
 .header-left h1 {
-  color: #b9a779;
+  color: var(--primary-gold);
   margin-bottom: 4px;
   font-size: 20px;
   font-weight: 700;
 }
 
 .header-left p {
-  color: #b9a779;
+  color: var(--primary-gold);
   margin: 0;
   font-size: 13px;
   opacity: 0.9;
 }
 
 .add-btn {
-  background: linear-gradient(135deg, #002623, #001a18);
-  color: #b9a779;
-  border: 1px solid #b9a779;
+  background: var(--gradient-primary);
+  color: var(--primary-gold);
+  border: 1px solid var(--primary-gold);
   padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
@@ -248,8 +248,8 @@ onMounted(() => {
 .add-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(185, 167, 121, 0.3);
-  background: linear-gradient(135deg, #b9a779, #d4c4a0);
-  color: #002623;
+  background: var(--gradient-gold);
+  color: var(--primary-dark);
 }
 
 .stats {
@@ -278,18 +278,17 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   background: #ffff;
-  color: #054239;
+  color: var(--primary-dark);
   border: 1px solid #edebe0;
 }
 
 .stat-info h3 {
   font-size: 28px;
-  color: #054239;
-  margin: 0 0 4px 0;
+  color: var(--primary-dark);
 }
 
 .stat-info p {
-  color: #054239;
+  color: var(--primary-dark);
   margin: 0;
   opacity: 0.8;
 }
@@ -349,7 +348,7 @@ onMounted(() => {
   width: 50px;
   height: 50px;
   border: 4px solid #edebe0;
-  border-top: 4px solid #054239;
+  border-top: 4px solid var(--primary-dark);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 20px;
@@ -381,17 +380,17 @@ onMounted(() => {
 }
 
 .error-state h3 {
-  color: #054239;
+  color: var(--primary-dark);
   margin-bottom: 8px;
 }
 
 .error-state p {
-  color: #054239;
+  color: var(--primary-dark);
   margin-bottom: 20px;
 }
 
 .retry-btn {
-  background: #054239;
+  background: var(--primary-dark);
   color: #ffffff;
   border: none;
   padding: 10px 20px;
@@ -427,7 +426,7 @@ onMounted(() => {
 
 .pagination-btn:hover:not(:disabled) {
   background: #edebe0;
-  color: #054239;
+  color: var(--primary-dark);
 }
 
 .pagination-btn:disabled {
@@ -436,7 +435,7 @@ onMounted(() => {
 }
 
 .pagination-info {
-  color: #054239;
+  color: var(--primary-dark);
   font-weight: 500;
 }
 

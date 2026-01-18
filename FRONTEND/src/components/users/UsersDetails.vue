@@ -188,7 +188,7 @@ const getSchoolsCount = () => {
 /* --- الهيدر --- */
 .modal-header {
   padding: 24px;
-  background: linear-gradient(135deg, #002623, #001a18);
+  background: linear-gradient(135deg, #003d36, #001a18);
   color: white;
   display: flex;
   justify-content: space-between;
@@ -254,7 +254,7 @@ const getSchoolsCount = () => {
 .user-avatar-large {
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, #002623, #0a4f45);
+  background: linear-gradient(135deg, #003d36, #0a4f45);
   color: #b9a779;
   font-size: 32px;
   font-weight: 700;
@@ -268,7 +268,7 @@ const getSchoolsCount = () => {
 }
 
 .user-title {
-  color: #002623;
+  color: #003d36;
   font-size: 24px;
   font-weight: 700;
   margin: 0 0 8px 0;
@@ -326,7 +326,7 @@ const getSchoolsCount = () => {
 
 .section-title h4 {
   font-size: 16px;
-  color: #002623;
+  color: #003d36;
   margin: 0 0 12px 0;
   border-bottom: 1px solid #b9a779;
   display: inline-block;
@@ -416,7 +416,7 @@ const getSchoolsCount = () => {
 .loading-spinner {
   width: 30px; height: 30px;
   border: 3px solid #e2e8f0;
-  border-top-color: #002623;
+  border-top-color: #003d36;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 10px;

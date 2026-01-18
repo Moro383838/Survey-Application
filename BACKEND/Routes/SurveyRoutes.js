@@ -8,7 +8,6 @@ const {
   publishSurveyCtrl,
   getAllSurveysAdmin,
   CloseSurveyCtrl,
-  getSurveyProfileCtrl,
   updateSurveyCtrl,
   deleteSurvey,
   getSurveyDetailsCtrl,

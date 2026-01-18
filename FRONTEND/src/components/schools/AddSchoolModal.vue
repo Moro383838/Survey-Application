@@ -227,7 +227,7 @@ const handleSubmit = async () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 38, 35, 0.85); /* تعتيم الخلفية */
+  background: rgba(5, 66, 57, 0.85); /* تعتيم الخلفية */
   display: flex;
   justify-content: center;
   align-items: center; /* توسيط عمودي وأفقي */
@@ -256,7 +256,7 @@ const handleSubmit = async () => {
 /* --- الرأس --- */
 .modal-header {
   padding: 24px 30px;
-  background: linear-gradient(135deg, #002623, #001a18);
+  background: linear-gradient(135deg, #054239, #001a18);
   color: white;
   display: flex;
   justify-content: space-between;
@@ -434,14 +434,14 @@ const handleSubmit = async () => {
 .btn-secondary:hover { background: #e2e8f0; color: #1e293b; }
 
 .btn-primary {
-  background: linear-gradient(135deg, #002623, #001a18);
+  background: linear-gradient(135deg, #054239, #001a18);
   color: #b9a779;
   border: 1px solid #b9a779;
 }
 
 .btn-primary:hover {
   background: linear-gradient(135deg, #b9a779, #d4c4a0);
-  color: #002623;
+  color: #054239;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(185, 167, 121, 0.3);
 }

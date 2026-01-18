@@ -1,216 +1,172 @@
 <template>
-  <div class="survey-details-page">
-    <div class="back-section">
-      <button class="back-btn" @click="$router.back()">
-        ← العودة
-      </button>
-    </div>
-
-    <!-- Loading State -->
-    <div v-if="loading" class="loading-container">
-      <div class="loading-spinner"></div>
-      <p>جاري تحميل تفاصيل الاستبيان...</p>
-    </div>
-
-    <!-- Error State -->
-    <div v-else-if="error" class="error-container">
-      <div class="error-icon">⚠️</div>
-      <h3>حدث خطأ أثناء تحميل البيانات</h3>
-      <p>{{ error }}</p>
-      <button class="retry-btn" @click="loadSurveyDetails">
-        إعادة المحاولة
-      </button>
-    </div>
-
-    <!-- Survey Content -->
-    <div v-else-if="survey && survey.id" class="survey-content">
-      <!-- Header Section -->
-      <div class="survey-header">
-        <div class="survey-icon">📋</div>
-        <div class="survey-info">
-          <h1>{{ survey.title }}</h1>
-          <div class="survey-meta">
-            <span class="status-badge" :class="getStatusClass(survey.status_id)">
-              {{ survey.status_label }}
-            </span>
-            <span class="survey-type">
-              {{ survey.is_periodic ? '🔄 استبيان دوري' : '📝 استبيان لمرة واحدة' }}
-            </span>
-            <span class="created-date">
-              📅 {{ formatDate(survey.created_at) }}
-            </span>
-          </div>
+  <div class="modal-overlay" @click.self="router.back()">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="header-content-wrapper">
+          <img src="/logo.png" alt="شعار الوزارة" class="ministry-logo" />
+          <h3>تفاصيل الاستبيان</h3>
         </div>
+        <button class="close-modal" @click="router.back()">&times;</button>
       </div>
 
-      <!-- Main Details Section -->
-      <div class="details-section">
-        <!-- Basic Information -->
-        <div class="details-card">
-          <div class="card-header">
-            <h3>📋 المعلومات الأساسية</h3>
+      <div class="modal-body custom-scrollbar">
+        
+        <div v-if="loading" class="state-container">
+          <div class="loading-spinner"></div>
+          <p>جاري جلب البيانات...</p>
+        </div>
+
+        <div v-else-if="error" class="error-message">
+          <span class="error-icon">❌</span>
+          <span>{{ error }}</span>
+          <button class="retry-link" @click="loadSurveyDetails">إعادة المحاولة</button>
+        </div>
+
+        <div v-else-if="survey && survey.id" class="content-wrapper">
+          
+          <div class="profile-header">
+            <div class="survey-icon-large">📋</div>
+            <h3 class="survey-title">{{ survey.title }}</h3>
+            <span class="detail-badge" :class="getStatusClass(survey.status_id)">
+              {{ survey.status_label }}
+            </span>
+            <span class="detail-badge survey-type-badge">
+              {{ survey.is_periodic ? 'استبيان دوري' : 'استبيان لمرة واحدة' }}
+            </span>
           </div>
-          <div class="card-content">
-            <div class="detail-row">
+
+          <div class="survey-details-box">
+            <div class="detail-item">
               <span class="detail-label">الوصف:</span>
               <span class="detail-value">{{ survey.description || 'لا يوجد وصف' }}</span>
             </div>
-            <div class="detail-row">
+            
+
+            <div class="detail-item">
+              <span class="detail-label">تاريخ البدء:</span>
+              <span class="detail-value">{{ formatDate(survey.start_date || survey.dates?.start) }}</span>
+            </div>
+
+            <div class="detail-item">
               <span class="detail-label">تاريخ الانتهاء:</span>
               <span class="detail-value">{{ formatDate(survey.end_date || survey.dates?.end) }}</span>
             </div>
-            <div v-if="survey.frequency" class="detail-row">
+
+            <div v-if="survey.frequency" class="detail-item">
               <span class="detail-label">التكرار:</span>
               <span class="detail-value">{{ survey.frequency }}</span>
             </div>
           </div>
-        </div>
 
-        <!-- Clean Questions Display -->
-        <div v-if="survey.questions && survey.questions.length > 0" class="details-card">
-          <div class="card-header">
-            <h3>❓ الأسئلة ({{ survey.questions.length }})</h3>
-          </div>
-          <div class="card-content questions-clean-container">
-            <div 
-              v-for="(question, index) in survey.questions"
-              :key="question.id || index"
-              class="clean-question-item"
-            >
-              <div class="clean-q-header">
-                <span class="clean-q-number">{{ index + 1 }}.</span>
-                <h4 class="clean-q-text">
-                  {{ question.text }}
-                  <span v-if="question.is_required || question.required" class="required-mark">*</span>
-                </h4>
-              </div>
-              
-              <!-- Text Questions (1, 2) -->
-              <div v-if="[1, 2].includes(question.type_id)" class="clean-answer-area">
-                <input 
-                  v-if="question.type_id === 1"
-                  type="text" 
-                  class="clean-input" 
-                  placeholder="إجابة نصية قصيرة"
-                  disabled
-                />
-                <textarea 
-                  v-else
-                  class="clean-textarea" 
-                  placeholder="إجابة نصية طويلة"
-                  rows="3"
-                  disabled
-                ></textarea>
-              </div>
-
-              <!-- Single Choice (3) -->
-              <div v-else-if="question.type_id === 3" class="clean-answer-area">
-                <div v-for="(option, idx) in question.options" :key="idx" class="clean-option">
-                  <input type="radio" :name="'q_' + question.id" disabled />
-                  <span>{{ typeof option === 'object' ? (option.text || option.label || option.value) : option }}</span>
-                </div>
-              </div>
-
-              <!-- Multiple Choice (4) -->
-              <div v-else-if="question.type_id === 4" class="clean-answer-area">
-                <div v-for="(option, idx) in question.options" :key="idx" class="clean-option">
-                  <input type="checkbox" disabled />
-                  <span>{{ typeof option === 'object' ? (option.text || option.label || option.value) : option }}</span>
-                </div>
-              </div>
-
-              <!-- Number (5) -->
-              <div v-else-if="question.type_id === 5" class="clean-answer-area">
-                <input type="number" class="clean-input" placeholder="رقم" disabled />
-              </div>
-
-              <!-- Date (6) -->
-              <div v-else-if="question.type_id === 6" class="clean-answer-area">
-                <input type="date" class="clean-input" disabled />
-              </div>
-
-              <!-- Time (7) -->
-              <div v-else-if="question.type_id === 7" class="clean-answer-area">
-                <input type="time" class="clean-input" disabled />
-              </div>
-
-              <!-- Rating (10) -->
-              <div v-else-if="question.type_id === 10" class="clean-answer-area">
-                <div class="clean-rating">
-                  <span v-for="n in 5" :key="n" class="star-icon">⭐</span>
-                </div>
-              </div>
-
-              <!-- Default -->
-              <div v-else class="clean-answer-area">
-                <input type="text" class="clean-input" placeholder="إجابة" disabled />
-              </div>
+          <div v-if="survey.questions && survey.questions.length > 0" class="questions-section">
+            <div class="section-title">
+              <h4>❓ الأسئلة ({{ survey.questions.length }})</h4>
             </div>
-          </div>
-        </div>
-
-        <!-- Targets Section -->
-        <div v-if="survey.targets && survey.targets.length > 0" class="details-card">
-          <div class="card-header">
-            <h3>🎯 الأهداف المحددة</h3>
-          </div>
-          <div class="card-content">
-            <div class="targets-grid">
+            
+            <div class="questions-list">
               <div 
-                v-for="target in survey.targets" 
-                :key="target.id" 
-                class="target-card"
+                v-for="(question, index) in survey.questions"
+                :key="question.id || index" 
+                class="question-item"
               >
-                <div class="target-icon">🏫</div>
-                <div class="target-info">
-                  <h4>{{ target.name || target.school_name }}</h4>
-                  <p v-if="target.directorate">{{ target.directorate }}</p>
+                <div class="question-info">
+                  <span class="question-number">{{ index + 1 }}.</span>
+                  <span class="question-text">
+                    {{ question.text }}
+                    <span v-if="question.is_required || question.required" class="required-mark">*</span>
+                  </span>
+                </div>
+                <div class="question-type">
+                  {{ getQuestionTypeText(question.type_id) }}
                 </div>
               </div>
             </div>
           </div>
+
+          <div v-if="hasTargets" class="targets-section">
+            <div class="section-title">
+              <h4>🎯 الأهداف المحددة</h4>
+            </div>
+            
+            <div class="targets-summary">
+              <div v-if="targetCounts.directorates > 0" class="target-category">
+                <span class="category-label">المديريات:</span>
+                <span class="category-count">{{ targetCounts.directorates }}</span>
+              </div>
+              <div v-if="targetCounts.complexes > 0" class="target-category">
+                <span class="category-label">المجمعات:</span>
+                <span class="category-count">{{ targetCounts.complexes }}</span>
+              </div>
+              <div v-if="targetCounts.schools > 0" class="target-category">
+                <span class="category-label">المدارس:</span>
+                <span class="category-count">{{ targetCounts.schools }}</span>
+              </div>
+              <div class="target-total">
+                <span class="total-label">المجموع الكلي:</span>
+                <span class="total-count">{{ targetCounts.total }}</span>
+              </div>
+            </div>
+
+            <div v-if="survey.targets && survey.targets.length > 0" class="targets-list">
+              <div v-for="target in survey.targets" :key="target.id" class="target-item">
+                <div class="target-info">
+                  <span class="target-name">{{ target.name || target.school_name }}</span>
+                  <span class="target-directorate" v-if="target.directorate">{{ target.directorate }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
-    </div>
 
-    <!-- No Data State -->
-    <div v-else class="empty-state">
-      <div class="empty-icon">📋</div>
-      <h3>لم يتم العثور على الاستبيان</h3>
-      <p>قد يكون الاستبيان محذوف أو الرابط غير صحيح</p>
-      <button class="back-home-btn" @click="$router.push('/surveys')">
-        العودة لقائمة الاستبيانات
-      </button>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" @click="router.back()">
+          إغلاق
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useSurveyStore } from '@/stores/surveys'
 
-const route = useRoute()
+const props = defineProps({
+  survey: {
+    type: Object,
+    default: null
+  },
+  id: {
+    type: [Number, String],
+    default: null
+  }
+})
+
+const emit = defineEmits(['close'])
+
+const router = useRouter()
 const store = useSurveyStore()
 
-// Reactive data
 const survey = ref(null)
 const loading = ref(true)
 const error = ref(null)
 
-// Load survey details
 const loadSurveyDetails = async () => {
   try {
     loading.value = true
     error.value = null
     
-    const surveyId = Number(route.params.id)
+    // Determine survey ID from either props.survey or props.id
+    const surveyId = props.survey?.id || props.id
     
-    if (!surveyId || isNaN(surveyId)) {
-      throw new Error('معرف الاستبيان غير صحيح')
+    if (!surveyId) {
+      throw new Error('معرف الاستبيان غير متوفر')
     }
-
-    const data = await store.fetchSurveyById(surveyId)
+    
+    const data = await store.fetchSurveyById(Number(surveyId))
     
     if (!data) {
       throw new Error('لم يتم العثور على الاستبيان')
@@ -219,637 +175,303 @@ const loadSurveyDetails = async () => {
     survey.value = data
     
   } catch (err) {
-    console.error('Error loading survey details:', err)
-    error.value = err.message || 'حدث خطأ أثناء تحميل تفاصيل الاستبيان'
+    console.error('❌ خطأ في تحميل تفاصيل الاستبيان:', err)
+    error.value = err.message || 'فشل في تحميل البيانات'
   } finally {
     loading.value = false
   }
 }
 
-// Format dates
+onMounted(loadSurveyDetails)
+
+// --- دوال مساعدة ---
 const formatDate = (dateString) => {
   if (!dateString) return '-'
-  try {
-    return new Date(dateString).toLocaleDateString('ar-SA', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-  } catch (e) {
-    return dateString
-  }
+  return new Date(dateString).toLocaleDateString('ar-SA')
 }
 
-// Get status class based on status ID
+// --- خصائص محسوبة للأهداف ---
+const hasTargets = computed(() => {
+  if (!survey.value?.targets) return false
+  
+  // Check for different target structures
+  const targets = survey.value.targets
+  
+  // Direct arrays
+  if (Array.isArray(targets) && targets.length > 0) return true
+  
+  // Nested structure with IDs
+  if (targets.directorate_ids && targets.directorate_ids.length > 0) return true
+  if (targets.complex_ids && targets.complex_ids.length > 0) return true
+  if (targets.school_ids && targets.school_ids.length > 0) return true
+  
+  return false
+})
+
+const targetCounts = computed(() => {
+  const targets = survey.value?.targets || {}
+  
+  // Handle different target data structures
+  let directorates = 0
+  let complexes = 0
+  let schools = 0
+  
+  if (Array.isArray(targets)) {
+    // Flat array of targets
+    schools = targets.length
+  } else {
+    // Nested structure
+    directorates = targets.directorate_ids?.length || 0
+    complexes = targets.complex_ids?.length || 0
+    schools = targets.school_ids?.length || 0
+  }
+  
+  return {
+    directorates,
+    complexes,
+    schools,
+    total: directorates + complexes + schools
+  }
+})
+
 const getStatusClass = (statusId) => {
-  const statusClasses = {
-    1: 'status-draft',
-    2: 'status-active',
-    3: 'status-closed'
+  const classes = {
+    1: 'draft',
+    2: 'active',
+    3: 'closed'
   }
-  return statusClasses[statusId] || 'status-default'
+  return classes[statusId] || ''
 }
 
-// Lifecycle
-onMounted(loadSurveyDetails)
+const getQuestionTypeText = (typeId) => {
+  const types = {
+    1: 'نص قصير',
+    2: 'نص طويل',
+    3: 'خيار واحد',
+    4: 'خيارات متعددة',
+    5: 'رقم',
+    6: 'تاريخ',
+    7: 'وقت',
+    10: 'تقييم'
+  }
+  return types[typeId] || 'نوع غير معروف'
+}
 </script>
 
 <style scoped>
-.survey-details-page {
-  padding: 24px;
-  direction: rtl;
-  min-height: calc(100vh - 128px);
-  background: #f8fafc;
-  color: #002623;
-  max-width: 100%;
-  font-family: 'Inter', 'Outfit', sans-serif;
-}
-
-/* Back Button */
-.back-btn {
-  margin-bottom: 24px;
-  cursor: pointer;
-  background: white;
-  color: #002623;
-  border: 1px solid #e2e8f0;
-  padding: 10px 24px;
-  border-radius: 12px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.back-btn:hover {
-  background: #002623;
-  color: #b9a779;
-  border-color: #002623;
-  transform: translateX(4px);
-  box-shadow: 0 4px 12px rgba(0, 38, 35, 0.15);
-}
-
-/* Loading State */
-.loading-container {
+/* --- هيكل المودال الأساسي (مطابق لقالب الحذف) --- */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  padding: 60px 20px;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal {
   background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  margin: 40px 0;
-  color: #002623;
-}
-
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid #f1f5f9;
-  border-top: 4px solid var(--primary-gold);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 20px;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Survey Header */
-.survey-header {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 24px;
-  background: linear-gradient(135deg, #002623, #001a18);
-  border: 1px solid #b9a779;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 38, 35, 0.2);
-  margin-bottom: 24px;
-  color: white;
-  flex-wrap: wrap;
-}
-
-.survey-icon {
-  font-size: 32px;
-}
-
-.survey-info h1 {
-  margin: 0 0 12px 0;
-  color: #b9a779;
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.survey-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  align-items: center;
-}
-
-.status-badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #ffffff;
-  border: 1px solid #b9a779;
-  background: rgba(0, 38, 35, 0.8);
-}
-
-.status-draft { background: var(--dark-bg); }
-.status-active { background: var(--status-success); }
-.status-closed { background: var(--status-error); }
-.status-default { background: var(--text-muted); }
-
-.survey-type {
-  background: rgba(185, 167, 121, 0.2);
-  color: #b9a779;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  border: 1px solid rgba(185, 167, 121, 0.4);
-}
-
-.created-date {
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-/* Details Section */
-.details-section {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.details-card {
-  background: var(--bg-card);
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 38, 35, 0.1);
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px; /* نفس عرض قالب الحذف */
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   overflow: hidden;
-  color: var(--primary-dark);
+  animation: slideUp 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh; /* لضمان ظهور التمرير إذا طالت القائمة */
 }
 
-.card-header {
-  padding: 20px 24px;
-  background: linear-gradient(135deg, #002623, #001a18);
+/* --- الهيدر --- */
+.modal-header {
+  padding: 24px;
+  background: linear-gradient(135deg, #003d36, #001a18);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-bottom: 2px solid #b9a779;
+  flex-shrink: 0;
+}
+
+.header-content-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ministry-logo {
+  height: 40px;
+  width: auto;
+}
+
+.modal-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: #b9a779;
+}
+
+.close-modal {
+  background: rgba(185, 167, 121, 0.1);
+  border: none;
+  color: #b9a779;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+  border-radius: 8px;
+}
+
+.close-modal:hover {
+  transform: rotate(90deg);
+  background: rgba(185, 167, 121, 0.2);
   color: white;
 }
 
-.card-header h3 {
-  margin: 0;
-  color: #b9a779;
-  font-size: 18px;
-  font-weight: 600;
+/* --- جسم المودال --- */
+.modal-body {
+  padding: 32px;
+  overflow-y: auto;
 }
 
-.card-content {
-  padding: 24px;
-}
-
-.detail-row {
-  display: flex;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border-secondary);
-}
-
-.detail-row:last-child {
-  border-bottom: none;
-}
-
-.detail-label {
-  min-width: 120px;
-  font-weight: 600;
-  color: var(--primary-dark);
-}
-
-.detail-value {
-  flex: 1;
-  color: var(--text-muted);
-  line-height: 1.6;
-}
-
-/* Questions Container */
-.questions-clean-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.clean-question-item {
-  padding: 20px;
-  background: var(--bg-hover);
-  border-radius: 12px;
-  border: 1px solid var(--border-secondary);
-}
-
-.clean-q-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.clean-q-number {
-  font-weight: 700;
-  color: var(--primary-dark);
-  font-size: 16px;
-  min-width: 24px;
-}
-
-.clean-q-text {
-  margin: 0;
-  color: var(--primary-dark);
-  font-size: 16px;
-  font-weight: 500;
-  flex: 1;
-  line-height: 1.5;
-}
-
-.required-mark {
-  color: var(--status-error);
-  font-weight: 700;
-}
-
-.clean-answer-area {
-  margin-right: 36px;
-  padding: 16px;
-  background: var(--bg-card);
-  border-radius: 8px;
-  border: 1px solid var(--border-secondary);
-}
-
-.clean-input, .clean-textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid var(--border-secondary);
-  border-radius: 8px;
-  font-size: 16px;
-  background: white;
-  color: var(--primary-dark);
-}
-
-.clean-input:focus, .clean-textarea:focus {
-  border-color: var(--primary-gold) !important;
-  box-shadow: 0 0 0 3px rgba(185, 167, 121, 0.1) !important;
-}
-
-.clean-textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.clean-option {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 0;
-}
-
-.clean-rating {
-  display: flex;
-  gap: 4px;
-}
-
-.star-icon {
-  font-size: 20px;
-}
-
-/* Targets Grid */
-.targets-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-}
-
-.target-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-  background: var(--bg-hover);
-  border-radius: 12px;
-  border: 1px solid var(--border-secondary);
-}
-
-.target-icon {
-  font-size: 24px;
-}
-
-.target-info h4 {
-  margin: 0 0 4px 0;
-  color: var(--primary-dark);
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.target-info p {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: 14px;
-}
-
-/* Empty State */
-.empty-state {
+/* البروفايل العلوي */
+.profile-header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 80px 20px;
-  background: var(--bg-card);
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 38, 35, 0.1);
-  margin: 40px 0;
-  color: var(--primary-dark);
-}
-
-.empty-icon {
-  font-size: 64px;
   margin-bottom: 24px;
 }
 
-.empty-state h3 {
-  margin: 0 0 16px 0;
-  color: var(--primary-dark);
-  font-size: 24px;
+.survey-icon-large {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #003d36, #0a4f45);
+  color: #b9a779;
+  font-size: 32px;
   font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 12px;
+  border: 2px solid #b9a779;
 }
 
-.empty-state p {
-  margin: 0 0 24px 0;
-  color: var(--text-muted);
-  font-size: 16px;
+.survey-title {
+  color: #003d36;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
   text-align: center;
 }
 
-.back-home-btn {
-  padding: 12px 24px;
-  background: var(--gradient-primary);
-  color: white;
-  border: 1px solid var(--primary-gold);
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.back-home-btn:hover {
-  background: var(--primary-gold);
-  color: var(--primary-dark);
-  transform: translateY(-2px);
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-  .survey-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 16px;
-    padding: 24px;
-  }
-  
-  .survey-meta {
-    justify-content: center;
-  }
-  
-  .targets-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .detail-row {
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .detail-label {
-    min-width: unset;
-  }
-  
-  .clean-answer-area {
-    margin-right: 0;
-  }
-}
-.survey-details-page {
-  padding: 24px;
-  direction: rtl;
-  min-height: 100vh;
+/* صندوق التفاصيل الرمادي */
+.survey-details-box {
   background: #f8fafc;
-}
-
-/* Back Button */
-.back-btn {
-  margin-bottom: 20px;
-  cursor: pointer;
-  background: #fff;
-  border: 1px solid #cbd5e1;
-  padding: 10px 20px;
-  border-radius: 8px;
-  color: #475569;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.back-btn:hover {
-  background: #f1f5f9;
-  border-color: #94a3b8;
-}
-
-/* Loading State */
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  margin: 40px 0;
-}
-
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid #f1f5f9;
-  border-top: 4px solid #428177;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 20px;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Survey Header */
-.survey-header {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 24px;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  padding: 20px;
   margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
 }
 
-.survey-icon {
-  font-size: 32px;
-}
-
-.survey-info h1 {
-  margin: 0 0 12px 0;
-  color: #1e293b;
-  font-size: 28px;
-  font-weight: 700;
-}
-
-.survey-meta {
+.detail-item {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
+  justify-content: space-between;
   align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.status-badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-}
-
-.status-draft { background: #94a3b8; }
-.status-active { background: #10b981; }
-.status-closed { background: #ef4444; }
-.status-default { background: #64748b; }
-
-.survey-type {
-  background: #e2e8f0;
-  color: #475569;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.created-date {
-  color: #64748b;
-  font-weight: 500;
-}
-
-/* Details Section */
-.details-section {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.details-card {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid #e2e8f0;
-}
-
-.details-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.card-header {
-  padding: 24px;
-  background: white;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.card-header h3 {
-  margin: 0;
-  color: #002623;
-  font-size: 20px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.card-content {
-  padding: 32px;
-}
-
-.detail-row {
-  display: flex;
-  padding: 12px 0;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.detail-row:last-child {
+.detail-item:last-child {
   border-bottom: none;
 }
 
 .detail-label {
-  min-width: 120px;
-  font-weight: 600;
-  color: #334155;
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 14px;
 }
 
 .detail-value {
-  flex: 1;
-  color: #64748b;
-  line-height: 1.6;
+  color: #374151;
+  font-weight: 600;
+  font-size: 14px;
 }
 
-/* Questions Container */
-.questions-clean-container {
+/* Badges */
+.detail-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 4px;
+}
+
+.detail-badge.draft { background: #dbeafe; color: #1e40af; }
+.detail-badge.active { background: #d1fae5; color: #059669; }
+.detail-badge.closed { background: #fee2e2; color: #dc2626; }
+.detail-badge.survey-type-badge { background: #e6f0ee; color: #054239; }
+
+/* قسم الأسئلة */
+.questions-section {
+  margin-bottom: 24px;
+}
+
+.section-title h4 {
+  font-size: 16px;
+  color: #003d36;
+  margin: 0 0 12px 0;
+  border-bottom: 1px solid #b9a779;
+  display: inline-block;
+  padding-bottom: 4px;
+}
+
+.questions-list {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 8px;
 }
 
-.clean-question-item {
-  padding: 24px;
-  background: #f8fafc;
-  border-radius: 16px;
+.question-item {
+  background: white;
   border: 1px solid #e2e8f0;
-  transition: border-color 0.2s ease;
+  border-radius: 8px;
+  padding: 12px 16px;
+  transition: all 0.2s;
 }
 
-.clean-question-item:hover {
+.question-item:hover {
   border-color: #b9a779;
+  box-shadow: 0 2px 4px rgba(0, 38, 35, 0.1);
 }
 
-.clean-q-header {
+.question-info {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 16px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
 }
 
-.clean-q-number {
+.question-number {
   font-weight: 700;
-  color: #0f766e;
-  font-size: 16px;
-  min-width: 24px;
+  color: #003d36;
+  min-width: 20px;
 }
 
-.clean-q-text {
-  margin: 0;
-  color: #1e293b;
-  font-size: 16px;
+.question-text {
+  color: #374151;
   font-weight: 500;
   flex: 1;
-  line-height: 1.5;
 }
 
 .required-mark {
@@ -857,154 +479,170 @@ onMounted(loadSurveyDetails)
   font-weight: 700;
 }
 
-.clean-answer-area {
-  margin-right: 36px;
-  padding: 16px;
-  background: white;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-}
-
-.clean-input, .clean-textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-size: 16px;
-  background: #f8fafc;
-}
-
-.clean-textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.clean-option {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 0;
-}
-
-.clean-rating {
-  display: flex;
-  gap: 4px;
-}
-
-.star-icon {
-  font-size: 20px;
-}
-
-/* Targets Grid */
-.targets-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-}
-
-.target-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-  background: #f8fafc;
+.question-type {
+  font-size: 12px;
+  color: #9ca3af;
+  background: #f3f4f6;
+  padding: 2px 8px;
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  align-self: flex-start;
 }
 
-.target-icon {
-  font-size: 24px;
-}
-
-.target-info h4 {
-  margin: 0 0 4px 0;
-  color: #1e293b;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.target-info p {
-  margin: 0;
-  color: #64748b;
-  font-size: 14px;
-}
-
-/* Empty State */
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 80px 20px;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  margin: 40px 0;
-}
-
-.empty-icon {
-  font-size: 64px;
+/* قسم الأهداف */
+.targets-section {
   margin-bottom: 24px;
 }
 
-.empty-state h3 {
-  margin: 0 0 16px 0;
-  color: #1e293b;
-  font-size: 24px;
+.targets-summary {
+  background: #f0f9ff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  border: 1px solid #bae6fd;
+}
+
+.target-category, .target-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e0f2fe;
+}
+
+.target-category:last-child {
+  border-bottom: none;
+}
+
+.target-total {
   font-weight: 700;
+  background: #e0f2fe;
+  margin: 8px -20px -20px -20px;
+  padding: 12px 20px;
+  border-radius: 0 0 12px 12px;
+  border-bottom: none;
 }
 
-.empty-state p {
-  margin: 0 0 24px 0;
-  color: #64748b;
-  font-size: 16px;
-  text-align: center;
+.category-label, .total-label {
+  color: #0c4a6e;
+  font-weight: 500;
 }
 
-.back-home-btn {
-  padding: 12px 24px;
-  background: #0f766e;
+.category-count, .total-count {
+  color: #0284c7;
+  font-weight: 700;
+  background: #bae6fd;
+  padding: 2px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.total-count {
+  background: #0284c7;
   color: white;
-  border: none;
+}
+
+.targets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.target-item {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 16px;
+  transition: all 0.2s;
+}
+
+.target-item:hover {
+  border-color: #b9a779;
+}
+
+.target-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.target-name {
+  color: #374151;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.target-directorate {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+/* --- التذييل --- */
+.modal-footer {
+  padding: 20px 32px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.btn {
+  padding: 10px 24px;
   border-radius: 8px;
   font-weight: 600;
+  font-size: 14px;
+  border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
-.back-home-btn:hover {
-  background: #0d9488;
-  transform: translateY(-2px);
+.btn-secondary {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
 }
 
-/* Responsive Styles */
-@media (max-width: 768px) {
-  .survey-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 16px;
-    padding: 24px;
-  }
-  
-  .survey-meta {
-    justify-content: center;
-  }
-  
-  .targets-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .detail-row {
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .detail-label {
-    min-width: unset;
-  }
-  
-  .clean-answer-area {
-    margin-right: 0;
-  }
+.btn-secondary:hover {
+  background: #e2e8f0;
 }
+
+/* حالات التحميل والخطأ */
+.state-container {
+  text-align: center;
+  padding: 40px;
+}
+
+.loading-spinner {
+  width: 30px; height: 30px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #003d36;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.retry-link {
+  background: none; border: none;
+  text-decoration: underline;
+  color: #dc2626;
+  cursor: pointer;
+  font-weight: 600;
+  margin-right: auto;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes spin { to { transform: rotate(360deg); } }
 </style>

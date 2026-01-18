@@ -1,13 +1,14 @@
 /* Global Brand Identity - Syrian Arab Republic Theme */
 :root {
   /* Primary Colors */
-  --primary-dark: #002623;
+  --primary-dark: #054239;
+  --primary-teal: #005f57;
   --primary-gold: #b9a779;
   --primary-white: #ffffff;
 
   /* Shades */
-  --dark-bg: #001a18;
-  --dark-hover: #003d36;
+  --dark-bg: #054239;
+  --dark-hover: #005f57;
   --gold-light: #d4c4a0;
   --gold-dark: #9a8660;
 
@@ -17,8 +18,8 @@
   --text-muted: #8a9a97;
 
   /* Background Colors */
-  --bg-primary: #002623;
-  --bg-secondary: #001a18;
+  --bg-primary: #054239;
+  --bg-secondary: #054239;
   --bg-page: #f8fafc;
   --bg-card: #ffffff;
   --bg-hover: #f1f5f9;
@@ -34,7 +35,7 @@
   --status-info: #3b82f6;
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, var(--primary-dark) 0%, var(--dark-bg) 100%);
+  --gradient-primary: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-teal) 100%);
   --gradient-gold: linear-gradient(135deg, var(--primary-gold) 0%, var(--gold-dark) 100%);
 }
 
@@ -74,7 +75,7 @@ button.primary:hover,
 .card-primary {
   border: 1px solid var(--border-secondary);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 38, 35, 0.1);
+  box-shadow: 0 2px 8px rgba(5, 66, 57, 0.1);
 }
 
 .card-header-primary {
@@ -89,7 +90,7 @@ button.primary:hover,
   color: var(--primary-white);
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 38, 35, 0.2);
+  box-shadow: 0 4px 12px rgba(5, 66, 57, 0.2);
 }
 
 /* Links */

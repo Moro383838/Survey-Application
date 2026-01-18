@@ -1,0 +1,92 @@
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #054239, #0a4f45);
+  color: #b9a779;
+  border: 1px solid #b9a779;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px; /* مسافة قبل الجدول */
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(5, 66, 57, 0.2);
+  background: #054239;
+}
+
+.btn-icon {
+  font-size: 18px;
+}
+
+/* تنسيق بطاقات الأسئلة */
+.question-analysis-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0;
+  margin-bottom: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+
+.qa-header {
+  background: #f8fafc;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.qa-body {
+  padding: 16px;
+}
+
+/* إحصائيات الأرقام */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.stat-box {
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+}
+
+.stat-box.average { border-color: #b9a779; background: rgba(185, 167, 121, 0.05); }
+.stat-box.min { border-color: #cbd5e1; }
+.stat-box.max { border-color: #054239; color: white; background: #054239; }
+.stat-box.max .stat-label { color: #b9a779; }
+.stat-box.max .stat-value { color: white; }
+
+.stat-label { font-size: 12px; color: #64748b; display: block; margin-bottom: 4px; }
+.stat-value { font-size: 18px; font-weight: 700; color: #1e293b; }
+
+/* خيارات */
+.choice-row { margin-bottom: 12px; }
+.choice-info { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 14px; }
+.progress-bg { height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: #054239; border-radius: 4px; transition: width 0.5s; }
+
+/* نصوص */
+.text-list { display: flex; flex-direction: column; gap: 8px; }
+.text-bubble {
+  background: #f8fafc;
+  padding: 10px 14px;
+  border-radius: 0 12px 12px 12px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+  color: #334155;
+  border-right: 3px solid #b9a779;
+}
+
+.no-data-text { color: #94a3b8; font-style: italic; font-size: 13px; text-align: center; padding: 10px; }

@@ -145,12 +145,13 @@ const formatDate = (dateString) => {
 }
 
 .schools-table th {
-  background: linear-gradient(135deg, #002623, #001a18);
+  background: #054239;
   padding: 16px 12px;
   text-align: right;
   font-weight: 600;
-  color: #b9a779;
-  border-bottom: 2px solid #b9a779;
+  color: var(--primary-gold);
+  border: none !important;
+  border-bottom: 2px  !important;
   font-size: 14px;
 }
 
@@ -226,8 +227,8 @@ const formatDate = (dateString) => {
 
 .edit-btn {
   background: white;
-  color: #002623;
-  border: 1px solid #e2e8f0;
+  color: var(--primary-dark);
+  border: 1px solid var(--primary-teal);
 }
 
 .edit-btn:hover {

@@ -62,7 +62,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
       loading.value = false
     }
   }
-  
+
 
   // جلب ملخص استبيان محدد
   const fetchSurveySummary = async (surveyId) => {
@@ -148,8 +148,21 @@ export const useAnalyticsStore = defineStore('analytics', () => {
       const response = await schoolService.getStats()
 
       if (response.data) {
-        // Handle both flat and nested structures
-        const apiData = response.data.data || response.data;
+        // Handle different API response structures
+        let apiData = response.data;
+
+        // Case 1: Wrapped in array with function name key (Postgres function result)
+        if (Array.isArray(apiData) && apiData.length > 0 && apiData[0]?.fn_get_school_statistics) {
+          apiData = apiData[0].fn_get_school_statistics;
+        }
+        // Case 2: Wrapped in 'data' property
+        else if (apiData.data) {
+          apiData = apiData.data;
+        }
+        // Case 3: Direct object (already clean)
+        else if (apiData.fn_get_school_statistics) {
+          apiData = apiData.fn_get_school_statistics;
+        }
 
         // Extract cards and charts data (handle both formats)
         const cards = apiData.cards || apiData;
@@ -260,24 +273,24 @@ export const useAnalyticsStore = defineStore('analytics', () => {
   }
   // أضف هذا داخل actions في ملف src/stores/analytics.js
 
-// جلب تحليل أسئلة استبيان محدد
-const fetchSurveyQuestionsAnalysis = async (surveyId) => {
-  loading.value = true
-  error.value = null
-  try {
-    // Reuse the analyticsService exported helper
-    const response = await analyticsService.getSurveyAnalysis(surveyId)
+  // جلب تحليل أسئلة استبيان محدد
+  const fetchSurveyQuestionsAnalysis = async (surveyId) => {
+    loading.value = true
+    error.value = null
+    try {
+      // Reuse the analyticsService exported helper
+      const response = await analyticsService.getSurveyAnalysis(surveyId)
 
-    // Normalize response shapes: return data or entire response
-    if (response && response.data) return response.data
-    return response
-  } catch (err) {
-    console.error('❌ خطأ في جلب تحليل الاستبيان:', err)
-    throw err
-  } finally {
-    loading.value = false
+      // Normalize response shapes: return data or entire response
+      if (response && response.data) return response.data
+      return response
+    } catch (err) {
+      console.error('❌ خطأ في جلب تحليل الاستبيان:', err)
+      throw err
+    } finally {
+      loading.value = false
+    }
   }
-}
 
 
   // ==========================

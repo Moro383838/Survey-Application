@@ -592,10 +592,10 @@ onMounted(() => {
   align-items: center;
   margin-bottom: 24px;
   padding: 16px 24px;
-  background: linear-gradient(135deg, #002623, #001a18);
+  background: linear-gradient(135deg, #054239, #001a18);
   border-radius: 12px;
   color: white;
-  box-shadow: 0 4px 12px rgba(0, 38, 35, 0.2);
+  box-shadow: 0 4px 12px rgba(5, 66, 57, 0.2);
   border: 1px solid #b9a779;
 }
 
@@ -659,7 +659,7 @@ onMounted(() => {
 
 .spinner {
   border: 4px solid #f3f4f6;
-  border-top: 4px solid #002623;
+  border-top: 4px solid #054239;
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -680,7 +680,7 @@ onMounted(() => {
 .btn-retry {
   margin-top: 16px;
   padding: 10px 20px;
-  background: #002623;
+  background: #054239;
   color: white;
   border: none;
   border-radius: 8px;
