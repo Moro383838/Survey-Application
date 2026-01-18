@@ -3,9 +3,6 @@ const jwt = require('jsonwebtoken');
 // 1. التحقق من التوكن (لكل المستخدمين المسجلين)
 const verifyToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
-    console.log(`🔍 [Backend] Request path: ${req.path}`);
-    console.log(`🔍 [Backend] Auth Header: ${authHeader ? 'Exists' : 'MISSING'}`);
-
     if (authHeader) {
         const token = authHeader.split(" ")[1];
 
