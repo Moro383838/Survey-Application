@@ -346,7 +346,7 @@ onMounted(() => {
   background: #d9fffa;
   color: #126e70;
   padding: 4px 8px;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 13px;
   font-weight: 500;
 }
@@ -388,7 +388,7 @@ onMounted(() => {
 }
 .modal {
   background: white;
-  border-radius: 20px;
+  border-radius: 8px;
   width: 90%;
   max-width: 500px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);

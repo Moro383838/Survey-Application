@@ -7,11 +7,23 @@ export default {
   theme: {
     extend: {
       colors: {
-        'primary-dark': '#002623',
-        'primary-light': '#001a18',
-        'primary-gold': '#b9a779',
-        'primary-gold-light': '#d4af37',
-        'primary-gold-very-light': '#e8dfc8',
+        // تم استخراج هذه الألوان من ملف base.css
+        primary: {
+          DEFAULT: '#002623', // --primary
+          dark: '#002623',    // --primary-dark
+          light: '#b9a779',   // --primary-light (Gold)
+          'very-light': '#f8fafc', // --primary-very-light
+        },
+        gold: {
+          DEFAULT: '#b9a779', // --primary-gold
+          dark: '#9a8660',    // Hover state
+          light: '#d4af37',
+        },
+        page: '#f8fafc', // --bg-page
+      },
+      fontFamily: {
+        // تم تعريف الخط الخاص بك هنا لتستخدمه كـ font-primary
+        primary: ['"ITF Qomra Arabic Light"', 'Segoe UI', 'Tajawal', 'sans-serif'],
       },
     },
   },

@@ -38,10 +38,6 @@ export const useSchoolsStore = defineStore('schools', () => {
     try {
       const response = await schoolService.getAll()
       schools.value = response.data || []
-      
-      // محاولة جلب الإحصائيات (اختياري)
-      try { await fetchStats() } catch (e) { console.warn('Stats fetch failed') }
-      
     } catch (err) {
       error.value = 'فشل في تحميل المدارس: ' + (err.response?.data?.error || err.message)
       console.error('❌ خطأ في جلب المدارس:', err)
@@ -64,14 +60,8 @@ export const useSchoolsStore = defineStore('schools', () => {
         directorates_distribution: data.directorates_distribution || {}
       }
     } catch (err) {
-      console.warn('استخدام إحصائيات محلية بسبب فشل السيرفر')
+      console.warn('خطأ في تحميل الاحصائيات')
       // حساب محلي في حال الفشل
-      stats.value = {
-        total_schools: schools.value.length,
-        empty_schools_count: schools.value.filter(s => !s.users_count).length,
-        active_schools: schools.value.filter(s => s.users_count > 0).length,
-        directorates_distribution: {}
-      }
     }
   }
 

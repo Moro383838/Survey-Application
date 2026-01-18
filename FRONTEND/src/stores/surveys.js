@@ -31,7 +31,6 @@ export const useSurveyStore = defineStore('survey', () => {
   // Actions
   const fetchQuestionTypes = async () => {
     try {
-      console.log('🔄 جاري جلب أنواع الأسئلة...')
       const response = await aidService.getQuestionTypes()
 
       if (response.data && Array.isArray(response.data)) {
@@ -41,7 +40,6 @@ export const useSurveyStore = defineStore('survey', () => {
           name: type.label || type.name, // دعم كلا التسميتين
           icon: getTypeIcon(type.code)
         }))
-        console.log(`✅ تم جلب ${questionTypes.value.length} نوع سؤال`)
       } else {
         questionTypes.value = getDefaultQuestionTypes()
       }
@@ -85,7 +83,6 @@ export const useSurveyStore = defineStore('survey', () => {
     error.value = null
 
     try {
-      console.log('🔄 جاري جلب الاستبيانات من API...')
 
       // Ensure auth store is available and token is current
       const authStore = useAuthStore()
@@ -106,7 +103,6 @@ export const useSurveyStore = defineStore('survey', () => {
           }
           return { ...s, status_id: sId }
         })
-        console.log(`✅ تم جلب ${surveys.value.length} استبيان`)
       } else {
         surveys.value = []
         console.warn('⚠️ API عاد ببيانات غير متوقعة:', response.data)

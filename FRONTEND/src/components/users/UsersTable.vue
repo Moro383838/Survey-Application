@@ -9,12 +9,15 @@
       </div>
     </div>
     
-    <div v-if="loading" class="table-loading">
-      <div class="loading-spinner"></div>
-      <p>جاري تحميل المستخدمين...</p>
-    </div>
+    <!-- Scrollable wrapper for responsive table -->
+    <div class="table-wrapper">
+    
+      <div v-if="loading" class="table-loading">
+        <div class="loading-spinner"></div>
+        <p>جاري تحميل المستخدمين...</p>
+      </div>
 
-    <table v-else class="users-table">
+      <table v-else class="users-table">
       <thead>
         <tr>
           <th>المستخدم</th>
@@ -28,7 +31,6 @@
         <tr v-for="user in users" :key="user.id">
           <td>
             <div class="user-cell">
-              <div class="user-avatar">{{ getInitials(user.username) }}</div>
               <div class="user-info">
                 <strong>{{ user.username }}</strong>
               </div>
@@ -62,6 +64,7 @@
       <h3>لا يوجد مستخدمين</h3>
       <p>لم يتم إضافة أي مستخدمين بعد</p>
     </div>
+    </div> <!-- End of table-wrapper -->
   </div>
 </template>
 
@@ -123,6 +126,31 @@ const formatDate = (dateString) => {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
   
+  /* Scrollable wrapper for responsive table */
+  .table-wrapper {
+    overflow-x: auto;
+    width: 100%;
+    border-radius: 8px;
+  }
+  
+  .table-wrapper::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .table-wrapper::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+  }
+  
+  .table-wrapper::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  
+  .table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+  
   .table-header {
     display: flex;
     justify-content: space-between;
@@ -149,7 +177,9 @@ const formatDate = (dateString) => {
   
   .users-table {
     width: 100%;
+    min-width: 800px; /* Minimum width to prevent columns from compressing */
     border-collapse: collapse;
+    white-space: nowrap; /* Prevent text wrapping in cells */
   }
   
   .users-table th {
@@ -177,21 +207,6 @@ const formatDate = (dateString) => {
     align-items: center;
     gap: 12px;
     direction: rtl;
-  }
-  
-  .user-avatar {
-    width: 40px;
-    height: 40px;
-    background: var(--gradient-primary);
-    border: 1px solid var(--primary-gold);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    font-size: 16px;
-    flex-shrink: 0;
   }
   
   .user-info {

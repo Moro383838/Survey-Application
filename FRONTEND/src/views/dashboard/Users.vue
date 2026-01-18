@@ -85,18 +85,17 @@
       @user-updated="handleUserUpdated"
     />
 
+    <UsersDetails
+      v-if="showViewModal && selectedUser"
+      :user="selectedUser"
+      @close="showViewModal = false"
+    />
+
     <DeleteUserModal 
       v-if="showDeleteModal && selectedUser"
       :user="selectedUser"
       @close="showDeleteModal = false"
       @user-deleted="handleUserDeleted"
-    />
-
-    <UsersDetails 
-      v-if="showDeleteModal && selectedUser"
-      :user="selectedUser"
-      @close="showDeleteModal = false"
-      @user-deleted="viewUserDetails"
     />
 
   </div>
@@ -107,6 +106,7 @@ import { ref, computed, onMounted } from 'vue'
 import UsersTable from '@/components/users/UsersTable.vue'
 import AddUserModal from '@/components/users/AddUserModal.vue'
 import EditUserModal from '@/components/users/EditUserModal.vue'
+import UsersDetails from '@/components/users/UsersDetails.vue'
 import { useUsersStore } from '@/stores/users.js'
 import DeleteUserModal from '@/components/users/DeleteUserModal.vue'
 import {useRouter} from 'vue-router'
@@ -120,6 +120,7 @@ const showEditModal = ref(false)
 const selectedUser = ref(null)
 const searchText = ref('')
 const showDeleteModal = ref(false)
+const showViewModal = ref(false)
 
 const loading = computed(() => usersStore.loading)
 const error = computed(() => usersStore.error)
@@ -173,8 +174,8 @@ const handleUserUpdated = () => {
   loadUsers() 
 }
 const viewUserDetails = (user) => {
-  console.log('عرض تفاصيل المستخدم:', user)
-   router.push(`/dashboard/users/${user.id}`)
+  selectedUser.value = user
+  showViewModal.value = true
 }
 
 
@@ -441,7 +442,7 @@ onMounted(() => {
 
 @media (max-width: 768px) {
   .users-page {
-    padding: 140px 16px 16px 16px;
+    padding: 16px;
   }
   
   .page-header {

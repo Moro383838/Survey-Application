@@ -1,463 +1,446 @@
 <template>
-    <div class="user-details-page">
-      <div class="back-section">
-        <button class="back-btn" @click="$router.back()">
-          ← العودة
-        </button>
-      </div>
-      <div class="user-header">
-        <div class="user-avatar">{{ getInitials(user?.username) }}</div>
-        <div class="user-info">
-          <h1>{{ user?.username }}</h1>
+  <div class="modal-overlay" @click.self="$emit('close')">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="header-content-wrapper">
+          <img src="/logo.png" alt="شعار الوزارة" class="ministry-logo" />
+          <h3>تفاصيل المستخدم</h3>
         </div>
+        <button class="close-modal" @click="$emit('close')">&times;</button>
       </div>
-      <div class="stats">
-        <div class="stat-card">
-          <div class="stat-icon">🏫</div>
-          <div class="stat-info">
-            <h3>{{ getSchoolsCount() }}</h3>
-            <p>مدارس مرتبطة</p>
-          </div>
+
+      <div class="modal-body custom-scrollbar">
+        
+        <div v-if="loading" class="state-container">
+          <div class="loading-spinner"></div>
+          <p>جاري جلب البيانات...</p>
         </div>
-      </div>
-      <div class="details-section">
-        <div class="details-card">
-          <h3>📋 المعلومات الأساسية</h3>
+
+        <div v-else-if="error" class="error-message">
+          <span class="error-icon">❌</span>
+          <span>{{ error }}</span>
+          <button class="retry-link" @click="loadUserDetails">إعادة المحاولة</button>
+        </div>
+
+        <div v-else-if="user" class="content-wrapper">
           
-          <div class="detail-item">
-            <span class="detail-label">اسم المستخدم:</span>
-            <span class="detail-value">{{ user?.username || '-' }}</span>
+          <div class="profile-header">
+            <div class="user-avatar-large">{{ getInitials(user.username) }}</div>
+            <h3 class="user-title">{{ user.username }}</h3>
+            <span class="detail-badge" :class="getRoleClass(user.role)">
+              {{ getRoleText(user.role) }}
+            </span>
           </div>
-          <div v-if="hasSchools" class="details-card">
-          <h3>🏫 المدارس المرتبطة</h3>
-          <div class="schools-list">
-            <div v-for="school in user.schools" :key="school.id" class="school-item">
-              <span class="school-icon">🏫</span>{{ school.name }}
-              <span class="school-name">{{ school.name }}</span>
+
+          <div class="user-details-box">
+            <div class="detail-item">
+              <span class="detail-label">الاسم الكامل:</span>
+              <span class="detail-value">{{ user.name || '-' }}</span>
+            </div>
+            
+            <div class="detail-item">
+              <span class="detail-label">تاريخ التسجيل:</span>
+              <span class="detail-value">{{ formatDate(user.created_at) }}</span>
+            </div>
+
+            <div class="detail-item">
+              <span class="detail-label">الصلاحيات:</span>
+              <span class="detail-value">{{ getPermissionsText() }}</span>
             </div>
           </div>
-      </div>
-        </div>
-    </div>
 
-      <div class="actions-section">
-        <button class="btn btn-danger" @click="deleteUser">
-          🗑️ حذف المستخدم
-        </button>
-        <button class="btn btn-secondary" @click="$router.back()">
+          <div class="schools-section">
+            <div class="section-title">
+              <h4>🏫 المدارس المرتبطة ({{ getSchoolsCount() }})</h4>
+            </div>
+            
+            <div v-if="hasSchools" class="schools-list">
+              <div v-for="school in user.schools" :key="school.id" class="school-item">
+                <div class="school-info">
+                  <span class="school-name">{{ school.name }}</span>
+                  <span class="school-code">رمز: {{ school.code }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div v-else class="empty-schools">
+              <span>لا يوجد مدارس مرتبطة بهذا المستخدم</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" @click="$emit('close')">
           إغلاق
         </button>
       </div>
     </div>
-  </template>
-  
-  <script setup>
-    import { ref, computed, onMounted } from 'vue'
-    import { useRoute, useRouter } from 'vue-router'
-    import { useUsersStore } from '@/stores/users'
-    
-    const route = useRoute()
-    const router = useRouter()
-    const usersStore = useUsersStore()
-    
-    const user = ref(null)
-    const userStats = ref(null)
-    const loading = ref(true)
-    const error = ref(null)
-    
-    /* تحميل المستخدم */
-    const loadUserDetails = async () => {
-      try {
-        loading.value = true
-        error.value = null
-    
-        // 1️⃣ حاول تجيبه من الستور (لو كان محمّل مسبقًا)
-        const cachedUser = usersStore.users.find(
-          u => u.id === Number(route.params.id)
-        )
-    
-        if (cachedUser) {
-          user.value = cachedUser
-        } else {
-          // 2️⃣ لو مو موجود → جيبه من السيرفر
-          const fetchedUser = await usersStore.getUserById(Number(route.params.id))
-          user.value = fetchedUser
-        }
-    
-        await loadUserStats()
-      } catch (err) {
-        console.error('❌ خطأ في تحميل تفاصيل المستخدم:', err)
-        error.value = 'فشل في تحميل تفاصيل المستخدم'
-      } finally {
-        loading.value = false
-      }
-    }
-    
-    /* إحصائيات وهمية (مؤقتًا) */
-    const loadUserStats = async () => {
-      userStats.value = {
-        surveys: Math.floor(Math.random() * 20),
-        responses: Math.floor(Math.random() * 100),
-        rating: (Math.random() * 5).toFixed(1)
-      }
-    }
-    
-    onMounted(loadUserDetails)
+  </div>
+</template>
 
-    const getInitials = (username) => {
-      if (!username) return 'م'
-      return username.charAt(0).toUpperCase()
-    }
-    
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useUsersStore } from '@/stores/users'
+
+const props = defineProps({
+  user: {
+    type: Object,
+    required: true
+  }
+})
+
+const emit = defineEmits(['close'])
+const usersStore = useUsersStore()
+
+const user = ref(null)
+const loading = ref(true)
+const error = ref(null)
+
+const loadUserDetails = async () => {
+  try {
+    loading.value = true
+    error.value = null
+    // جلب التفاصيل الكاملة من الستور
+    const fetchedUser = await usersStore.getUserById(props.user.id)
+    user.value = fetchedUser
+  } catch (err) {
+    console.error('❌ خطأ في تحميل تفاصيل المستخدم:', err)
+    error.value = 'فشل في تحميل البيانات'
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(loadUserDetails)
+
+// --- دوال مساعدة ---
+const getInitials = (username) => {
+  if (!username) return '?'
+  return username.charAt(0).toUpperCase()
+}
+
 const getRoleText = (role) => {
   const roles = {
-    // حالة النصوص
     'ADMIN': 'مدير النظام',
     'SCHOOL_USER': 'مستخدم مدرسة',
-    'ANALAYZER_USER': 'محلل بيانات',
-    // حالة الأرقام (IDs)
-    1: 'مدير النظام',
-    2: 'مستخدم مدرسة',
-    3: 'محلل بيانات'
+    'ANALAYZER_USER': 'محلل بيانات'
   }
-  return roles[role] || 'غير محدد'
+  return roles[role] || role
 }
-    
-    const hasSchools = computed(() => {
-      return user.value?.schools && Array.isArray(user.value.schools) && user.value.schools.length > 0
-    })
-    
-    const getSchoolsArray = () => {
-      return user.value?.schools?.map(school => school?.name) || []
-    }
-    
-    const getSchoolsCount = () => getSchoolsArray().length
-    
-    const formatDate = (dateString) => {
-      if (!dateString) return '-'
-      return new Date(dateString).toLocaleDateString('ar-SA', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      })
-    }
-    
-    const getPermissionsText = () => ({
-      ADMIN: 'صلاحيات كاملة',
-      SCHOOL_USER: 'إدارة المدارس المعينة',
-      ANALAYZER_USER: 'تحليل البيانات'
-    }[user.value?.role] || 'صلاحيات محدودة')
 
-    const deleteUser = async () => {
-      if (!confirm(`هل أنت متأكد من حذف المستخدم "${user.value.username}"؟`)) return
-    
-      try {
-        await usersStore.deleteUser(user.value.id)
-        router.push('/dashboard/users')
-      } catch (err) {
-        alert(err.message || 'فشل حذف المستخدم')
-      }
-    }
-    </script>
-    
-  <style scoped>
-  .user-details-page {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
+const getRoleClass = (role) => {
+  const classes = {
+    'ADMIN': 'admin',
+    'SCHOOL_USER': 'school-user',
+    'ANALAYZER_USER': 'analayzer-user'
   }
-  
-  .back-section {
-    margin-bottom: 20px;
-  }
-  
-  .back-btn {
-    background: none;
-    border: none;
-    color: #64748b;
-    cursor: pointer;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: 8px;
-    transition: all 0.3s;
-  }
-  
-  .back-btn:hover {
-    background: #f1f5f9;
-  }
-  
-  .user-header {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    background: white;
-    padding: 30px;
-    border-radius: 16px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  .user-avatar {
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(135deg, #52B5AB, #126E70);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 32px;
-    font-weight: bold;
-  }
-  
-  .user-info h1 {
-    margin: 0 0 8px 0;
-    color: #1e293b;
-    font-size: 28px;
-  }
-  
-  .user-info p {
-    margin: 0;
-    color: #64748b;
-  }
-  
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 16px;
-    margin-bottom: 30px;
-  }
-  
-  .stat-card {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .stat-icon {
-    font-size: 24px;
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #D9FFFA;
-    color: #126E70;
-  }
-  
-  .stat-info h3 {
-    font-size: 24px;
-    color: #1e293b;
-    margin: 0 0 4px 0;
-  }
-  
-  .stat-info p {
-    color: #64748b;
-    margin: 0;
-  }
-  
-  .details-section {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .details-card {
-    background: white;
-    border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  .details-card h3 {
-    margin: 0 0 20px 0;
-    color: #1e293b;
-    font-size: 18px;
-  }
-  
-  .detail-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 0;
-    border-bottom: 1px solid #f1f5f9;
-  }
-  
-  .detail-item:last-child {
-    border-bottom: none;
-  }
-  
-  .detail-label {
-    color: #64748b;
-    font-weight: 500;
-  }
-  
-  .detail-value {
-    color: #1e293b;
-    font-weight: 600;
-  }
-  
-  .role-badge {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-  }
-  
-  .role-badge.admin {
-    background: #dbeafe;
-    color: #1e40af;
-  }
-  
-  .role-badge.school-user {
-    background: #D9FFFA;
-    color: #126E70;
-  }
-  
-  .role-badge.analayzer-user {
-    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-    color: #166534;
-  }
-  
-  .status-badge {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-  }
-  
-  .status-badge.active {
-    background: #d1fae5;
-    color: #065f46;
-  }
-  
-  .status-badge.inactive {
-    background: #fef3c7;
-    color: #92400e;
-  }
-  
-  .permissions-badge {
-    display: inline-block;
-    padding: 6px 12px;
-    background: #f8fafc;
-    color: #475569;
-    border-radius: 8px;
-    font-size: 13px;
-    border: 1px solid #e2e8f0;
-  }
-  
-  .schools-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .school-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background: #f8fafc;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-    transition: all 0.3s;
-  }
-  
-  .school-item:hover {
-    background: #f1f5f9;
-  }
-  
-  .school-icon {
-    font-size: 20px;
-  }
-  
-  .school-name {
-    color: #1e293b;
-    font-weight: 500;
-  }
-  
-  .actions-section {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin-top: 30px;
-    padding: 20px;
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  .btn {
-    padding: 12px 24px;
-    border-radius: 12px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s;
-  }
-  
-  .btn-primary {
-    background: linear-gradient(135deg, #52B5AB, #126E70);
-    color: white;
-  }
-  
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(82, 181, 171, 0.3);
-  }
-  
-  .btn-danger {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-    color: white;
-  }
-  
-  .btn-danger:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
-  }
-  
-  .btn-secondary {
-    background: #f1f5f9;
-    color: #475569;
-    border: 1px solid #e2e8f0;
-  }
-  
-  .btn-secondary:hover {
-    background: #e2e8f0;
-  }
-  
-  @media (max-width: 768px) {
-    .user-header {
-      flex-direction: column;
-      text-align: center;
-    }
-    
-    .stats {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .actions-section {
-      flex-direction: column;
-    }
-    
-    .btn {
-      width: 100%;
-      justify-content: center;
-    }
-  }
-  </style>
+  return classes[role] || ''
+}
+
+const formatDate = (dateString) => {
+  if (!dateString) return '-'
+  return new Date(dateString).toLocaleDateString('ar-SA')
+}
+
+const getPermissionsText = () => ({
+  ADMIN: 'صلاحيات كاملة',
+  SCHOOL_USER: 'إدارة المدارس المعينة',
+  ANALAYZER_USER: 'تحليل البيانات'
+}[user.value?.role] || 'صلاحيات محدودة')
+
+const hasSchools = computed(() => {
+  return user.value?.schools && user.value.schools.length > 0
+})
+
+const getSchoolsCount = () => {
+  return user.value?.schools?.length || 0
+}
+</script>
+
+<style scoped>
+/* --- هيكل المودال الأساسي (مطابق لقالب الحذف) --- */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px; /* نفس عرض قالب الحذف */
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh; /* لضمان ظهور التمرير إذا طالت القائمة */
+}
+
+/* --- الهيدر --- */
+.modal-header {
+  padding: 24px;
+  background: linear-gradient(135deg, #002623, #001a18);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #b9a779;
+  flex-shrink: 0;
+}
+
+.header-content-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ministry-logo {
+  height: 40px;
+  width: auto;
+}
+
+.modal-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: #b9a779;
+}
+
+.close-modal {
+  background: rgba(185, 167, 121, 0.1);
+  border: none;
+  color: #b9a779;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+  border-radius: 8px;
+}
+
+.close-modal:hover {
+  transform: rotate(90deg);
+  background: rgba(185, 167, 121, 0.2);
+  color: white;
+}
+
+/* --- جسم المودال --- */
+.modal-body {
+  padding: 32px;
+  overflow-y: auto;
+}
+
+/* البروفايل العلوي */
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.user-avatar-large {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #002623, #0a4f45);
+  color: #b9a779;
+  font-size: 32px;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 12px;
+  border: 2px solid #b9a779;
+}
+
+.user-title {
+  color: #002623;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+/* صندوق التفاصيل الرمادي */
+.user-details-box {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.detail-value {
+  color: #374151;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Badges */
+.detail-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.detail-badge.admin { background: #dbeafe; color: #1e40af; }
+.detail-badge.school-user { background: #e6f0ee; color: #054239; }
+.detail-badge.analayzer-user { background: #f0fdf4; color: #166534; }
+
+/* قسم المدارس */
+.schools-section {
+  margin-top: 10px;
+}
+
+.section-title h4 {
+  font-size: 16px;
+  color: #002623;
+  margin: 0 0 12px 0;
+  border-bottom: 1px solid #b9a779;
+  display: inline-block;
+  padding-bottom: 4px;
+}
+
+.schools-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.school-item {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  transition: all 0.2s;
+}
+
+.school-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.school-name {
+  color: #374151;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.school-code {
+  color: #9ca3af;
+  font-size: 12px;
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.empty-schools {
+  text-align: center;
+  color: #9ca3af;
+  padding: 10px;
+  font-size: 14px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px dashed #e5e7eb;
+}
+
+/* --- التذييل --- */
+.modal-footer {
+  padding: 20px 32px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.btn {
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.btn-secondary:hover {
+  background: #e2e8f0;
+}
+
+/* حالات التحميل والخطأ */
+.state-container {
+  text-align: center;
+  padding: 40px;
+}
+.loading-spinner {
+  width: 30px; height: 30px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #002623;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px;
+}
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.retry-link {
+  background: none; border: none;
+  text-decoration: underline;
+  color: #dc2626;
+  cursor: pointer;
+  font-weight: 600;
+  margin-right: auto;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>

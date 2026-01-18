@@ -31,7 +31,7 @@ const routes = [
   {
     path: '/available-surveys',
     name: 'AvailableSurveys',
-    component: () => import('@/views/dashboard/AvailableSurveys.vue'),
+    component: () => import('@/components/surveys/AvailableSurveys.vue'),
     meta: { requiresAuth: true }
   },
   {
@@ -76,20 +76,20 @@ const routes = [
   {
     path: '/surveys/create-wizard',
     name: 'CreateSurveyWizard',
-    component: () => import('@/views/dashboard/CreateSurveyWizard.vue'),
+    component: () => import('@/components/surveys/CreateSurveyWizard.vue'),
     meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
     path: '/surveys/edit-wizard/:id',
     name: 'EditSurveyWizard',
-    component: () => import('@/views/dashboard/EditSurveyWizard.vue'),
+    component: () => import('@/components/surveys/EditSurveyWizard.vue'),
     props: true,
     meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
     path: '/surveys/:id',
     name: 'SurveyDetails',
-    component: () => import('@/views/dashboard/SurveyDetails.vue'),
+    component: () => import('@/components/surveys/SurveyDetails.vue'),
     props: true,
     meta: { requiresAuth: true }
   }
@@ -108,13 +108,6 @@ router.beforeEach((to, from, next) => {
     authStore.initialize()
   }
 
-  console.log('🛡️ فحص الصلاحيات:')
-  console.log('   الصفحة:', to.path)
-  console.log('   المستخدم:', authStore.user?.name)
-  console.log('   الدور:', authStore.user?.role)
-  console.log('   هل هو مصادق؟', authStore.isAuthenticated)
-  console.log('   هل هو مدير؟', authStore.isAdmin)
-
   // إذا كانت الصفحة تتطلب مصادقة
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     console.log('⛔ غير مصرح - توجيه إلى تسجيل الدخول')
@@ -124,7 +117,6 @@ router.beforeEach((to, from, next) => {
 
   // إذا كانت الصفحة تتطلب عدم مصادقة
   if (to.meta.requiresGuest && authStore.isAuthenticated) {
-    console.log('✅ مسجل دخول بالفعل - إعادة التوجيه')
     if (authStore.isAdmin) {
       next('/dashboard')
     } else if (authStore.hasAnalyticsAccess) {
@@ -138,7 +130,6 @@ router.beforeEach((to, from, next) => {
 
   // إذا كانت الصفحة تتطلب صلاحيات مدير
   if (to.meta.requiresAdmin && !authStore.isAdmin) {
-    console.log('⛔ ليس لديك صلاحيات مدير - توجيه إلى الصفحة الرئيسية')
     next('/home')
     return
   }
@@ -149,13 +140,11 @@ router.beforeEach((to, from, next) => {
     const hasAnalyticsAccess = userRole === 'ADMIN' || userRole === 'ANALAYZER_USER'
     
     if (!hasAnalyticsAccess) {
-      console.log('⛔ ليس لديك صلاحيات الوصول للتحليلات - توجيه إلى الصفحة الرئيسية')
       next('/home')
       return
     }
   }
 
-  console.log('✅ الوصول مسموح')
   next()
 })
 

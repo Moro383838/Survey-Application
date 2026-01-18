@@ -1,76 +1,98 @@
-/* Primary Color Palette */
+/* stylelint-disable at-rule-no-unknown */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* stylelint-enable at-rule-no-unknown */
 
-/* Font Face Declaration for ITF Qomra Arabic Light */
+/* 1. تعريف الخط */
 @font-face {
   font-family: 'ITF Qomra Arabic Light';
   src: url('./itfQomraArabic-Light.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
-:root {
-  /* Primary Colors - Aligned with Brand Identity */
-  --primary-dark: #002623;
-  --primary: #002623;
-  --primary-light: #b9a779;
-  --primary-very-light: #f8fafc;
+/* 2. القواعد الأساسية (Base Layer) */
+@layer base {
+  /* تعيين الخط والاتجاه الافتراضي */
+  html {
+    font-family: theme('fontFamily.primary');
+  }
 
-  /* Font Family */
-  --font-primary: 'ITF Qomra Arabic Light', 'Segoe UI', 'Tajawal', sans-serif;
+  body {
+    @apply bg-page text-slate-800 antialiased;
+    direction: rtl;
+    text-align: right;
+    line-height: 1.6;
+  }
 
-  /* Base Colors */
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
+  /* تخصيص شريط التمرير (Scrollbar) */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  ::-webkit-scrollbar-track {
+    /* stylelint-disable-next-line at-rule-no-unknown */
+    @apply bg-page rounded;
+  }
 
-  --vt-c-indigo: #2c3e50;
+  ::-webkit-scrollbar-thumb {
+    /* stylelint-disable-next-line at-rule-no-unknown */
+    @apply bg-gold rounded;
+  }
 
-  --vt-c-divider-light-1: rgba(0, 38, 35, 0.29);
-  --vt-c-divider-light-2: rgba(0, 38, 35, 0.12);
-  --vt-c-divider-dark-1: rgba(185, 167, 121, 0.65);
-  --vt-c-divider-dark-2: rgba(185, 167, 121, 0.48);
-
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  ::-webkit-scrollbar-thumb:hover {
+    /* stylelint-disable-next-line at-rule-no-unknown */
+    @apply bg-gold-dark;
+  }
 }
 
-/* semantic color variables for this project */
-:root {
-  --color-background: var(--primary-very-light);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
+/* 3. إصلاحات الجوال (Mobile Compatibility Layer) */
+/* هذه القواعد مأخوذة من base.css لضمان عمل العناصر بشكل جيد على الجوال */
+@media (max-width: 768px) {
+  @layer base {
+    /* أجبار الحاويات على أخذ العرض الكامل */
+    .container, .dashboard-container, .page-content {
+      width: 100% !important;
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
 
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--primary-light);
+    /* تكبير مناطق اللمس للأزرار وحقول الإدخال */
+    button, .btn, input, select, textarea {
+      /* stylelint-disable-next-line at-rule-no-unknown */
+      @apply w-full min-h-[50px] my-1 flex items-center justify-center text-center flex-wrap;
+      height: auto !important;
+      white-space: normal !important;
+    }
 
-  --color-heading: var(--primary-dark);
-  --color-text: var(--vt-c-text-light-1);
+    /* إصلاح مشاكل الجداول على الجوال */
+    .table-section, .table-container {
+      /* stylelint-disable-next-line at-rule-no-unknown */
+      @apply w-full overflow-x-auto block;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    table {
+      /* stylelint-disable-next-line at-rule-no-unknown */
+      @apply min-w-[600px]; /* ضمان عدم انضغاط الجدول جداً */
+    }
 
-  --section-gap: 160px;
+    /* إصلاح أيقونات البحث */
+    .search-box {
+      /* stylelint-disable-next-line at-rule-no-unknown */
+      @apply relative w-full;
+    }
+  }
 }
 
-/* Reset styles - keep minimal to avoid conflicts */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-/* Only set font-family on body, let App.vue handle the rest */
-body {
-  font-family: var(--font-primary);
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Global class for ITF Qomra Arabic Light font */
-.arabic-font {
-  font-family: var(--font-primary) !important;
+/* 4. كلاسات مساعدة مخصصة (Components Layer) */
+@layer components {
+  /* يمكنك إضافة كلاسات مكررة هنا لاحقاً */
+  .btn-primary {
+    /* stylelint-disable-next-line at-rule-no-unknown */
+    @apply bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors;
+  }
 }

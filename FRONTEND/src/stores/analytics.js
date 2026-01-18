@@ -62,6 +62,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
       loading.value = false
     }
   }
+  
 
   // جلب ملخص استبيان محدد
   const fetchSurveySummary = async (surveyId) => {
@@ -257,6 +258,27 @@ export const useAnalyticsStore = defineStore('analytics', () => {
       throw err
     }
   }
+  // أضف هذا داخل actions في ملف src/stores/analytics.js
+
+// جلب تحليل أسئلة استبيان محدد
+const fetchSurveyQuestionsAnalysis = async (surveyId) => {
+  loading.value = true
+  error.value = null
+  try {
+    // Reuse the analyticsService exported helper
+    const response = await analyticsService.getSurveyAnalysis(surveyId)
+
+    // Normalize response shapes: return data or entire response
+    if (response && response.data) return response.data
+    return response
+  } catch (err) {
+    console.error('❌ خطأ في جلب تحليل الاستبيان:', err)
+    throw err
+  } finally {
+    loading.value = false
+  }
+}
+
 
   // ==========================
   //  Return
@@ -278,7 +300,8 @@ export const useAnalyticsStore = defineStore('analytics', () => {
     fetchSchoolAnalytics,
     fetchUserAnalytics,
     fetchAllSchoolAnalytics,
-    fetchAllUserAnalytics
+    fetchAllUserAnalytics,
+    fetchSurveyQuestionsAnalysis
   }
 })
 

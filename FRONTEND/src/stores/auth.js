@@ -30,9 +30,6 @@ export const useAuthStore = defineStore('auth', () => {
   const login = async (credentials) => {
     isLoading.value = true
     error.value = null
-
-    console.log(' بدء عملية تسجيل الدخول:', credentials.username)
-
     try {
       const response = await authService.login({
         username: credentials.username,

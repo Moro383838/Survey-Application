@@ -111,6 +111,7 @@ const formatDate = (dateString) => {
   border-radius: 3px;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
 }
 
 .table-header {
@@ -140,6 +141,7 @@ const formatDate = (dateString) => {
 .schools-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 800px;
 }
 
 .schools-table th {

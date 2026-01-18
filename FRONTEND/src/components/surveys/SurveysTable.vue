@@ -1,5 +1,6 @@
 <template>
-  <table class="custom-table">
+  <div class="table-wrapper">
+    <table class="custom-table">
       <thead>
         <tr>
           <th style="width: 25%">الاستبيان</th>
@@ -11,7 +12,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(survey, index) in surveys" :key="survey.id">
+        <tr v-for="(survey) in surveys" :key="survey.id">
           <td>
             <div class="survey-name-cell">
               <span class="survey-title">{{ survey.title }}</span>
@@ -68,6 +69,7 @@
         </tr>
       </tbody>
     </table>
+  </div>
 </template>
 
 <script setup>
@@ -88,7 +90,6 @@ const props = defineProps({
 
 onMounted(async () => {
   await surveyStore.fetchSurveys()
-  console.log('📦 Surveys Data:', props.surveys)
 })
 
 defineEmits(['view', 'edit', 'delete', 'close', 'publish', 'unpublish'])
@@ -118,6 +119,7 @@ const getStatusClass = (statusId) => {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
+  min-width: 800px;
 }
 
 .custom-table th {

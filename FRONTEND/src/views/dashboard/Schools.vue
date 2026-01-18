@@ -101,7 +101,6 @@
   
   <script setup>
   import { ref, computed, onMounted } from 'vue'
-  import { useRouter } from 'vue-router'
   import SchoolsTable from '@/components/schools/SchoolsTable.vue'
   import AddSchoolModal from '@/components/schools/AddSchoolModal.vue'
   import EditSchoolModal from '@/components/schools/EditSchoolModal.vue'
@@ -109,10 +108,7 @@
   import ViewSchoolModal from '@/components/schools/ViewSchoolModal.vue'
   import { schoolService } from '@/api/index.js'
   
-  const router = useRouter()
-
   const schools = ref([])
-  const stats = ref({})
   const loading = ref(false)
   const error = ref('')
   const searchText = ref('')
@@ -134,17 +130,7 @@
       school.region?.toLowerCase().includes(query)
     )
   })
-  
-  const uniqueRegionsCount = computed(() => {
-  if (!schools.value || schools.value.length === 0) return 0
-  // استخراج المناطق، فلترة القيم الفارغة، ثم استخدام Set لإزالة التكرار
-  const regions = schools.value
-    .map(school => school.region)
-    .filter(region => region && region.trim() !== '')
-  
-  return new Set(regions).size
-})
-  
+
   const paginatedSchools = computed(() => {
     const start = (currentPage.value - 1) * itemsPerPage.value
     return filteredSchools.value.slice(start, start + itemsPerPage.value)
@@ -154,14 +140,8 @@
     error.value = ''
     
     try {
-      console.log('🔄 جاري تحميل المدارس...')
       const response = await schoolService.getAll()
-      console.log('📦 بيانات المدارس:', response.data)
       schools.value = response.data || []
-
-        console.log('🔍  schools.value:', typeof schools.value)
-        console.log('🔍 schools.value ', Array.isArray(schools.value))
-        console.log('🔍 schools.value:', schools.value)
       await fetchStats()
       
     } catch (err) {
@@ -179,31 +159,11 @@
 
     // ✅ حساب أعلى عدد موظفين محلياً (لأن السيرفر لا يرجعه حالياً)
     // نبحث عن أعلى قيمة users_count في مصفوفة المدارس
-    const maxStaff = schools.value.reduce((max, school) => {
-      const count = Number(school.users_count) || 0
-      return count > max ? count : max
-    }, 0)
-
-    stats.value = {
-      ...serverStats,
-      max_staff_count: maxStaff // إضافة القيمة المحسوبة يدوياً
-    }
 
   } catch (error) {
     console.warn('⚠️ تعذر جلب الإحصائيات من السيرفر، استخدام حسابات محلية.')
     
     // حسابات محلية بالكامل عند فشل السيرفر
-    const maxStaff = schools.value.reduce((max, school) => {
-      const count = Number(school.users_count) || 0
-      return count > max ? count : max
-    }, 0)
-
-    stats.value = {
-      total_schools: schools.value.length || 0,
-      max_staff_count: maxStaff, // ✅ القيمة الصحيحة
-      empty_schools_count: schools.value.filter(s => !s.users_count || s.users_count == 0).length,
-      active_schools: schools.value.length || 0
-    }
   }
 }
   const handleSearch = () => {
@@ -215,9 +175,6 @@
     currentPage.value = page
   }
 
-  const openAddModal = () => {
-    showAddModal.value = true
-  }
 
   const handleEdit = (school) => {
     selectedSchool.value = school
@@ -508,7 +465,7 @@
   
   @media (max-width: 768px) {
     .schools-page {
-      padding: 140px 16px 16px 16px;
+      padding: 16px;
     }
     
     .page-header {

@@ -214,20 +214,6 @@ const emit = defineEmits([
   return descriptions[typeId] || 'نوع سؤال'
 }
   
-const getQuestionIcon = (typeId) => {
-  const icons = {
-    1: '📝',
-    2: '📄',
-    3: '🔘',
-    4: '☑️',
-    5: '🔢',
-    6: '📅',
-    7: '⏰',
-    8: '📆',
-    9: '🗓️'
-  }
-  return icons[typeId] || '❓'
-}
   
   const truncateText = (text, length) => {
     if (!text) return 'لا يوجد نص'

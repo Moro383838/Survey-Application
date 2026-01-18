@@ -1055,7 +1055,7 @@ watch([searchQuery, statusFilter, typeFilter], () => {
 
 @media (max-width: 768px) {
   .surveys-page {
-    padding: 140px 16px 16px 16px;
+    padding: 16px;
   }
   
   .page-header {

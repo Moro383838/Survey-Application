@@ -1,0 +1,90 @@
+/* src/assets/responsive-global.css */
+
+/* 1. قاعدة الأساس: منع العناصر من تجاوز عرض الشاشة */
+*, *::before, *::after {
+  box-sizing: border-box;
+  max-width: 100%; /* هذا السطر هو الأهم */
+}
+
+/* 2. حاوية الصفحة العامة (توضع على الديف الرئيسي في كل صفحة) */
+.page-container, .page-content, .container {
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 1200px) {
+  .page-container, .page-content, .container {
+    max-width: 1200px; /* أو حسب تصميمك */
+  }
+}
+
+/* 3. الشبكات الذكية (Auto Grid) */
+/* أي مكان تستخدم فيه grid، سيتحول تلقائياً لعمود واحد بالموبايل */
+.stats-cards, 
+.cards-grid,
+.grid-container {
+  display: grid;
+  /* السحر هنا: العناصر ستترتب بجانب بعضها حسب المساحة، وبالموبايل ستصبح تحت بعضها تلقائياً */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important; 
+  gap: 20px;
+}
+
+/* 4. المرونة (Flexbox) */
+/* أي حاوية فيها أزرار أو فلاتر ستتحول لعمودية في الموبايل */
+@media (max-width: 768px) {
+  .controls-section,
+  .header-content,
+  .page-header,
+  .filters-container,
+  .flex-responsive {
+    flex-direction: column !important;
+    align-items: stretch !important; /* تمديد العناصر للعرض الكامل */
+    gap: 16px !important;
+    height: auto !important;
+  }
+
+  /* 5. الأزرار وحقول الإدخال */
+  button, 
+  input[type="text"], 
+  input[type="date"], 
+  select, 
+  .btn,
+  .search-input {
+    width: 100% !important; /* اجبار العرض الكامل */
+    min-width: 0 !important; /* إلغاء العرض الثابت */
+    margin: 5px 0; /* مسافة بسيطة */
+    min-height: 48px; /* تكبير منطقة اللمس */
+  }
+}
+
+/* 6. حل مشكلة الجداول (الحل السريع الشامل) */
+/* سيجعل أي جدول في الموقع قابل للتمرير أفقياً بدلاً من كسر الصفحة */
+.table-section, .table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  min-width: 600px; /* نضمن أن الجدول لا ينضغط بشكل قبيح */
+}
+
+/* 7. المودال (Popups) */
+.modal-content, .dialog-box {
+  width: 90% !important;
+  max-width: 500px; /* العرض للكمبيوتر */
+  margin: 20px auto;
+}
+
+@media (max-width: 600px) {
+  .modal-content {
+    width: 100% !important;
+    border-radius: 15px 15px 0 0 !important;
+    position: absolute;
+    bottom: 0;
+    margin: 0;
+  }
+}
