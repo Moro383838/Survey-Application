@@ -5,10 +5,10 @@
       <div class="header-content">
         <div class="logo-section">
           <img src="/Syrian Arab Republic.svg" alt="شعار الجمهورية" class="header-logo" />
-          <div class="system-info">
-            <h1>نظام الاستبيانات</h1>
-            <p>الإلكتروني للمدارس</p>
-          </div>
+        </div>
+        <div class="system-info">
+          <h1>نظام الاستبيانات</h1>
+          <p>الإلكتروني للمدارس</p>
         </div>
       </div>
     </header>
@@ -172,17 +172,18 @@ const handleSubmit = async () => {
   display: flex;
   align-items: center;
   gap: 1rem;
-  width: 100%;
-  max-width: 480px;
 }
 
 .header-logo {
-  height: 100px;
+  height: 120px;
   width: auto;
-  max-height: 100px;
-  object-fit: contain;
   display: block;
+  flex-shrink: 0;
+
+  transform: scale(2.3);
+  transform-origin: center;
 }
+
 
 .system-info h1 {
   color: #ffff;
@@ -190,6 +191,7 @@ const handleSubmit = async () => {
   font-weight: 700;
   margin: 0;
   line-height: 1.2;
+  text-align: left;
 }
 
 .system-info p {
@@ -197,6 +199,7 @@ const handleSubmit = async () => {
   font-size: 0.875rem;
   margin: 0;
   opacity: 0.8;
+  text-align: left;
 }
 
 /* Main */
