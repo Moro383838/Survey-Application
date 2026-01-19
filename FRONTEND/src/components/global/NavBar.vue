@@ -2,6 +2,7 @@
   <nav class="navbar" :class="{ 'navbar--mobile-open': isOpen }">
     <div class="nav-wrapper">
       <button 
+        v-if="authStore.isAdmin"
         @click="handleTabClick('surveys')"
         class="nav-link" 
         :class="{ 'nav-link--active': activeTab === 'surveys' }"
@@ -10,6 +11,7 @@
         <span class="nav-link__text">الاستبيانات</span>
       </button>
       <button 
+        v-if="authStore.isAdmin"
         @click="handleTabClick('users')"
         class="nav-link" 
         :class="{ 'nav-link--active': activeTab === 'users' }"
@@ -18,6 +20,7 @@
         <span class="nav-link__text">إدارة المستخدمين</span>
       </button>
       <button 
+        v-if="authStore.isAdmin"
         @click="handleTabClick('schools')"
         class="nav-link" 
         :class="{ 'nav-link--active': activeTab === 'schools' }"
@@ -26,6 +29,7 @@
         <span class="nav-link__text">المدارس</span>
       </button>
       <button 
+        v-if="authStore.isAdmin || authStore.hasAnalyticsAccess"
         @click="handleTabClick('analytics')"
         class="nav-link" 
         :class="{ 'nav-link--active': activeTab === 'analytics' }"
@@ -41,6 +45,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 
 const props = defineProps({
   isOpen: {
@@ -51,7 +56,8 @@ const props = defineProps({
 
 const emit = defineEmits(['tab-change', 'close'])
 
-const activeTab = ref('surveys')
+const authStore = useAuthStore()
+const activeTab = ref(authStore.isAdmin ? 'surveys' : 'analytics')
 
 const handleTabClick = (tab) => {
   activeTab.value = tab

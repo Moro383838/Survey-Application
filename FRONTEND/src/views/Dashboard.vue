@@ -29,12 +29,13 @@
             <div class="user-info hidden md:flex">
               <h3 class="user-info__name">{{ username }}</h3>
               <p class="user-info__role">
-                <span class="role-badge" :class="{ 'role-badge--admin': user.role === 'ADMIN', 'role-badge--user': user.role !== 'ADMIN' }">
-                  {{ user.role === 'ADMIN' ? 'مدير النظام' : 'مستخدم' }}
+                <span class="role-badge" :class="{ 'role-badge--admin': authStore.isAdmin, 'role-badge--user': !authStore.isAdmin }">
+                  {{ authStore.isAdmin ? 'مدير النظام' : (authStore.hasAnalyticsAccess ? 'محلل بيانات' : 'مستخدم') }}
                 </span>
               </p>
             </div>
           </div>
+          <div class="header-divider"></div>
           <LogOut />
         </div>
       </div>
@@ -67,12 +68,11 @@ import Users from '@/views/dashboard/Users.vue'
 import Schools from '@/views/dashboard/Schools.vue'
 import Analytics from '@/views/dashboard/Analytics.vue'
 
-const username = JSON.parse(localStorage.getItem('user')).username
-const role = JSON.parse(localStorage.getItem('user')).role
-const router = useRouter()
 const authStore = useAuthStore()
+const username = authStore.userName
+const router = useRouter()
 
-const user = computed(() => authStore.user || { username: username, role: role })
+const user = computed(() => authStore.user || { username: username, role: authStore.isAdmin ? 'ADMIN' : (authStore.hasAnalyticsAccess ? 'ANALAYZER_USER' : 'USER') })
 
 const userInitials = computed(() => {
   if (!user.value?.username) return 'م'
@@ -85,7 +85,7 @@ const isMenuOpen = ref(false)
 
 // Tab management
 const navBarRef = ref(null)
-const currentComponent = shallowRef(Surveys)
+const currentComponent = shallowRef(authStore.isAdmin ? Surveys : Analytics)
 
 const tabComponents = {
   surveys: Surveys,
@@ -95,6 +95,11 @@ const tabComponents = {
 }
 
 const handleTabChange = (tabName) => {
+  // الحماية: المحلل لا يمكنه الدخول لتبويبات المشرف
+  if (!authStore.isAdmin && (tabName === 'surveys' || tabName === 'users' || tabName === 'schools')) {
+    return
+  }
+
   if (tabComponents[tabName]) {
     currentComponent.value = tabComponents[tabName]
   }
@@ -212,6 +217,13 @@ if (!authStore.isAdmin && !authStore.hasAnalyticsAccess) {
   color: var(--primary-dark);
   font-weight: 700;
   font-size: 14px;
+}
+
+.header-divider {
+  width: 1px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 8px;
 }
 
 /* Content Area */

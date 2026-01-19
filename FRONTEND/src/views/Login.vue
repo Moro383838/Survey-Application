@@ -120,11 +120,9 @@ const handleSubmit = async () => {
     await new Promise(resolve => setTimeout(resolve, 100))
 
     // Redirect based on user role
-    if (authStore.isAdmin) {
+    if (authStore.isAdmin || authStore.hasAnalyticsAccess) {
+      // Both Admins and Analysts go to the Dashboard
       router.push('/dashboard')
-    } else if (authStore.hasAnalyticsAccess) {
-      // ANALAYZER_USER goes directly to analytics
-      router.push('/dashboard/analytics')
     } else {
       router.push('/home')
     }

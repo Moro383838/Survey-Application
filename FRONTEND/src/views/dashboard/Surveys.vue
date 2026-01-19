@@ -8,7 +8,7 @@
           <p class="header-subtitle">عرض وإدارة جميع الاستبيانات في النظام</p>
         </div>
       </div>
-      <div class="header-actions">
+      <div class="header-actions" v-if="authStore.isAdmin">
         <button class="btn-add-survey" @click="router.push('/surveys/create-wizard')">
           <span class="btn-icon">➕</span>
           إنشاء استبيان جديد
@@ -177,6 +177,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSurveyStore } from '@/stores/surveys'
+import { useAuthStore } from '@/stores/auth'
 import SurveysTable from '@/components/surveys/SurveysTable.vue'
 import AddSurveyModal from '@/components/surveys/modals/AddSurveyModal.vue'
 import EditSurveyModal from '@/components/surveys/modals/EditSurveyModal.vue'
@@ -184,6 +185,7 @@ import DeleteSurveyModal from '@/components/surveys/modals/DeleteSurveyModal.vue
 
 const router = useRouter()
 const store = useSurveyStore()
+const authStore = useAuthStore()
 
 // حالة المكون
 const showAddModal = ref(false)

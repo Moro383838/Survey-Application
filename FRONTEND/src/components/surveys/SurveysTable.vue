@@ -53,14 +53,14 @@
               <button 
                 class="action-btn btn-publish" 
                 @click="$emit('publish', survey)" 
-                v-if="survey.status_id == 1"
+                v-if="authStore.isAdmin && survey.status_id == 1"
               >نشر
               </button>
 
               <button 
                 class="action-btn btn-edit" 
                 @click="$emit('edit', survey)" 
-                v-if="survey.status_id == 1 || survey.status_id == 2"
+                v-if="authStore.isAdmin && (survey.status_id == 1 || survey.status_id == 2)"
               >
                 تعديل
               </button>
@@ -68,7 +68,7 @@
               <button 
                 class="action-btn btn-unpublish" 
                 @click="$emit('unpublish', survey)" 
-                v-if="survey.status_id == 2"
+                v-if="authStore.isAdmin && survey.status_id == 2"
               >
                 إلغاء النشر
               </button>
@@ -76,7 +76,7 @@
               <button 
                 class="action-btn btn-delete" 
                 @click="$emit('close', survey)" 
-                v-if="survey.status_id != 3"
+                v-if="authStore.isAdmin && survey.status_id != 3"
               >
                 إغلاق
               </button>

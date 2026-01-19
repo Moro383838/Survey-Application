@@ -13,7 +13,10 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAuthenticated = computed(() => !!token.value)
   const isAdmin = computed(() => user.value?.role === 'ADMIN')
-  const hasAnalyticsAccess = computed(() => user.value?.role === 'ADMIN' || user.value?.role === 'ANALAYZER_USER')
+  const hasAnalyticsAccess = computed(() => {
+    const role = user.value?.role
+    return role === 'ADMIN' || role === 'ANALAYZER_USER' || role === 'ANALYZER_USER' || role === 'ANALYST'
+  })
   const userName = computed(() => user.value?.username || 'مستخدم')
   const selectedSchoolId = ref(localStorage.getItem('selectedSchoolId') ? parseInt(localStorage.getItem('selectedSchoolId')) : null)
 

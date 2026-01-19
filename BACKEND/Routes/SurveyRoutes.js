@@ -19,10 +19,10 @@ const { verifyTokenAndAdmin, verifyTokenAndAdminOrAnalyzer } = require("../middl
 // 1. العمليات الأساسية (CRUD)
 router.route("/")
   .post(verifyTokenAndAdmin, createSurveyCrlt) // إنشاء
-  .get(verifyTokenAndAdminOrAnalyzer, getAllSurveysAdmin); // جلب الكل
+  .get(verifyTokenAndAdmin, getAllSurveysAdmin); // جلب الكل
 
 router.route("/:id")
-  .get(verifyTokenAndAdminOrAnalyzer, getSurveyDetailsCtrl) // جلب تفاصيل واحد
+  .get(verifyTokenAndAdmin, getSurveyDetailsCtrl) // جلب تفاصيل واحد
   .put(verifyTokenAndAdmin, updateSurveyCtrl)     // تعديل
   .delete(verifyTokenAndAdmin, deleteSurvey);     // حذف
 

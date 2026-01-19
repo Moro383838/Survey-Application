@@ -2,7 +2,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
 import SchoolDetails from '@/components/schools/SchoolDetails.vue'
-import dashboard from '@/views/Dashboard.vue'  
+import dashboard from '@/views/Dashboard.vue'
 const routes = [
   {
     path: '/',
@@ -20,7 +20,7 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: dashboard,
-    meta: { requiresAuth: true, requiresAdmin: true }
+    meta: { requiresAuth: true, requiresAnalyticsAccess: true }
   },
   {
     path: '/question-library',
@@ -40,9 +40,7 @@ const routes = [
   },
   {
     path: '/dashboard/analytics',
-    name: 'Analytics',
-    component: () => import('@/views/dashboard/Analytics.vue'),
-    meta: { requiresAuth: true, requiresAnalyticsAccess: true }
+    redirect: '/dashboard'
   },
   {
     path: '/dashboard/users',
@@ -71,7 +69,7 @@ const routes = [
     path: '/surveys',
     name: 'Surveys',
     component: () => import('@/views/dashboard/Surveys.vue'),
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
     path: '/surveys/create-wizard',
@@ -91,7 +89,7 @@ const routes = [
     name: 'SurveyDetails',
     component: () => import('@/components/surveys/SurveyDetails.vue'),
     props: true,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAdmin: true }
   }
 ]
 
@@ -117,11 +115,8 @@ router.beforeEach((to, from, next) => {
 
   // إذا كانت الصفحة تتطلب عدم مصادقة
   if (to.meta.requiresGuest && authStore.isAuthenticated) {
-    if (authStore.isAdmin) {
+    if (authStore.isAdmin || authStore.hasAnalyticsAccess) {
       next('/dashboard')
-    } else if (authStore.hasAnalyticsAccess) {
-      // ANALAYZER_USER goes directly to analytics
-      next('/dashboard/analytics')
     } else {
       next('/home')
     }
@@ -137,8 +132,8 @@ router.beforeEach((to, from, next) => {
   // إذا كانت الصفحة تتطلب صلاحيات تحليل (مدير أو محلل)
   if (to.meta.requiresAnalyticsAccess) {
     const userRole = authStore.user?.role
-    const hasAnalyticsAccess = userRole === 'ADMIN' || userRole === 'ANALAYZER_USER'
-    
+    const hasAnalyticsAccess = userRole === 'ADMIN' || userRole === 'ANALAYZER_USER' || userRole === 'ANALYZER_USER' || userRole === 'ANALYST'
+
     if (!hasAnalyticsAccess) {
       next('/home')
       return
