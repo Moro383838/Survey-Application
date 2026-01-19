@@ -65,7 +65,7 @@
               </div>
               <div v-if="form.isPeriodic" class="form-group">
                 <label>التكرار</label>
-                <select v-model="form.frequency" class="form-input" :disabled="frequenciesLoading">
+                <select v-model="form.frequencyId" class="form-input" :disabled="frequenciesLoading">
                   <option value="">اختر التكرار...</option>
                   <option 
                     v-for="freq in frequencies" 
@@ -363,7 +363,7 @@
               </div>
               <div class="review-item">
                 <label>نوع الاستبيان:</label>
-                <span>{{ form.isPeriodic ? `دوري (${form.frequency})` : 'لمرة واحدة' }}</span>
+                <span>{{ form.isPeriodic ? `دوري (${getFrequencyLabel(form.frequencyId)})` : 'لمرة واحدة' }}</span>
               </div>
               <div class="review-item">
                 <label>عدد الأسئلة:</label>
@@ -451,7 +451,7 @@ const form = reactive({
   startDate: '',
   endDate: '',
   isPeriodic: false,
-  frequency: ''
+  frequencyId: ''
 })
 
 const questions = ref([])
@@ -470,6 +470,11 @@ const filteredSchools = computed(() => {
     s.code?.toLowerCase().includes(query)
   )
 })
+
+const getFrequencyLabel = (id) => {
+  const freq = frequencies.value.find(f => f.id == id)
+  return freq ? freq.name : id
+}
 
 // Helper function to format datetime-local
 const formatDateTimeLocal = (dateStr) => {
@@ -496,7 +501,7 @@ const loadSurveyData = async () => {
       form.title = survey.title || ''
       form.description = survey.description || ''
       form.isPeriodic = survey.is_periodic || false
-      form.frequency = survey.frequency || 'monthly'
+      form.frequencyId = survey.frequency_id || ''
       
       // Format dates for datetime-local input
       if (survey.dates?.start) {
@@ -543,8 +548,8 @@ const loadFrequencies = async () => {
     if (response.data && Array.isArray(response.data)) {
       frequencies.value = response.data
       // Set default frequency if not already set and we have data
-      if (!form.frequency && frequencies.value.length > 0) {
-        form.frequency = frequencies.value[0].id
+      if (!form.frequencyId && frequencies.value.length > 0) {
+        form.frequencyId = frequencies.value[0].id
       }
     }
   } catch (err) {

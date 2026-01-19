@@ -218,10 +218,10 @@ export const useSurveyStore = defineStore('survey', () => {
       const apiPayload = {
         title: payload.title,
         description: payload.description,
-        isPeriodic: payload.isPeriodic,
+        isPeriodic: !!payload.isPeriodic,
         startDate: payload.startDate,
         endDate: payload.endDate,
-        frequencyId: payload.frequencyId || null
+        frequencyId: payload.isPeriodic ? payload.frequencyId : null
       }
 
       const response = await api.post(API_BASE_URL, apiPayload)
@@ -282,10 +282,10 @@ export const useSurveyStore = defineStore('survey', () => {
       const apiPayload = {
         title: payload.title,
         description: payload.description || '',
-        isPeriodic: payload.isPeriodic,
+        isPeriodic: !!payload.isPeriodic,
         startDate: formatDateForAPI(payload.startDate),
         endDate: formatDateForAPI(payload.endDate),
-        frequencyId: frequencyIdToSend
+        frequencyId: payload.isPeriodic ? payload.frequencyId : null
       }
 
       // إزالة الحقول الفارغة (لكن نحتفظ بـ boolean fields و description)
