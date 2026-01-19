@@ -99,7 +99,7 @@ export const useSurveyStore = defineStore('survey', () => {
           if (!sId && s.status_label) {
             if (s.status_label === 'مسودة') sId = 1
             else if (s.status_label === 'نشط') sId = 2
-            else if (s.status_label === 'مغلق') sId = 3
+            else if (s.status_label === 'مغلق' || s.status_label === 'مكتمل') sId = 3
           }
           return { ...s, status_id: sId }
         })

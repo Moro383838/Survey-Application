@@ -38,7 +38,7 @@
           <option value="">جميع الحالات</option>
           <option value="1">مسودة</option>
           <option value="2">نشط</option>
-          <option value="3">مكتمل</option>
+          <option value="3">مغلق</option>
         </select>
 
         <select v-model="typeFilter" class="filter-select" @change="applyFilters">

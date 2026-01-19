@@ -160,18 +160,6 @@
               </div>
             </div>
 
-            <div class="form-group">
-              <label for="questionHint" class="form-label">
-                نص التوضيح (اختياري)
-              </label>
-              <input
-                id="questionHint"
-                type="text"
-                v-model="localQuestion.hint"
-                placeholder="نص توضيحي يظهر أسفل السؤال..."
-                class="form-input"
-              />
-            </div>
             
             <!-- الخيارات لأنواع الاختيار -->
             <div v-if="showOptions" class="form-group options-section">
@@ -300,15 +288,6 @@
                   </select>
                 </div>
                 
-                <div v-if="showTextInput || showTextArea" class="setting-item">
-                  <label class="form-label">نص النص التوضيحي</label>
-                  <input
-                    type="text"
-                    v-model="localQuestion.placeholder"
-                    placeholder="اكتب النص التوضيحي الذي يظهر في حقل الإدخال..."
-                    class="form-input large-input"
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -352,8 +331,6 @@ const localQuestion = ref({
   type_id: props.questionType?.id,
   type_label: props.questionType?.name || '',
   required: true,
-  hint: '',
-  placeholder: '',
   options: [{ text: '' }, { text: '' }],
   hasOtherOption: false,
   selectionType: 'single',

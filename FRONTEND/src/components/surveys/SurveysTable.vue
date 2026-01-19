@@ -41,7 +41,7 @@
           </td>
           <td data-label="الحالة">
             <span class="status-text" :class="getStatusClass(survey.status_id)">
-              {{ survey.status_label || 'مسودة' }}
+              {{ survey.status_id === 3 ? 'مغلق' : (survey.status_label || 'مسودة') }}
             </span>
           </td>
           <td data-label="الإجراءات" class="actions-cell">

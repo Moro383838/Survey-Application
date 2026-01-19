@@ -764,9 +764,9 @@ const handlePublish = async () => {
       })
     }
     await surveyStore.publishSurvey(surveyId.value)
-    // Show success message and navigate to surveys dashboard
+    // Show success message and navigate to Dashboard
     alert('تم نشر الاستبيان بنجاح!')
-    router.push('/surveys')
+    router.push('/dashboard')
   } catch (err) {
     console.error('Publish failed', err)
     alert('حدث خطأ أثناء نشر الاستبيان. يرجى المحاولة مرة أخرى.')
