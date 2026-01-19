@@ -1,11 +1,12 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import LogOut from '@/components/global/LogOut.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()
+const isMenuOpen = ref(false)
 
 const userName = computed(() => authStore.user?.username || authStore.user?.name || '')
 const selectedSchool = computed(() => {
@@ -56,15 +57,20 @@ const navigateTo = (route) => {
   <div class="home-container">
     <header class="home-header">
       <div class="header-content">
-        <div class="header-logo">
-          <img src="/logo.png" alt="شعار النظام" class="logo-img" />
-          <div class="logo-text">
-            <h1>الصفحة الرئيسية</h1>
-            <p>مرحباً بك في نظام الاستبيانات</p>
+        <div class="mobile-header-row">
+          <div class="header-logo">
+            <img src="/logo.png" alt="شعار النظام" class="logo-img" />
+            <div class="logo-text">
+              <h1>الصفحة الرئيسية</h1>
+              <p>مرحباً بك في نظام الاستبيانات</p>
+            </div>
           </div>
+          <button class="mobile-menu-btn" @click="isMenuOpen = !isMenuOpen" aria-label="Toggle menu">
+            <span class="menu-icon">{{ isMenuOpen ? '✕' : '☰' }}</span>
+          </button>
         </div>
 
-        <div class="header-actions">
+        <div class="header-actions" :class="{ 'is-open': isMenuOpen }">
           <!-- School Selector -->
           <div class="school-selector-container" v-if="authStore.userSchoolsList.length > 1">
             <span class="selector-label">المدرسة النشطة:</span>
@@ -138,6 +144,12 @@ const navigateTo = (route) => {
     </main>
   </div>
 </template>
+
+
+  /* Hide menu button on desktop */
+  .mobile-menu-btn {
+    display: none;
+  }
 
 <style scoped>
 .home-container {
@@ -416,22 +428,54 @@ const navigateTo = (route) => {
 
   .home-header {
     padding: 0.75rem 1rem;
+    position: relative; /* Unstick header on mobile */
   }
 
   .header-content {
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0; /* Remove gap */
     align-items: stretch;
+  }
+  
+  .mobile-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
   }
 
   .header-logo {
-    justify-content: center;
+    justify-content: flex-start;
+  }
+  
+  .mobile-menu-btn {
+    display: block; /* Visible on mobile */
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--primary-dark);
+    cursor: pointer;
+    padding: 0.5rem;
   }
 
   .header-actions {
     flex-direction: column;
     width: 100%;
     gap: 0.75rem;
+    display: none; /* Hidden by default */
+    padding-top: 1rem;
+    border-top: 1px dashed #e2e8f0;
+    margin-top: 0.5rem;
+    animation: slideDown 0.3s ease-out;
+  }
+  
+  .header-actions.is-open {
+    display: flex; /* Show when open */
+  }
+  
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .school-selector-container, .user-welcome {
