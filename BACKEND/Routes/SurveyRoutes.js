@@ -16,13 +16,12 @@ const {
 } = require("../Controllers/SurveyController");
 const { verifyTokenAndAdmin, verifyTokenAndAdminOrAnalyzer } = require("../middleware/verifyToken");
 
-// 1. العمليات الأساسية (CRUD)
 router.route("/")
   .post(verifyTokenAndAdmin, createSurveyCrlt) // إنشاء
-  .get(verifyTokenAndAdmin, getAllSurveysAdmin); // جلب الكل
+  .get(verifyTokenAndAdminOrAnalyzer, getAllSurveysAdmin); // جلب الكل
 
 router.route("/:id")
-  .get(verifyTokenAndAdmin, getSurveyDetailsCtrl) // جلب تفاصيل واحد
+  .get(verifyTokenAndAdminOrAnalyzer, getSurveyDetailsCtrl) // جلب تفاصيل واحد
   .put(verifyTokenAndAdmin, updateSurveyCtrl)     // تعديل
   .delete(verifyTokenAndAdmin, deleteSurvey);     // حذف
 

@@ -185,9 +185,20 @@ if (!authStore.isAdmin && !authStore.hasAnalyticsAccess) {
   display: none; /* Hide subtitle on very small screens */
 }
 
-/* Emblem (Hidden on mobile to save space, or very small) */
+/* Emblem/Logo Styles */
 .dashboard-header__emblem {
-  display: none; 
+  display: none; /* Hidden on small mobile to avoid crowding */
+  align-items: center;
+  justify-content: center;
+  width:120px;
+  height: 120px;
+  z-index: 40;
+}
+
+.emblem-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 /* User Section */
@@ -276,15 +287,15 @@ if (!authStore.isAdmin && !authStore.hasAnalyticsAccess) {
   }
 
   .dashboard-header__emblem {
-    display: block;
-    position: absolute;
-    right: 32px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 120px; /* Smaller than before to fit */
-    height: 120px;
-    opacity: 0.1;
-    pointer-events: none;
+    display: flex;
+    width: 180px; 
+    height: 180px;
+    opacity: 1; 
+    margin-right: 0;
+    margin-left: 30px; /* Shifted left as per user request */
+    margin-top: -10px;
+    transform: scale(1.5);
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); /* Added shadow for more depth */
   }
   
   .emblem-svg {
