@@ -1,48 +1,62 @@
 <template>
-  <nav class="navbar">
+  <nav class="navbar" :class="{ 'navbar--mobile-open': isOpen }">
     <div class="nav-wrapper">
       <button 
-        @click="setActiveTab('surveys')"
+        @click="handleTabClick('surveys')"
         class="nav-link" 
         :class="{ 'nav-link--active': activeTab === 'surveys' }"
       >
+        <span class="nav-link__icon">📋</span>
         <span class="nav-link__text">الاستبيانات</span>
       </button>
       <button 
-        @click="setActiveTab('users')"
+        @click="handleTabClick('users')"
         class="nav-link" 
         :class="{ 'nav-link--active': activeTab === 'users' }"
       >
+        <span class="nav-link__icon">👥</span>
         <span class="nav-link__text">إدارة المستخدمين</span>
       </button>
       <button 
-        @click="setActiveTab('schools')"
+        @click="handleTabClick('schools')"
         class="nav-link" 
         :class="{ 'nav-link--active': activeTab === 'schools' }"
       >
+         <span class="nav-link__icon">🏫</span>
         <span class="nav-link__text">المدارس</span>
       </button>
       <button 
-        @click="setActiveTab('analytics')"
+        @click="handleTabClick('analytics')"
         class="nav-link" 
         :class="{ 'nav-link--active': activeTab === 'analytics' }"
       >
+         <span class="nav-link__icon">📊</span>
         <span class="nav-link__text">التحليلات</span>
       </button>
     </div>
   </nav>
+  <!-- Overlay for mobile -->
+  <div v-if="isOpen" class="mobile-overlay" @click="$emit('close')"></div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 
-const emit = defineEmits(['tab-change'])
+const props = defineProps({
+  isOpen: {
+    type: Boolean,
+    default: false
+  }
+})
+
+const emit = defineEmits(['tab-change', 'close'])
 
 const activeTab = ref('surveys')
 
-const setActiveTab = (tab) => {
+const handleTabClick = (tab) => {
   activeTab.value = tab
   emit('tab-change', tab)
+  emit('close') // Close drawer on selection (mobile)
 }
 
 // Expose activeTab for parent component to access
@@ -52,127 +66,118 @@ defineExpose({
 </script>
 
 <style scoped>
+/* Mobile First: Sidebar Drawer Style (Hidden by default) */
 .navbar {
-  background: var(--gradient-primary);
-  border-top: 1px solid var(--primary-teal);
+  background: var(--gradient-primary); /* Fallback */
+  background: linear-gradient(180deg, #1a4d46 0%, #133a35 100%);
   position: fixed;
-  top: 80px; /* Default position below header */
+  top: 0;
+  right: -280px; /* Hidden off-screen */
+  width: 280px;
+  height: 100vh;
+  z-index: 2000;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.2);
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding-top: 80px; /* Space for close button or header */
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar--mobile-open {
+  right: 0; /* Slide in */
+}
+
+/* Overlay */
+.mobile-overlay {
+  position: fixed;
+  top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1900;
+  animation: fadeIn 0.3s ease;
 }
 
-/* Responsive positioning to match header height changes */
-@media (max-width: 768px) {
-  .navbar {
-    top: 100px; /* Match tablet header height */
-  }
-}
-
-@media (max-width: 480px) {
-  .navbar {
-    top: 80px; /* Match small phone header height */
-  }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .nav-wrapper {
   display: flex;
+  flex-direction: column; /* Stack vertically on mobile */
   gap: 8px;
-  padding: 0 32px;
-  overflow-x: auto;
-  justify-content: center;
-  height: 48px;
-  align-items: center;
+  padding: 20px;
+  width: 100%;
 }
 
 .nav-link {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  color: var(--primary-gold);
+  gap: 12px;
+  padding: 14px 20px;
+  color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
-  white-space: nowrap;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+  border-radius: 12px;
+  transition: all 0.2s ease;
   border: none !important;
-  outline: none !important;
-  cursor: pointer;
-  box-shadow: none !important;
   background-color: transparent !important;
+  width: 100%;
+  justify-content: flex-start;
 }
-
-.nav-link::-moz-focus-inner {
-  border: 0 !important;
-  outline: 0 !important;
-}
-
-.nav-link:focus {
-  outline: none !important;
-  box-shadow: none !important;
-  border: none !important;
-}
-
-.nav-link:focus-visible {
-  outline: none !important;
-  box-shadow: none !important;
-  border: none !important;
-}
-
-.nav-link:-moz-focusring {
-  outline: none !important;
-  box-shadow: none !important;
-  border: none !important;
-}
-
-/* Removed hover effect - buttons maintain original appearance */
 
 .nav-link--active {
-  color: var(--primary-dark);
-  font-weight: 600;
-  background: var(--gradient-gold) !important;
-  box-shadow: 0 2px 8px rgba(var(--primary-gold-rgb), 0.3);
+  color: var(--primary-dark) !important;
+  font-weight: 700;
+  background: var(--primary-gold) !important;
+  box-shadow: 0 4px 12px rgba(185, 167, 121, 0.3);
 }
 
 .nav-link__icon {
-  font-size: 18px;
+  font-size: 20px;
 }
 
-.nav-link__text {
-  display: inline;
-}
+/* Desktop Styles (Min-width: 1024px) - Revert to Horizontal Top Bar */
+@media (min-width: 1024px) {
+  .navbar {
+    top: 80px;
+    right: 0;
+    left: 0;
+    width: 100%;
+    height: 56px;
+    padding-top: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: none;
+    background: var(--gradient-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
 
-@media (max-width: 768px) {
   .nav-wrapper {
-    padding: 0 20px;
-    gap: 4px;
+    flex-direction: row; /* Horizontal */
+    justify-content: center;
+    align-items: center;
+    padding: 0 32px;
+    height: 100%;
   }
 
   .nav-link {
-    padding: 12px 16px;
+    width: auto;
+    padding: 8px 16px;
     font-size: 14px;
-    gap: 6px;
+    color: var(--primary-gold);
   }
 
-  .nav-link__icon {
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .nav-link__text {
-    display: none;
+  .nav-link--active {
+    background: var(--gradient-gold) !important;
+    color: var(--primary-dark) !important;
   }
 
-  .nav-link {
-    padding: 10px 12px;
-  }
-
-  .nav-link__icon {
-    font-size: 14px;
+  .mobile-overlay {
+    display: none; /* Never show overlay on desktop */
   }
 }
 </style>
