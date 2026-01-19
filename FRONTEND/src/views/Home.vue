@@ -97,9 +97,11 @@ const navigateTo = (route) => {
       <!-- Welcome Section -->
       <div class="welcome-section">
         <div class="welcome-card">
+          <div class="welcome-text-content">
+            <h2>مرحباً بك في {{ schoolName }}</h2>
+            <p>يمكنك من هنا الوصول إلى جميع الاستبيانات المتاحة لمدرستك</p>
+          </div>
           <div class="welcome-icon-large">🏫</div>
-          <h2>مرحباً بك في {{ schoolName }}</h2>
-          <p>يمكنك من هنا الوصول إلى جميع الاستبيانات المتاحة لمدرستك</p>
         </div>
       </div>
 
@@ -412,26 +414,88 @@ const navigateTo = (route) => {
     padding: 1rem;
   }
 
-  .welcome-card {
-    padding: 2rem 1.5rem;
-  }
-
-  .welcome-card h2 {
-    font-size: 1.5rem;
-  }
-
-  .cards-grid {
-    grid-template-columns: 1fr;
+  .home-header {
+    padding: 0.75rem 1rem;
   }
 
   .header-content {
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  .header-logo {
+    justify-content: center;
   }
 
   .header-actions {
+    flex-direction: column;
     width: 100%;
+    gap: 0.75rem;
+  }
+
+  .school-selector-container, .user-welcome {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .school-select {
+    flex: 1;
+  }
+
+  /* Compact Welcome Card for Mobile */
+  .welcome-card {
+    padding: 1.5rem;
+    text-align: right; /* Align text to start */
+    display: flex;     /* Side-by-side layout */
+    flex-direction: row-reverse; /* Icon on left (LTR) -> Right in RTL? No, we want icon on side. */
+    align-items: center;
     justify-content: space-between;
+    gap: 1rem;
+    min-height: auto;
+  }
+
+  .welcome-icon-large {
+    font-size: 40px; /* Smaller icon */
+    margin-bottom: 0;
+    margin-right: 0;
+    flex-shrink: 0;
+  }
+
+  .welcome-card h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .welcome-card p {
+    font-size: 0.9rem;
+  }
+
+  .welcome-text-content {
+    flex: 1;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .dashboard-card {
+    padding: 1.5rem;
+  }
+  
+  .card-icon {
+    font-size: 32px;
+    margin-bottom: 0.75rem;
+  }
+
+  .quick-actions {
+     flex-direction: column;
+  }
+  
+  .quick-action-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 </style>

@@ -162,7 +162,8 @@
   color: #334155;
 }
 
-.form-input, .form-textarea {
+.form-input,
+.form-textarea {
   padding: 0.875rem;
   border: 2px solid #e2e8f0;
   border-radius: 0.75rem;
@@ -170,7 +171,8 @@
   transition: all 0.2s;
 }
 
-.form-input:focus, .form-textarea:focus {
+.form-input:focus,
+.form-textarea:focus {
   border-color: #b9a779;
   outline: none;
   box-shadow: 0 0 0 4px rgba(185, 167, 121, 0.2);
@@ -521,8 +523,15 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .dir-item {
@@ -546,7 +555,7 @@
 }
 
 .remove-btn {
-  background: rgba(0,0,0,0.05);
+  background: rgba(0, 0, 0, 0.05);
   border: none;
   color: inherit;
   width: 24px;
@@ -562,7 +571,7 @@
 }
 
 .remove-btn:hover {
-  background: rgba(0,0,0,0.15);
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .empty-list {
@@ -720,6 +729,7 @@
   border-radius: 1rem;
   border: 2px dashed #e2e8f0;
 }
+
 .wizard-actions {
   display: flex;
   justify-content: flex-end;
@@ -764,4 +774,107 @@ input[type="datetime-local"] {
   font-size: 0.875rem;
   color: #64748b;
   font-style: italic;
+}
+
+/* Mobile Responsive Fixes */
+@media (max-width: 640px) {
+  .wizard-page {
+    padding: 16px;
+    overflow-x: hidden;
+  }
+
+  .wizard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .wizard-actions {
+    width: 100%;
+  }
+
+  .wizard-actions button {
+    width: 100%;
+  }
+
+  /* Stepper Mobile */
+  .step-label {
+    display: none;
+    /* Hide labels to save space */
+  }
+
+  .step-circle {
+    width: 32px;
+    /* Smaller circles */
+    height: 32px;
+    font-size: 0.9rem;
+  }
+
+  .step-line {
+    top: 16px;
+    /* Adjust line position */
+  }
+
+  /* Form Grid Mobile */
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .full-width {
+    grid-column: span 1;
+  }
+
+  /* Buttons Mobile */
+  .card-footer {
+    flex-direction: column-reverse;
+    /* Stack buttons */
+    gap: 1rem;
+  }
+
+  .card-footer button {
+    width: 100%;
+  }
+
+  .final-btns {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  /* Targeting Layout Mobile */
+  .targeting-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .targeting-tabs {
+    flex-wrap: wrap;
+  }
+
+  .builder-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex: none;
+  }
+
+  .types-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Ensure inputs don't overflow */
+  .form-input,
+  .form-textarea,
+  .form-select {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    /* Critical for preventing padding overflow */
+  }
+
+  .card {
+    padding: 1.5rem;
+    /* Reduce card padding */
+  }
 }

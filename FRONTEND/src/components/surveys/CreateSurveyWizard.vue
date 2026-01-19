@@ -836,6 +836,13 @@ const formatDate = (dateStr) => {
   direction: rtl;
   font-family: 'Inter', 'Outfit', sans-serif;
   min-height: calc(100vh - 128px);
+  overflow-x: hidden; /* Prevent horizontal spill */
+}
+
+@media (max-width: 640px) {
+  .wizard-page {
+    padding: 16px; /* Reduced padding on mobile */
+  }
 }
 
 .wizard-header {
@@ -1053,7 +1060,18 @@ const formatDate = (dateStr) => {
     width: 100%;
   }
   .types-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(2, 1fr); /* 2 cols for types on mobile */
+  }
+
+  /* Ensure inputs don't overflow */
+  .form-input, .form-textarea, .form-select {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box; /* Critical for preventing padding overflow */
+  }
+  
+  .card {
+     padding: 1.5rem; /* Reduce card padding on mobile */
   }
 }
 
