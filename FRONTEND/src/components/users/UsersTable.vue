@@ -29,21 +29,21 @@
       </thead>
       <tbody>
         <tr v-for="user in users" :key="user.id">
-          <td>
+          <td data-label="المستخدم">
             <div class="user-cell">
               <div class="user-info">
                 <strong>{{ user.username }}</strong>
               </div>
             </div>
           </td>
-          <td>
+          <td data-label="الدور">
             <span class="role-badge" :class="getRoleClass(user.role)">
               {{user.role_name}}
             </span>
           </td>
-          <td>{{ user.school_names !== 'N/A' ? user.school_names : '-' }}</td>
-          <td>{{ formatDate(user.created_at) }}</td>
-          <td>
+          <td data-label="المدرسة">{{ user.school_names !== 'N/A' ? user.school_names : '-' }}</td>
+          <td data-label="تاريخ التسجيل">{{ formatDate(user.created_at) }}</td>
+          <td data-label="الإجراءات" class="actions-cell">
             <div class="actions">
               <button class="edit-btn" @click="handleEdit(user)">
                 ✏️ تعديل
@@ -333,5 +333,75 @@ const formatDate = (dateString) => {
   
   @keyframes spin {
     to { transform: rotate(360deg); }
+  }
+
+  /* =========================================
+   Mobile Card View (Responsive Framework Behavior) 
+   ========================================= */
+  @media (max-width: 768px) {
+    .table-wrapper {
+      overflow-x: visible; /* Remove horizontal scroll */
+    }
+
+    .users-table {
+      min-width: 100%;
+      display: block;
+    }
+
+    .users-table thead {
+      display: none; /* Hide standard header */
+    }
+
+    .users-table tbody {
+      display: block;
+      width: 100%;
+    }
+
+    .users-table tr {
+      display: block;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      padding: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      white-space: normal; /* Allow wrapping in card mode */
+    }
+
+    .users-table td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f1f5f9;
+      text-align: left;
+    }
+
+    .users-table td:last-child {
+      border-bottom: none;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    /* Add Labels using data-label attribute */
+    .users-table td::before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .actions {
+      width: 100%;
+      justify-content: flex-start;
+    }
+
+    .edit-btn, .delete-btn, .view-btn {
+      flex: 1;
+      justify-content: center;
+      padding: 10px;
+    }
   }
   </style>

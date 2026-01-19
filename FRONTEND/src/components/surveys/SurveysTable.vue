@@ -13,22 +13,22 @@
       </thead>
       <tbody>
         <tr v-for="(survey) in surveys" :key="survey.id">
-          <td>
+          <td data-label="الاستبيان">
             <div class="survey-name-cell">
               <span class="survey-title">{{ survey.title }}</span>
             </div>
           </td>
-          <td>{{ survey.is_periodic ? 'دوري' : 'عادي' }}</td>
-          <td>{{ formatDate(survey.created_at) }}</td>
-          <td class="text-center">
+          <td data-label="النوع">{{ survey.is_periodic ? 'دوري' : 'عادي' }}</td>
+          <td data-label="تاريخ الإنشاء">{{ formatDate(survey.created_at) }}</td>
+          <td data-label="عدد الأسئلة" class="text-center">
             <span class="count-badge red-badge">{{ survey.questions?.length || 0 }}</span>
           </td>
-          <td>
+          <td data-label="الحالة">
             <span class="status-text" :class="getStatusClass(survey.status_id)">
               {{ survey.status_label || 'مسودة' }}
             </span>
           </td>
-          <td>
+          <td data-label="الإجراءات" class="actions-cell">
             <div class="actions-group">
               <button class="action-btn btn-details" @click="$emit('view', survey)">
                 <span class="dot">●</span> تفاصيل
@@ -118,7 +118,7 @@ const getStatusClass = (statusId) => {
 .custom-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 800px;
+  min-width: 800px; /* Force scroll on desktop if needed, overridden on mobile */
 }
 
 .custom-table th {
@@ -151,14 +151,6 @@ const getStatusClass = (statusId) => {
   gap: 10px;
 }
 
-.survey-icon-small {
-  background: var(--bg-hover);
-  padding: 6px;
-  border-radius: 6px;
-  font-size: 14px;
-  border: 1px solid var(--primary-gold);
-}
-
 .survey-title {
   font-weight: 600;
   color: var(--primary-dark);
@@ -182,13 +174,6 @@ const getStatusClass = (statusId) => {
   text-align: center !important;
 }
 
-.btn-close {
-  background-color: #ffedd5;
-  color: #f97316;
-}
-.btn-close .icon {
-  font-size: 12px;
-}
 /* Status Text */
 .status-text {
   font-weight: 500;
@@ -197,11 +182,12 @@ const getStatusClass = (statusId) => {
 .status-text.draft { color: var(--text-muted); }
 .status-text.closed { color: #ef4444; }
 
-/* Actions Buttons - Matching the screenshot style */
+/* Actions Buttons */
 .actions-group {
   display: flex;
   gap: 8px;
   justify-content: flex-end;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
 }
 
 .action-btn {
@@ -215,54 +201,86 @@ const getStatusClass = (statusId) => {
   align-items: center;
   gap: 6px;
   transition: opacity 0.2s;
+  white-space: nowrap;
 }
 
 .action-btn:hover {
   opacity: 0.8;
 }
 
-/* Details Button (Blue/Teal) */
-.btn-details {
-  background-color: #e0f2fe;
-  color: #0284c7;
-}
-.btn-details .dot {
-  font-size: 10px;
-}
+/* Specific Button Colors */
+.btn-details { background-color: #e0f2fe; color: #0284c7; }
+.btn-delete { background-color: #fee2e2; color: #ef4444; }
+.btn-edit { background-color: #ffedd5; color: #f97316; }
+.btn-unpublish { background-color: #f3e8ff; color: #9333ea; }
+.btn-publish { background-color: #dcfce7; color: #16a34a; }
 
-/* Delete Button (Red) */
-.btn-delete {
-  background-color: #fee2e2;
-  color: #ef4444;
-}
-.btn-delete .icon {
-  font-size: 12px;
-}
+/* =========================================
+   Mobile Card View (Responsive Framework Behavior) 
+   ========================================= */
+@media (max-width: 768px) {
+  .table-wrapper {
+    overflow-x: visible; /* Remove horizontal scroll */
+  }
 
-/* Edit Button (Orange) */
-.btn-edit {
-  background-color: #ffedd5;
-  color: #f97316;
-}
-.btn-edit .icon {
-  font-size: 12px;
-}
+  .custom-table {
+    min-width: 100%;
+    display: block;
+  }
 
-/* Unpublish Button (Purple) */
-.btn-unpublish {
-  background-color: #f3e8ff;
-  color: #9333ea;
-}
-.btn-unpublish .icon {
-  font-size: 12px;
-}
+  .custom-table thead {
+    display: none; /* Hide standard header */
+  }
 
-/* Publish Button (Green) */
-.btn-publish {
-  background-color: #dcfce7;
-  color: #16a34a;
-}
-.btn-publish .icon {
-  font-size: 12px;
+  .custom-table tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .custom-table tr {
+    display: block;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  .custom-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+    text-align: left;
+  }
+
+  .custom-table td:last-child {
+    border-bottom: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  /* Add Labels using data-label attribute */
+  .custom-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #64748b;
+    font-size: 13px;
+  }
+
+  .actions-group {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .action-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 10px;
+  }
 }
 </style>

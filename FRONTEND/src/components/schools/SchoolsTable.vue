@@ -18,7 +18,7 @@
           <th>المدرسة</th>
           <th>الرمز</th>
           <th>المنطقة</th>
-          <th>المديرية</th> <!-- حقل جديد -->
+          <th>المديرية</th>
           <th>المجمع</th>   
           <th>عدد الموظفين</th>
           <th>تاريخ الإنشاء</th>
@@ -27,23 +27,23 @@
       </thead>
       <tbody>
         <tr v-for="school in schools" :key="school.id">
-          <td>
+          <td data-label="المدرسة">
             <div class="school-cell">
               <div class="school-info">
                 <strong>{{ school.name }}</strong>
               </div>
             </div>
           </td>
-          <td>{{ school.code }}</td>
-          <td>{{ school.region }}</td>
-          <td>{{ school.directorate_name }}</td> <!-- عرض اسم المديرية -->
-          <td>{{ school.complex_name }}</td>
-          <td>
+          <td data-label="الرمز">{{ school.code }}</td>
+          <td data-label="المنطقة">{{ school.region }}</td>
+          <td data-label="المديرية">{{ school.directorate_name }}</td>
+          <td data-label="المجمع">{{ school.complex_name }}</td>
+          <td data-label="عدد الموظفين">
             <span class="staff-count" :class="{ 'zero-staff': school.users_count == 0 }">
               {{ school.users_count || 0 }}
             </span></td>
-          <td>{{ formatDate(school.created_at) }}</td>
-          <td>
+          <td data-label="تاريخ الإنشاء">{{ formatDate(school.created_at) }}</td>
+          <td data-label="الإجراءات" class="actions-cell">
             <div class="actions">
               <button class="edit-btn" @click="handleEdit(school)">
                  تعديل
@@ -291,5 +291,74 @@ const formatDate = (dateString) => {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* =========================================
+   Mobile Card View (Responsive Framework Behavior) 
+   ========================================= */
+@media (max-width: 768px) {
+  .table-container {
+    overflow-x: visible; /* Remove horizontal scroll */
+  }
+
+  .schools-table {
+    min-width: 100%;
+    display: block;
+  }
+
+  .schools-table thead {
+    display: none; /* Hide standard header */
+  }
+
+  .schools-table tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .schools-table tr {
+    display: block;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  .schools-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+    text-align: left;
+  }
+
+  .schools-table td:last-child {
+    border-bottom: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  /* Add Labels using data-label attribute */
+  .schools-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #64748b;
+    font-size: 13px;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .edit-btn, .delete-btn, .view-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 10px;
+  }
 }
 </style>
