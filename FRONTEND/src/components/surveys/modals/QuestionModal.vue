@@ -1029,53 +1029,113 @@ const saveQuestion = () => {
 
 @media (max-width: 768px) {
   .question-modal {
-    width: 98%;
-    margin: 10px;
+    width: 95%;
+    max-height: 95vh;
   }
-  
+
+  .modal-header {
+    padding: 16px 20px;
+  }
+
+  .modal-header h3 {
+    font-size: 18px;
+  }
+
   .question-editor {
-    padding: 20px;
+    padding: 16px;
+    gap: 16px;
   }
-  
-  .settings-grid {
-    grid-template-columns: 1fr;
+
+  .question-preview {
+    padding: 16px;
+    border-radius: 12px;
   }
-  
-  .range-inputs {
-    flex-direction: column;
+
+  .preview-question-text {
+    font-size: 16px;
+    padding: 12px;
   }
-  
-  .date-range-preview,
-  .time-range-preview {
-    flex-direction: column;
+
+  .form-label {
+    font-size: 15px;
   }
-  
+
+  .large-textarea {
+    padding: 12px;
+    font-size: 15px;
+    min-height: 100px;
+  }
+
+  .options-section, .range-settings, .rating-settings, .settings-section {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .option-item {
+    gap: 8px;
+  }
+
+  .option-number {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .option-input {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .remove-option-btn {
+    width: 36px;
+    height: 36px;
+  }
+
   .modal-footer {
-    flex-direction: column;
+    padding: 16px 20px;
+    flex-direction: row; /* Keep them next to each other if possible, or stack on very small */
+    gap: 12px;
   }
-  
+
   .btn {
-    width: 100%;
+    padding: 12px 20px;
+    font-size: 14px;
+    min-width: auto;
+    flex: 1;
   }
 }
 
 @media (max-width: 480px) {
-  .question-preview {
-    padding: 20px;
+  .modal-header {
+    padding: 12px 16px;
   }
-  
-  .preview-question-text {
-    font-size: 16px;
-    padding: 16px;
+
+  .question-editor {
+    padding: 12px;
   }
-  
-  .option-item {
+
+  .modal-footer {
+    padding: 12px 16px;
+    flex-direction: column-reverse;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 14px;
+  }
+
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .range-inputs {
     flex-direction: column;
-    align-items: stretch;
+    gap: 12px;
   }
-  
-  .option-number {
-    align-self: flex-start;
+
+  .date-range-preview, .time-range-preview {
+    flex-direction: column;
+    gap: 10px;
   }
 }
 </style>

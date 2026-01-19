@@ -430,23 +430,7 @@
                     <span class="stat-label">مدرسة</span>
                   </div>
                 </div>
-                <div class="scale-info">
-                  <span class="scale-label">المقياس:</span>
-                  <div class="scale-indicators">
-                    <div class="scale-item high">
-                      <div class="scale-box"></div>
-                      <span>أكثر من 20 مدرسة</span>
-                    </div>
-                    <div class="scale-item medium">
-                      <div class="scale-box"></div>
-                      <span>10-20 مدرسة</span>
-                    </div>
-                    <div class="scale-item low">
-                      <div class="scale-box"></div>
-                      <span>أقل من 10 مدارس</span>
-                    </div>
-                  </div>
-                </div>
+               
               </div>
               
               <div class="balanced-directorates-grid">
