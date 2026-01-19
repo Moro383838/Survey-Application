@@ -235,31 +235,40 @@
 
                   <!-- Schools Input (Search) -->
                   <div v-if="activeTargetTab === 'schools'" class="input-wrapper">
-                    <label class="input-label">بحث عن مدرسة</label>
-                     <div class="search-box">
-                      <input 
-                        type="text" 
-                        v-model="schoolSearch" 
-                        placeholder="ابحث باسم المدرسة أو الكود..."
-                        class="form-input"
-                      />
-                      <span class="search-icon">🔍</span>
+                    <label class="input-label">أضف مدرسة</label>
+                    <div class="searchable-dropdown-container">
+                      <div class="search-box">
+                        <input 
+                          type="text" 
+                          v-model="schoolSearch" 
+                          placeholder="ابحث باسم المدرسة أو الكود..."
+                          class="form-input dropdown-search-input"
+                          @focus="showSchoolDropdown = true"
+                        />
+                        <span class="search-icon">🔍</span>
+                      </div>
                       
-                      <!-- Autocomplete Results -->
-                      <div v-if="schoolSearch && filteredSchools.length > 0" class="search-dropdown">
+                      <!-- Searchable Dropdown List -->
+                      <div v-if="showSchoolDropdown" class="searchable-dropdown-list">
                         <div 
                           v-for="school in filteredSchools" 
                           :key="school.id"
-                          class="dropdown-item"
-                          @click="addSchoolTarget(school)"
+                          class="dropdown-list-item"
+                          :class="{ 'item-selected': targets.schoolIds.includes(school.id) }"
+                          @click="selectSchoolFromDropdown(school)"
                         >
-                          <span class="d-name">{{ school.name }}</span>
-                          <span class="d-meta">{{ school.code }}</span>
-                          <span class="plus-icon">+</span>
+                          <div class="item-main">
+                            <span class="item-name">{{ school.name }}</span>
+                            <span class="item-code">{{ school.code }}</span>
+                          </div>
+                          <span v-if="targets.schoolIds.includes(school.id)" class="selected-check">✅</span>
+                        </div>
+                        <div v-if="filteredSchools.length === 0" class="no-results-found">
+                          لا توجد نتائج بحث
                         </div>
                       </div>
                     </div>
-                    <p class="helper-text">ابحث بالاسم أو الكود لإضافة المدرسة.</p>
+                    <p class="helper-text">اضغط على الحقل للبحث واختيار المدارس.</p>
                   </div>
 
                 </div>
@@ -428,6 +437,7 @@ const showQuestionModal = ref(false)
 const selectedType = ref(null)
 const editingQuestion = ref(null)
 const editingIndex = ref(-1)
+const showSchoolDropdown = ref(false)
 
 const steps = [
   { number: 1, label: 'المعلومات الأساسية' },
@@ -581,6 +591,11 @@ const fetchComplexesForDir = async () => {
 }
 
 // Actions
+const selectSchoolFromDropdown = (school) => {
+  addSchoolTarget(school)
+  showSchoolDropdown.value = false
+  schoolSearch.value = ''
+}
 const handleStep1Next = async () => {
   if (!form.title) {
     alert('يرجى إدخال عنوان الاستبيان')

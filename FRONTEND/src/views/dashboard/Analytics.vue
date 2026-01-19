@@ -1888,7 +1888,8 @@ const clustersData = computed(() => {
 });
 
 const formatNumber = (num) => {
-  return num.toLocaleString('ar-SA')
+  if (num === null || num === undefined) return '0'
+  return num.toLocaleString('en-US')
 }
 
 const formatDateRelative = (dateString) => {
@@ -1906,7 +1907,7 @@ const formatDateRelative = (dateString) => {
     if (diffDays < 7) return `قبل ${diffDays} أيام`;
     
     // For older dates, show formatted date
-    return date.toLocaleDateString('ar-SA', {
+    return date.toLocaleDateString('en-GB', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
@@ -1962,7 +1963,7 @@ const formatDate = (dateString) => {
     const date = new Date(dateString)
     if (isNaN(date.getTime())) return 'Invalid Date'
     
-    return date.toLocaleDateString('ar-EG', {
+    return date.toLocaleDateString('en-GB', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'

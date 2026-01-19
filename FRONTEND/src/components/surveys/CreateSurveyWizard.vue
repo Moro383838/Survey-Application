@@ -233,33 +233,41 @@
                     </div>
                   </div>
 
-                  <!-- Schools Input (Search) -->
                   <div v-if="activeTargetTab === 'schools'" class="input-wrapper">
-                    <label class="input-label">بحث عن مدرسة</label>
-                     <div class="search-box">
-                      <input 
-                        type="text" 
-                        v-model="schoolSearch" 
-                        placeholder="ابحث باسم المدرسة أو الكود..."
-                        class="form-input"
-                      />
-                      <span class="search-icon">🔍</span>
+                    <label class="input-label">أضف مدرسة</label>
+                    <div class="searchable-dropdown-container">
+                      <div class="search-box">
+                        <input 
+                          type="text" 
+                          v-model="schoolSearch" 
+                          placeholder="ابحث باسم المدرسة أو الكود..."
+                          class="form-input dropdown-search-input"
+                          @focus="showSchoolDropdown = true"
+                        />
+                        <span class="search-icon">🔍</span>
+                      </div>
                       
-                      <!-- Autocomplete Results -->
-                      <div v-if="schoolSearch && filteredSchools.length > 0" class="search-dropdown">
+                      <!-- Searchable Dropdown List -->
+                      <div v-if="showSchoolDropdown" class="searchable-dropdown-list">
                         <div 
                           v-for="school in filteredSchools" 
                           :key="school.id"
-                          class="dropdown-item"
-                          @click="addSchoolTarget(school)"
+                          class="dropdown-list-item"
+                          :class="{ 'item-selected': targets.schoolIds.includes(school.id) }"
+                          @click="selectSchoolFromDropdown(school)"
                         >
-                          <span class="d-name">{{ school.name }}</span>
-                          <span class="d-meta">{{ school.code }}</span>
-                          <span class="plus-icon">+</span>
+                          <div class="item-main">
+                            <span class="item-name">{{ school.name }}</span>
+                            <span class="item-code">{{ school.code }}</span>
+                          </div>
+                          <span v-if="targets.schoolIds.includes(school.id)" class="selected-check">✅</span>
+                        </div>
+                        <div v-if="filteredSchools.length === 0" class="no-results-found">
+                          لا توجد نتائج بحث
                         </div>
                       </div>
                     </div>
-                    <p class="helper-text">ابحث بالاسم أو الكود لإضافة المدرسة.</p>
+                    <p class="helper-text">اضغط على الحقل للبحث واختيار المدارس.</p>
                   </div>
 
                 </div>
@@ -428,6 +436,7 @@ const showQuestionModal = ref(false)
 const selectedType = ref(null)
 const editingQuestion = ref(null)
 const editingIndex = ref(-1)
+const showSchoolDropdown = ref(false)
 
 const steps = [
   { number: 1, label: 'المعلومات الأساسية' },
@@ -454,10 +463,12 @@ const frequenciesLoading = ref(false)
 const progress = computed(() => (currentStep.value / 4) * 100)
 const questionTypes = computed(() => surveyStore.questionTypes)
 const filteredSchools = computed(() => {
-  if (!schoolSearch.value) return []
+  const query = schoolSearch.value.toLowerCase().trim()
+  if (!query) return schoolsStore.schools
   return schoolsStore.schools.filter(s => 
-    s.name.includes(schoolSearch.value) || s.code.includes(schoolSearch.value)
-  ).slice(0, 5)
+    s.name?.toLowerCase().includes(query) || 
+    s.code?.toLowerCase().includes(query)
+  )
 })
 
 // Helper function to format datetime-local
@@ -581,6 +592,11 @@ const fetchComplexesForDir = async () => {
 }
 
 // Actions
+const selectSchoolFromDropdown = (school) => {
+  addSchoolTarget(school)
+  showSchoolDropdown.value = false
+  schoolSearch.value = ''
+}
 const handleStep1Next = async () => {
   if (!form.title) {
     alert('يرجى إدخال عنوان الاستبيان')
@@ -1550,32 +1566,67 @@ const formatDate = (dateStr) => {
   font-weight: bold;
 }
 
-.search-box {
+/* Searchable Dropdown Styles */
+.searchable-dropdown-container {
   position: relative;
-  margin-bottom: 1.5rem;
 }
 
-.search-input {
-  width: 100%;
-  padding: 1rem 3rem 1rem 1rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 1rem;
-  font-size: 1rem;
-  transition: all 0.3s;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #054239;
-  box-shadow: 0 0 0 4px rgba(5, 66, 57, 0.1);
-}
-
-.search-icon {
+.searchable-dropdown-list {
   position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 100;
+  margin-top: 5px;
+}
+
+.dropdown-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dropdown-list-item:hover {
+  background: #f8fafc;
+}
+
+.dropdown-list-item.item-selected {
+  background: #f0fdf4;
+}
+
+.item-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-name {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.item-code {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.no-results-found {
+  padding: 20px;
+  text-align: center;
   color: #94a3b8;
+}
+
+.dropdown-search-input {
+  padding-right: 3rem !important;
 }
 
 /* Selected Summary Tags */
