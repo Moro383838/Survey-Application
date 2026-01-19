@@ -7,7 +7,7 @@
       </div>
       <div class="wizard-actions">
         <button class="btn btn-outline" @click="$router.push('/dashboard')">
-          إلغاء العودة
+          إلغاء
         </button>
       </div>
     </div>
@@ -1121,6 +1121,35 @@ const formatDate = (dateStr) => {
   border-color: #054239;
 }
 
+/* Question Options Layout Fix */
+.q-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #f1f5f9;
+}
+
+.opt-tag {
+  background: white;
+  color: #054239;
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid #b9a779;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.opt-tag:hover {
+  background: #fdfaf3;
+  transform: translateY(-1px);
+}
+
 .q-header {
   display: flex;
   align-items: center;
@@ -1203,9 +1232,20 @@ const formatDate = (dateStr) => {
   color: #64748b;
 }
 
+.wizard-header .btn-outline {
+  border-color: #b9a779;
+  color: #b9a779;
+}
+
 .btn-outline:hover {
   border-color: #054239;
   color: #054239;
+}
+
+.wizard-header .btn-outline:hover {
+  background: rgba(185, 167, 121, 0.1);
+  border-color: #b9a779;
+  color: #b9a779;
 }
 
 .btn-success {

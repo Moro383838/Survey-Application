@@ -159,8 +159,9 @@ const formatDate = (dateString) => {
   }
   
   .refresh-btn {
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
+    background: #edebe0;
+    color: var(--primary-dark);
+    border: 1px solid var(--primary-gold);
     padding: 8px 16px;
     border-radius: 8px;
     cursor: pointer;
@@ -168,11 +169,11 @@ const formatDate = (dateString) => {
     align-items: center;
     gap: 8px;
     font-size: 14px;
-    color: #475569;
+    font-weight: 700;
   }
   
   .refresh-btn:hover {
-    background: #e2e8f0;
+    background: #d1d5db;
   }
   
   .users-table {
@@ -183,7 +184,7 @@ const formatDate = (dateString) => {
   }
   
   .users-table th {
-  background:#054239;
+  background:#005f57;
   padding: 16px 12px;
   text-align: right;
   font-weight: 600;

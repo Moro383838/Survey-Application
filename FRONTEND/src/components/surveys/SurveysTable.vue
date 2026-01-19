@@ -3,10 +3,13 @@
     <table class="custom-table">
       <thead>
         <tr>
-          <th style="width: 25%">الاستبيان</th>
-          <th>النوع</th>
+          <th style="width: 20%">الاستبيان</th>
+          <th>المنشئ</th>
+          <th>التكرار</th>
           <th>تاريخ الإنشاء</th>
-          <th class="text-center">عدد الأسئلة</th>
+          <th class="text-center">المستهدف</th>
+          <th class="text-center">الإجابات</th>
+          <th class="text-center">الإنجاز</th>
           <th>الحالة</th>
           <th>الإجراءات</th>
         </tr>
@@ -18,10 +21,23 @@
               <span class="survey-title">{{ survey.title }}</span>
             </div>
           </td>
-          <td data-label="النوع">{{ survey.is_periodic ? 'دوري' : 'عادي' }}</td>
+          <td data-label="المنشئ">{{ survey.created_by_name || '-' }}</td>
+          <td data-label="التكرار">
+            <span class="frequency-badge">{{ survey.frequency_label || (survey.is_periodic ? 'دوري' : 'لمرة واحدة') }}</span>
+          </td>
           <td data-label="تاريخ الإنشاء">{{ formatDate(survey.created_at) }}</td>
-          <td data-label="عدد الأسئلة" class="text-center">
-            <span class="count-badge red-badge">{{ survey.questions?.length || 0 }}</span>
+          <td data-label="المستهدف" class="text-center">
+            <span class="count-badge target-badge">{{ survey.target_count || 0 }}</span>
+          </td>
+          <td data-label="الإجابات" class="text-center">
+            <span class="count-badge response-badge">{{ survey.response_count || 0 }}</span>
+          </td>
+          <td data-label="الإنجاز" class="text-center">
+            <div class="completion-container">
+              <span class="completion-rate" :class="getCompletionClass(survey.completion_rate)">
+                {{ survey.completion_rate }}%
+              </span>
+            </div>
           </td>
           <td data-label="الحالة">
             <span class="status-text" :class="getStatusClass(survey.status_id)">
@@ -107,6 +123,13 @@ const getStatusClass = (statusId) => {
   if (statusId === 3) return 'closed' // مغلق
   return 'draft'
 }
+
+const getCompletionClass = (rate) => {
+  const num = parseFloat(rate);
+  if (num >= 100) return 'fully-completed';
+  if (num > 0) return 'partially-completed';
+  return 'not-started';
+}
 </script>
 
 <style scoped>
@@ -122,7 +145,7 @@ const getStatusClass = (statusId) => {
 }
 
 .custom-table th {
-  background: #054239;
+  background: #005f57;
   color: var(--primary-gold);
   font-weight: 600;
   padding: 16px;
@@ -165,14 +188,34 @@ const getStatusClass = (statusId) => {
   font-weight: 600;
 }
 
-.red-badge {
-  background-color: #fee2e2;
-  color: #ef4444;
+.target-badge {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+.response-badge {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.frequency-badge {
+  color: #6366f1;
+  font-weight: 500;
 }
 
 .text-center {
   text-align: center !important;
 }
+
+/* Completion Styles */
+.completion-rate {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.fully-completed { color: #16a34a; }
+.partially-completed { color: #f59e0b; }
+.not-started { color: #94a3b8; }
 
 /* Status Text */
 .status-text {

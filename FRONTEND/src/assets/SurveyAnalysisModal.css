@@ -10,13 +10,15 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-bottom: 20px; /* مسافة قبل الجدول */
+  margin-bottom: 20px;
+  /* مسافة قبل الجدول */
 }
 
 .action-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(5, 66, 57, 0.2);
-  background: #054239;
+  box-shadow: 0 4px 12px rgba(185, 167, 121, 0.3);
+  background: var(--gradient-gold);
+  color: var(--primary-dark);
 }
 
 .btn-icon {
@@ -31,7 +33,7 @@
   padding: 0;
   margin-bottom: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
 }
 
 .qa-header {
@@ -62,23 +64,75 @@
   border: 1px solid #e2e8f0;
 }
 
-.stat-box.average { border-color: #b9a779; background: rgba(185, 167, 121, 0.05); }
-.stat-box.min { border-color: #cbd5e1; }
-.stat-box.max { border-color: #054239; color: white; background: #054239; }
-.stat-box.max .stat-label { color: #b9a779; }
-.stat-box.max .stat-value { color: white; }
+.stat-box.average {
+  border-color: #b9a779;
+  background: rgba(185, 167, 121, 0.05);
+}
 
-.stat-label { font-size: 12px; color: #64748b; display: block; margin-bottom: 4px; }
-.stat-value { font-size: 18px; font-weight: 700; color: #1e293b; }
+.stat-box.min {
+  border-color: #cbd5e1;
+}
+
+.stat-box.max {
+  border-color: #054239;
+  color: white;
+  background: #054239;
+}
+
+.stat-box.max .stat-label {
+  color: #b9a779;
+}
+
+.stat-box.max .stat-value {
+  color: white;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #64748b;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+}
 
 /* خيارات */
-.choice-row { margin-bottom: 12px; }
-.choice-info { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 14px; }
-.progress-bg { height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden; }
-.progress-fill { height: 100%; background: #054239; border-radius: 4px; transition: width 0.5s; }
+.choice-row {
+  margin-bottom: 12px;
+}
+
+.choice-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.progress-bg {
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #054239;
+  border-radius: 4px;
+  transition: width 0.5s;
+}
 
 /* نصوص */
-.text-list { display: flex; flex-direction: column; gap: 8px; }
+.text-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .text-bubble {
   background: #f8fafc;
   padding: 10px 14px;
@@ -89,4 +143,10 @@
   border-right: 3px solid #b9a779;
 }
 
-.no-data-text { color: #94a3b8; font-style: italic; font-size: 13px; text-align: center; padding: 10px; }
+.no-data-text {
+  color: #94a3b8;
+  font-style: italic;
+  font-size: 13px;
+  text-align: center;
+  padding: 10px;
+}

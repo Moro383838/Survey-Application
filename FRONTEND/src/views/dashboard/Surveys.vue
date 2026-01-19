@@ -358,8 +358,15 @@ const handleEditSurvey = async (survey) => {
   if (survey.status_id == 2) {
     if (!confirm('هذا الاستبيان نشط حالياً. لتعديله يجب إلغاء نشره أولاً (تحويله لمسودة).\nهل تريد المتابعة؟')) return
     
-    // سؤال عن إعادة التعيين
-    const shouldReset = confirm('هل تريد أيضاً تصفير (حذف) جميع الإجابات السابقة وجعل المدارس تجيب من جديد؟\n\n- موافق (OK): نعم، احذف الإجابات القديمة.\n- إلغاء (Cancel): لا، احتفظ بالإجابات القديمة.')
+    // سؤال عن إعادة التعيين مع تأكيد نصي للأمان
+    const userInput = prompt('⚠️ هل تريد أيضاً تصفير (حذف) جميع الإجابات السابقة وجعل المدارس تجيب من جديد؟\n\n- لتأكيد الحذف: اكتب كلمة "تصفير" في المربع أدناه.\n- للإلغاء: اضغط إلغاء أو اترك المربع فارغاً.')
+    
+    let shouldReset = false
+    if (userInput === 'تصفير') {
+      shouldReset = true
+    } else if (userInput !== null && userInput.trim() !== '') {
+      alert('⚠️ لم يتم كتابة كلمة "تصفير" بشكل صحيح. سيتم الحفاظ على الإجابات السابقة.')
+    }
 
     try {
       await store.unpublishSurvey(survey.id, { reset: shouldReset })

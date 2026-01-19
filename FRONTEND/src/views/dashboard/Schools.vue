@@ -259,7 +259,7 @@
   }
   
 .add-btn {
-  background: linear-gradient(135deg, #002623, #001a18);
+  background: var(--gradient-primary);
   color: var(--primary-gold);
   border: 1px solid var(--primary-gold);
   padding: 10px 20px;

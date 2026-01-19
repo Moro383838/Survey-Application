@@ -278,7 +278,7 @@ export const useSurveyStore = defineStore('survey', () => {
       if (payload.isPeriodic && payload.frequencyId) {
         frequencyIdToSend = payload.frequencyId
       }
-      
+
       const apiPayload = {
         title: payload.title,
         description: payload.description || '',
@@ -304,10 +304,10 @@ export const useSurveyStore = defineStore('survey', () => {
 
       // Backend returns success message, so we need to fetch updated survey data
       console.log('📥 Backend response:', response.data)
-      
+
       // Fetch the updated survey data
       const updatedSurvey = await fetchSurveyById(id)
-      
+
       if (updatedSurvey) {
         const index = surveys.value.findIndex(s => s.id === id)
         if (index !== -1) {
@@ -320,7 +320,7 @@ export const useSurveyStore = defineStore('survey', () => {
         console.log('✅ تم تحديث الاستبيان بنجاح:', updatedSurvey)
         return updatedSurvey
       }
-      
+
       // If fetch fails, return the response anyway
       return response.data
 
@@ -741,71 +741,7 @@ export const useSurveyStore = defineStore('survey', () => {
     }
   }
 
-  // بيانات تجريبية للتنمية
-  const getMockSurveys = () => {
-    return [
-      {
-        id: 1,
-        title: 'استبيان رضا أولياء الأمور',
-        description: 'قياس مستوى رضا أولياء الأمور',
-        status_id: 2,
-        status_label: 'نشط',
-        is_periodic: true,
-        dates: {
-          start: '2024-01-01T08:00:00',
-          end: '2024-12-31T14:00:00'
-        },
-        questions: [
-          {
-            id: 1,
-            text: 'ما هو مستوى رضاك عن الخدمة؟',
-            type_id: 3,
-            type_label: 'اختيار واحد',
-            required: true,
-            options: [
-              { id: 1, text: 'ممتاز' },
-              { id: 2, text: 'جيد' },
-              { id: 3, text: 'متوسط' },
-              { id: 4, text: 'ضعيف' }
-            ],
-            logic: null
-          }
-        ],
-        targets: [
-          {
-            id: 1,
-            name: 'ثانوية المتفوقين'
-          }
-        ],
-        created_at: '2024-01-01T00:00:00Z'
-      },
-      {
-        id: 2,
-        title: 'استبيان المدرسين',
-        description: 'تقييم أداء المدرسين',
-        status_id: 1,
-        status_label: 'مسودة',
-        is_periodic: false,
-        dates: {
-          start: '2024-02-01T08:00:00',
-          end: '2024-02-28T14:00:00'
-        },
-        questions: [
-          {
-            id: 2,
-            text: 'ما هي الصعوبات التي تواجهك؟',
-            type_id: 2,
-            type_label: 'نص طويل',
-            required: false,
-            options: [],
-            logic: null
-          }
-        ],
-        targets: [],
-        created_at: '2024-01-15T00:00:00Z'
-      }
-    ]
-  }
+
 
   return {
     // State

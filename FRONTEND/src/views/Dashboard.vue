@@ -118,7 +118,7 @@ if (!authStore.isAdmin && !authStore.hasAnalyticsAccess) {
 .dashboard-header {
   background: var(--gradient-primary);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -217,7 +217,7 @@ if (!authStore.isAdmin && !authStore.hasAnalyticsAccess) {
 /* Content Area */
 .dashboard-content {
   padding: 0;
-  margin-top: 0; /* No fixed overlap on mobile */
+  padding-top: 64px;
   width: 100%;
 }
 
@@ -305,7 +305,8 @@ if (!authStore.isAdmin && !authStore.hasAnalyticsAccess) {
 
   /* Content Spacing for Desktop Fixed Header + Nav */
   .dashboard-content {
-    margin-top: 136px; /* 80px Header + 56px Nav */
+    margin-top: 0;
+    padding-top: 136px; /* 80px Header + 56px Nav */
   }
 }
 </style>

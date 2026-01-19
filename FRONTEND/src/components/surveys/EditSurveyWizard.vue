@@ -7,7 +7,7 @@
       </div>
       <div class="wizard-actions">
         <button class="btn btn-outline" @click="$router.push('/dashboard')">
-          إلغاء العودة
+          إلغاء
         </button>
       </div>
     </div>

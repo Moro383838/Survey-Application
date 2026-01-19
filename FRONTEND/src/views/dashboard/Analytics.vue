@@ -401,19 +401,6 @@
               <div class="chart-actions">
                 <button 
                   class="chart-action-btn" 
-                  :class="{ active: viewType === 'grid' }"
-                  @click="switchViewType('grid')"
-                  title="عرض الشبكة"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="7" height="7"></rect>
-                    <rect x="14" y="3" width="7" height="7"></rect>
-                    <rect x="14" y="14" width="7" height="7"></rect>
-                    <rect x="3" y="14" width="7" height="7"></rect>
-                  </svg>
-                </button>
-                <button 
-                  class="chart-action-btn" 
                   :class="{ active: viewType === 'list' }"
                   @click="switchViewType('list')"
                   title="عرض القائمة"
@@ -425,13 +412,6 @@
                     <line x1="3" y1="6" x2="3.01" y2="6"></line>
                     <line x1="3" y1="12" x2="3.01" y2="12"></line>
                     <line x1="3" y1="18" x2="3.01" y2="18"></line>
-                  </svg>
-                </button>
-                <button class="chart-action-btn" @click="exportSchoolChart('directorates')">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
                   </svg>
                 </button>
               </div>
@@ -900,7 +880,7 @@
                 <div v-for="school in respondedSchools" :key="school.school_id" class="school-item responded">
                   <span class="school-name">{{ school.school_name }}</span>
                   <span class="response-date">{{ formatDate(school.submitted_at) }}</span>
-                  <span v-if="school.submitted_by" class="submitted-by">بواسطة: {{ school.submitted_by }}</span>
+                  <span v-if="school.submitted_by" class="submitted-by">بواسطة: {{ getSubmitterName(school.submitted_by) }}</span>
                 </div>
                 <div v-if="respondedSchools.length === 0" class="empty-list">
                   لا توجد مدارس أجابت بعد
@@ -982,11 +962,10 @@
         <!-- Target Schools and Users Table -->
         <div class="target-schools-section animate-slide-up delay-3">
           <h2 class="section-title">المدارس المستهدفة والمستخدمين</h2>
-          <div class="target-schools-table-wrapper">
-            <table class="target-schools-table">
+          <div class="table-container table-wrapper">
+            <table class="data-table">
               <thead>
                 <tr>
-                  <th>#</th>
                   <th>اسم المدرسة</th>
                   <th>حالة الإجابة</th>
                   <th>تاريخ الإجابة</th>
@@ -995,20 +974,21 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(targetSchool, index) in targetSchoolsWithUsers" :key="targetSchool.school_id">
-                  <td>{{ index + 1 }}</td>
-                  <td>{{ targetSchool.school_name }}</td>
-                  <td>
-                    <span class="response-status" :class="targetSchool.has_responded ? 'responded' : 'not-responded'">
+                <tr v-for="(targetSchool) in targetSchoolsWithUsers" :key="targetSchool.school_id">
+                  <td data-label="اسم المدرسة">
+                    <strong>{{ targetSchool.school_name }}</strong>
+                  </td>
+                  <td data-label="حالة الإجابة">
+                    <span class="status-badge" :class="targetSchool.has_responded ? 'active' : 'draft'">
                       {{ targetSchool.has_responded ? 'أجابت' : 'لم تجب' }}
                     </span>
                   </td>
-                  <td>{{ targetSchool.has_responded ? formatDate(targetSchool.responded_at) : '-' }}</td>
-                  <td>{{ targetSchool.submitted_by || '-' }}</td>
-                  <td>
+                  <td data-label="تاريخ الإجابة">{{ targetSchool.has_responded ? formatDate(targetSchool.responded_at) : '-' }}</td>
+                  <td data-label="تم الإرسال بواسطة">{{ getSubmitterName(targetSchool.submitted_by) }}</td>
+                  <td data-label="الإجراءات" class="actions-cell">
                     <button 
                       v-if="targetSchool.has_responded"
-                      class="btn-view-responses"
+                      class="action-btn btn-view-responses"
                       @click="viewSchoolResponses(targetSchool.school_id)"
                     >
                       عرض الإجابات
@@ -1765,6 +1745,23 @@ const getQuestionType = (typeCode) => {
   return types[typeCode] || typeCode
 }
 
+const getSubmitterName = (identifier) => {
+  if (!identifier) return '-'
+  
+  // محاولة البحث عن المستخدم في القائمة المحملة لجلب الاسم الحقيقي
+  if (users.value && users.value.length > 0) {
+    // البحث عن طريق اسم المستخدم (username)
+    const userByUsername = users.value.find(u => u.username === identifier)
+    if (userByUsername) return userByUsername.name || userByUsername.username
+    
+    // البحث عن طريق المعرف (ID) في حال كان القيمة رقمية
+    const userById = users.value.find(u => u.id == identifier)
+    if (userById) return userById.name || userById.username
+  }
+  
+  return identifier
+}
+
 // Helper method to get total from object values
 const getTotalFromObject = (obj) => {
   if (!obj || typeof obj !== 'object') return 0
@@ -2135,4 +2132,5 @@ onMounted(async () => {
 
 <style scoped>
   @import "../../assets/analytics.css";
+  @import "../../assets/tables.css";
 </style>

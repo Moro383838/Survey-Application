@@ -68,7 +68,7 @@
                 <div v-else class="text-responses">
                   <div v-if="Array.isArray(q.stats) && q.stats.length > 0" class="text-list">
                     <div v-for="(answer, i) in q.stats" :key="i" class="text-bubble">
-                      {{ cleanText(answer) }}
+                      {{ formatAnswer(answer, q.type) }}
                     </div>
                   </div>
                   <div v-else class="no-data-text">لا توجد إجابات نصية</div>
@@ -189,6 +189,42 @@ const cleanText = (text) => {
   if (typeof text !== 'string') return text
   // Remove surrounding quotes if they exist (e.g. "\"value\"")
   return text.replace(/^"|"$/g, '').replace(/\\"/g, '"')
+}
+
+const formatAnswer = (answer, type) => {
+  if (!answer) return '-'
+  
+  // Handle JSON strings (for ranges)
+  if (typeof answer === 'string' && (answer.startsWith('{') || answer.startsWith('['))) {
+    try {
+      const parsed = JSON.parse(answer)
+      
+      if (type === 'DATE_RANGE') {
+        const start = parsed.startDate || '-'
+        const end = parsed.endDate || '-'
+        return `📅 من ${start} إلى ${end}`
+      }
+      
+      if (type === 'DATETIME_RANGE') {
+        const start = `${parsed.startDate || '-'} ${parsed.startTime || ''}`.trim()
+        const end = `${parsed.endDate || '-'} ${parsed.endTime || ''}`.trim()
+        return `⏰ من ${start} إلى ${end}`
+      }
+      
+      // If it's just a simple array or object not handled above
+      if (typeof parsed === 'object') return JSON.stringify(parsed)
+    } catch (e) {
+      // Fail silently and return as text
+    }
+  }
+
+  // Handle simple strings
+  let text = cleanText(answer)
+  
+  if (type === 'DATE') return `📅 ${text}`
+  if (type === 'TIME') return `⏰ ${text}`
+  
+  return text
 }
 
 const calculatePercentage = (count, allStats) => {
