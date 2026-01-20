@@ -34,13 +34,8 @@
 
           <div class="user-details-box">
             <div class="detail-item">
-              <span class="detail-label">الاسم الكامل:</span>
-              <span class="detail-value">{{ user.name || '-' }}</span>
-            </div>
-            
-            <div class="detail-item">
-              <span class="detail-label">تاريخ التسجيل:</span>
-              <span class="detail-value">{{ formatDate(user.created_at) }}</span>
+              <span class="detail-label">اسم المستخدم:</span>
+              <span class="detail-value">{{ user.username }}</span>
             </div>
 
             <div class="detail-item">
@@ -168,7 +163,7 @@ const getSchoolsCount = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 3000;
   animation: fadeIn 0.3s ease;
 }
 

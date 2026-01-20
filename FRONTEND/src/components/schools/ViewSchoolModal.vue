@@ -113,7 +113,7 @@ const formatDate = (dateString) => {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 3000;
   animation: fadeIn 0.3s ease;
   backdrop-filter: blur(4px);
   direction: rtl;

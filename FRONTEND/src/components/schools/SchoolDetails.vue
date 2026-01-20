@@ -384,4 +384,57 @@
   .btn-secondary:hover {
     background: #e2e8f0;
   }
+
+  @media (max-width: 768px) {
+    .school-details-page {
+      padding: 12px;
+    }
+
+    .school-header {
+      flex-direction: column;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .school-avatar {
+      width: 60px;
+      height: 60px;
+      font-size: 28px;
+    }
+
+    .school-info h1 {
+      font-size: 22px;
+    }
+
+    .stats {
+      grid-template-columns: 1fr;
+    }
+
+    .details-card, .users-section {
+      padding: 20px;
+    }
+
+    .detail-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+
+    .detail-label {
+      font-size: 13px;
+    }
+
+    .detail-value {
+      font-size: 15px;
+    }
+
+    .actions-section {
+      flex-direction: column;
+    }
+
+    .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
   </style>
