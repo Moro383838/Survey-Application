@@ -296,7 +296,7 @@ const getCompletionClass = (rate) => {
     align-items: center;
     padding: 12px 0;
     border-bottom: 1px solid #f1f5f9;
-    text-align: left;
+    text-align: right;
   }
 
   .custom-table td:last-child {

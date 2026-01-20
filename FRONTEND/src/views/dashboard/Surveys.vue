@@ -997,14 +997,16 @@ watch([searchQuery, statusFilter, typeFilter], () => {
 @media (max-width: 992px) {
   .page-header {
     flex-direction: column;
-    text-align: center;
-    gap: 24px;
+    text-align: right;
+    gap: 20px;
+    align-items: stretch;
   }
   
   .header-content {
     flex-direction: column;
-    text-align: center;
-    gap: 16px;
+    text-align: right;
+    gap: 12px;
+    align-items: flex-start;
   }
   
   .controls-section {
@@ -1033,13 +1035,16 @@ watch([searchQuery, statusFilter, typeFilter], () => {
   }
   
   .page-header {
-    padding: 16px;
+    padding: 20px 16px;
     flex-direction: column;
     align-items: flex-start;
+    text-align: right;
   }
   
   .header-content h1 {
     font-size: 20px;
+    text-align: right;
+    width: 100%;
   }
   
   .header-subtitle {

@@ -176,7 +176,7 @@ const handleSubmit = async () => {
   height: 120px;
   width: auto;
   display: block;
-  flex-shrink: 0;
+  flex-shrink: 1;
 
   transform: scale(2.3);
   transform-origin: center;
