@@ -3,10 +3,8 @@
     <!-- Fixed Page Header -->
     <div class="page-header fixed-header">
       <div class="header-content">
-        <div>
-          <h1>إدارة الاستبيانات</h1>
-          <p class="header-subtitle">عرض وإدارة جميع الاستبيانات في النظام</p>
-        </div>
+        <h1>إدارة الاستبيانات</h1>
+        <p class="header-subtitle">عرض وإدارة جميع الاستبيانات في النظام</p>
       </div>
       <div class="header-actions" v-if="authStore.isAdmin">
         <button class="btn-add-survey" @click="router.push('/surveys/create-wizard')">
@@ -996,17 +994,18 @@ watch([searchQuery, statusFilter, typeFilter], () => {
 
 @media (max-width: 992px) {
   .page-header {
-    flex-direction: column;
-    text-align: right;
+    flex-direction: column !important;
+    text-align: right !important;
     gap: 20px;
-    align-items: stretch;
+    align-items: flex-start !important;
   }
   
   .header-content {
-    flex-direction: column;
-    text-align: right;
-    gap: 12px;
-    align-items: flex-start;
+    flex-direction: column !important;
+    text-align: right !important;
+    gap: 8px;
+    align-items: flex-start !important;
+    width: 100% !important;
   }
   
   .controls-section {
@@ -1035,25 +1034,31 @@ watch([searchQuery, statusFilter, typeFilter], () => {
   }
   
   .page-header {
-    padding: 20px 16px;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: right;
+    padding: 24px 20px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    text-align: right !important;
   }
   
   .header-content h1 {
-    font-size: 20px;
-    text-align: right;
-    width: 100%;
+    font-size: 22px !important;
+    text-align: right !important;
+    width: 100% !important;
+    margin-bottom: 8px !important;
   }
   
   .header-subtitle {
-    font-size: 12px;
+    font-size: 14px !important;
+    text-align: right !important;
+    width: 100% !important;
+    opacity: 0.8;
   }
   
   .btn-add-survey {
-    width: 100%;
-    justify-content: center;
+    width: 100% !important;
+    justify-content: flex-start !important; 
+    padding-right: 20px !important;
+    margin-top: 10px;
   }
   
   .stats-cards {
